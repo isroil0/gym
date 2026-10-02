@@ -35,6 +35,7 @@ export const NAVIGATION: Record<UserRole, NavSection[]> = {
         { key: 'trainers', href: '/admin/trainers', icon: 'trainers' },
         { key: 'memberships', href: '/admin/memberships', icon: 'memberships' },
         { key: 'attendance', href: '/admin/attendance', icon: 'attendance' },
+        { key: 'doorCode', href: '/admin/door', icon: 'qr' },
       ],
     },
     {
@@ -83,6 +84,7 @@ export const NAVIGATION: Record<UserRole, NavSection[]> = {
       key: null,
       items: [
         { key: 'home', href: '/me', icon: 'home' },
+        { key: 'checkIn', href: '/me/check-in', icon: 'attendance' },
         { key: 'qrCard', href: '/me/card', icon: 'qr' },
       ],
     },
@@ -127,7 +129,7 @@ export const MOBILE_PRIMARY: Record<UserRole, NavItem[]> = {
   ],
   MEMBER: [
     { key: 'home', href: '/me', icon: 'home' },
-    { key: 'qrCard', href: '/me/card', icon: 'qr' },
+    { key: 'checkIn', href: '/me/check-in', icon: 'attendance' },
     { key: 'workout', href: '/me/workout', icon: 'workouts' },
     { key: 'myMembership', href: '/me/membership', icon: 'memberships' },
   ],

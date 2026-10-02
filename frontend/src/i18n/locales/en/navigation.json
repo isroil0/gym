@@ -32,5 +32,7 @@
   "userMenu": "Account menu",
   "mainNavigation": "Main navigation",
   "more": "More",
-  "audit": "Audit log"
+  "audit": "Audit log",
+  "doorCode": "Entry code",
+  "checkIn": "Check in"
 }

@@ -75,7 +75,9 @@
     "CARD_SUPERSEDED": "This card has been replaced by a newer one",
     "CARD_INVALID": "This QR code is not a valid membership card",
     "CARD_NOT_ISSUED": "No membership card has been issued for this member",
-    "UNKNOWN": "This member cannot be admitted"
+    "UNKNOWN": "This member cannot be admitted",
+    "DOOR_CODE_INVALID": "This is not the gym entry code",
+    "DOOR_CODE_EXPIRED": "This code has expired. Scan the one on the screen now"
   },
   "warnings": {
     "expiringSoon": "This membership expires in {count, plural, one {# day} other {# days}}",
@@ -116,5 +118,28 @@
     "retrying": "Connection lost. Retrying…",
     "restored": "Connection restored",
     "offlineWarning": "Check-ins cannot be recorded while offline. The gym's server decides who may enter."
+  },
+  "door": {
+    "title": "Entry code",
+    "subtitle": "Show this on a screen at the door for members to scan",
+    "rotates": "Changes every {seconds} seconds",
+    "refreshing": "A new code is on its way…",
+    "fullscreen": "Show full screen",
+    "exitFullscreen": "Exit full screen",
+    "instruction": "Open the app and scan to check in",
+    "staleWarning": "A photograph of this code stops working within a minute.",
+    "error": "The entry code could not be loaded"
+  },
+  "selfScan": {
+    "title": "Check in",
+    "subtitle": "Scan the code on the screen at the gym entrance",
+    "button": "Scan to check in",
+    "scanning": "Point your camera at the screen at the door",
+    "success": "You are checked in",
+    "again": "Scan again",
+    "noCamera": "Your device has no camera. Ask the front desk to check you in.",
+    "denied": "Camera access was refused. Allow it in your browser settings, or ask the front desk.",
+    "insecure": "The camera needs a secure connection. Ask the front desk to check you in.",
+    "alreadyInside": "You are already checked in"
   }
 }

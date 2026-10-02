@@ -16,6 +16,12 @@ import {
   type EntryDecision,
 } from './entry-eligibility';
 import { parseCardToken } from './membership-card-token';
+import {
+  DOOR_CODE_PERIOD_SECONDS,
+  buildDoorCode,
+  millisecondsUntilRotation,
+  verifyDoorCode,
+} from './door-code';
 import type { AuthenticatedUser } from '../auth/types/authenticated-user';
 import type { AttendanceWithRelations, QueryAttendanceDto } from './dto/attendance.dto';
 
@@ -95,6 +101,52 @@ export class AttendanceService {
     }
 
     return this.admit(card.memberId, CheckInMethod.QR, { actorId: actor.id, markCardUsed: true });
+  }
+
+  /**
+   * The code currently on the door screen, plus when it stops being current,
+   * so the screen can refresh itself without polling.
+   */
+  currentDoorCode(now: Date = new Date()): {
+    code: string;
+    periodSeconds: number;
+    expiresAt: Date;
+  } {
+    return {
+      code: buildDoorCode(now, this.config.qrSecret),
+      periodSeconds: DOOR_CODE_PERIOD_SECONDS,
+      expiresAt: new Date(now.getTime() + millisecondsUntilRotation(now)),
+    };
+  }
+
+  /**
+   * A member admitting themselves by scanning the gym's door code.
+   *
+   * The mirror image of `checkInByCard`: there, staff scan a code that says
+   * who the member is; here, the member scans a code that says only *when*
+   * and *where*, and their own session says who they are. That asymmetry is
+   * deliberate — a member cannot admit anybody but themselves, whatever they
+   * scan.
+   *
+   * Everything after the code check is the shared `admit` path, so the rules
+   * at the door are identical however somebody arrives at it.
+   */
+  async checkInBySelfScan(code: string, userId: string): Promise<CheckInOutcome> {
+    const verified = verifyDoorCode(code, this.config.qrSecret, new Date());
+
+    if (!verified.ok) {
+      this.logger.warn(`Rejected door-code scan: ${verified.reason}`);
+      throw AttendanceService.denied(
+        verified.reason === 'EXPIRED'
+          ? EntryDenialReason.DOOR_CODE_EXPIRED
+          : EntryDenialReason.DOOR_CODE_INVALID,
+      );
+    }
+
+    const member = await this.members.findByUserIdOrFail(userId);
+
+    // No actorId: nobody at the desk did this, the member did.
+    return this.admit(member.id, CheckInMethod.QR, {});
   }
 
   /**

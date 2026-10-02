@@ -11,6 +11,7 @@ import LinearProgress from '@mui/material/LinearProgress';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import QrCodeIcon from '@mui/icons-material/QrCode2Rounded';
+import QrCodeScannerIcon from '@mui/icons-material/QrCodeScannerRounded';
 import ChevronRightIcon from '@mui/icons-material/ChevronRightRounded';
 import { alpha } from '@mui/material/styles';
 import { api } from '@/lib/api/client';
@@ -38,6 +39,7 @@ export function MemberHome() {
   const t = useTranslations('dashboard.member');
   const tm = useTranslations('memberships');
   const tc = useTranslations('common');
+  const tScan = useTranslations('attendance.selfScan');
   const te = useTranslations('errors');
   const { user } = useSession();
   const { locale } = useLocale();
@@ -151,17 +153,30 @@ export function MemberHome() {
         </CardContent>
       </Card>
 
-      {/* The reason most members open this at all. */}
-      <Button
-        component={Link}
-        href="/me/card"
-        variant="contained"
-        size="large"
-        startIcon={<QrCodeIcon sx={{ fontSize: 24 }} />}
-        sx={{ py: 1.75, fontSize: '1rem' }}
-      >
-        {t('showQrCard')}
-      </Button>
+      {/* Getting through the door is why most members open this at all. */}
+      <Stack spacing={1.5}>
+        <Button
+          component={Link}
+          href="/me/check-in"
+          variant="contained"
+          size="large"
+          startIcon={<QrCodeScannerIcon sx={{ fontSize: 24 }} />}
+          sx={{ py: 1.75, fontSize: '1rem' }}
+        >
+          {tScan('button')}
+        </Button>
+        {/* The card stays: some gyms still scan the member rather than the
+            other way round, and the backend supports both. */}
+        <Button
+          component={Link}
+          href="/me/card"
+          variant="outlined"
+          size="large"
+          startIcon={<QrCodeIcon sx={{ fontSize: 22 }} />}
+        >
+          {t('showQrCard')}
+        </Button>
+      </Stack>
 
       {owes ? (
         <Card

@@ -75,7 +75,9 @@
     "CARD_SUPERSEDED": "Bu karta yangisi bilan almashtirilgan",
     "CARD_INVALID": "Bu QR kod yaroqli abonement kartasi emas",
     "CARD_NOT_ISSUED": "Bu a'zoga abonement kartasi berilmagan",
-    "UNKNOWN": "Bu a'zoni kiritib bo'lmaydi"
+    "UNKNOWN": "Bu a'zoni kiritib bo'lmaydi",
+    "DOOR_CODE_INVALID": "Bu sportzalning kirish kodi emas",
+    "DOOR_CODE_EXPIRED": "Bu kod eskirgan. Ekrandagi hozirgi kodni skanerlang"
   },
   "warnings": {
     "expiringSoon": "Bu abonement {count, plural, other {# kundan}} keyin tugaydi",
@@ -116,5 +118,28 @@
     "retrying": "Aloqa uzildi. Qayta urinilmoqda…",
     "restored": "Aloqa tiklandi",
     "offlineWarning": "Internet yo'qligida tashrifni qayd etib bo'lmaydi. Kimni kiritish sportzal serveri tomonidan hal qilinadi."
+  },
+  "door": {
+    "title": "Kirish kodi",
+    "subtitle": "A'zolar skanerlashi uchun buni eshik oldidagi ekranda ko'rsating",
+    "rotates": "Har {seconds} soniyada o'zgaradi",
+    "refreshing": "Yangi kod tayyorlanmoqda…",
+    "fullscreen": "To'liq ekranda ko'rsatish",
+    "exitFullscreen": "To'liq ekrandan chiqish",
+    "instruction": "Ilovani oching va kirishni qayd etish uchun skanerlang",
+    "staleWarning": "Bu kodning surati bir daqiqa ichida ishlamay qoladi.",
+    "error": "Kirish kodini yuklab bo'lmadi"
+  },
+  "selfScan": {
+    "title": "Kirishni qayd etish",
+    "subtitle": "Sportzal kiraverishidagi ekrandagi kodni skanerlang",
+    "button": "Skanerlab kirish",
+    "scanning": "Kamerani eshik oldidagi ekranga tuting",
+    "success": "Kirishingiz qayd etildi",
+    "again": "Qayta skanerlash",
+    "noCamera": "Qurilmangizda kamera yo'q. Qabulxonadan qayd etishni so'rang.",
+    "denied": "Kameraga ruxsat berilmadi. Brauzer sozlamalarida ruxsat bering yoki qabulxonaga murojaat qiling.",
+    "insecure": "Kamera xavfsiz ulanishni talab qiladi. Qabulxonadan qayd etishni so'rang.",
+    "alreadyInside": "Siz allaqachon ichkaridasiz"
   }
 }

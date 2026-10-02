@@ -24,6 +24,11 @@ export enum EntryDenialReason {
   CARD_SUPERSEDED = 'CARD_SUPERSEDED',
   CARD_INVALID = 'CARD_INVALID',
   CARD_NOT_ISSUED = 'CARD_NOT_ISSUED',
+  /// The door screen's code was unreadable or not ours.
+  DOOR_CODE_INVALID = 'DOOR_CODE_INVALID',
+  /// A real code, but no longer the one on the screen. Almost always a
+  /// photograph, which is exactly what rotation is meant to defeat.
+  DOOR_CODE_EXPIRED = 'DOOR_CODE_EXPIRED',
 }
 
 export const ENTRY_DENIAL_MESSAGES: Record<EntryDenialReason, string> = {
@@ -41,6 +46,9 @@ export const ENTRY_DENIAL_MESSAGES: Record<EntryDenialReason, string> = {
   [EntryDenialReason.CARD_SUPERSEDED]: 'This membership card has been replaced by a newer one',
   [EntryDenialReason.CARD_INVALID]: 'This QR code is not a valid membership card',
   [EntryDenialReason.CARD_NOT_ISSUED]: 'This member has no membership card',
+  [EntryDenialReason.DOOR_CODE_INVALID]: 'This QR code is not the gym entry code',
+  [EntryDenialReason.DOOR_CODE_EXPIRED]:
+    'This entry code has expired. Scan the code currently on the screen',
 };
 
 /** The subset of a membership entry needs to reason about. */

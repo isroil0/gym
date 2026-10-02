@@ -98,7 +98,6 @@ export function MemberCard() {
         value={card.token}
         size={256}
         style={{ width: '100%', height: 'auto', maxWidth: fullscreen ? 420 : 300 }}
-        viewBox="0 0 256 256"
         level="M"
       />
     </Box>

@@ -1233,6 +1233,46 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/attendance/door-code": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * The entry code currently shown at the door
+         * @description Render this as a QR on a screen at the entrance for members to scan. It identifies the moment, not a person, and rotates every few seconds so that a photograph of it is worthless by the time it is shared. Fetch the next one at `expiresAt`.
+         */
+        get: operations["AttendanceController_doorCode_v1"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/attendance/check-in/self": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Admit yourself by scanning the gym door code
+         * @description The member scans the screen at the entrance. The code says only when and where; who is taken from the caller, so a member can admit nobody but themselves. The same membership rules apply as at the front desk.
+         */
+        post: operations["AttendanceController_checkInSelf_v1"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/attendance/check-in/qr": {
         parameters: {
             query?: never;
@@ -3508,6 +3548,27 @@ export interface components {
              * @example 12
              */
             membershipDaysRemaining?: number | null;
+        };
+        DoorCodeDto: {
+            /**
+             * @description Encode this string into the QR image shown at the door.
+             * @example DOOR1.59697360.3f2a1c8e9b7d4a6f0e5c2b8d1a4f7c3e
+             */
+            code: string;
+            /**
+             * @description How long each code lasts, in seconds.
+             * @example 30
+             */
+            periodSeconds: number;
+            /** @description When this code stops being the current one. The screen should fetch the next code at this moment. */
+            expiresAt: string;
+        };
+        SelfCheckInDto: {
+            /**
+             * @description The exact string decoded from the QR shown at the gym door.
+             * @example DOOR1.59697360.3f2a1c8e9b7d4a6f0e5c2b8d1a4f7c3e
+             */
+            code: string;
         };
         QrScanDto: {
             /**
@@ -7504,6 +7565,75 @@ export interface operations {
         requestBody: {
             content: {
                 "application/json": components["schemas"]["ManualCheckInDto"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CheckInResultDto"];
+                };
+            };
+            /** @description Role not permitted */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponse"];
+                };
+            };
+            /** @description Entry refused — see details for the reason code */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponse"];
+                };
+            };
+        };
+    };
+    AttendanceController_doorCode_v1: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DoorCodeDto"];
+                };
+            };
+            /** @description Role not permitted */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponse"];
+                };
+            };
+        };
+    };
+    AttendanceController_checkInSelf_v1: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SelfCheckInDto"];
             };
         };
         responses: {

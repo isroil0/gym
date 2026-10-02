@@ -10,6 +10,7 @@ import {
 import {
   IsDateString,
   IsEnum,
+  IsNotEmpty,
   IsOptional,
   IsString,
   IsUUID,
@@ -180,4 +181,38 @@ export function computeVisitsRemaining(
 ): number | null {
   if (!membership) return null;
   return visitsRemaining(membership.visitLimit, membership.visitsUsed);
+}
+
+/** The code to render on the door screen, and when it stops being current. */
+export class DoorCodeDto {
+  @ApiProperty({
+    description: 'Encode this string into the QR image shown at the door.',
+    example: 'DOOR1.59697360.3f2a1c8e9b7d4a6f0e5c2b8d1a4f7c3e',
+  })
+  code!: string;
+
+  @ApiProperty({
+    description: 'How long each code lasts, in seconds.',
+    example: 30,
+  })
+  periodSeconds!: number;
+
+  @ApiProperty({
+    description:
+      'When this code stops being the current one. The screen should fetch ' +
+      'the next code at this moment.',
+  })
+  expiresAt!: string;
+}
+
+/** A member admitting themselves by scanning the door screen. */
+export class SelfCheckInDto {
+  @ApiProperty({
+    description: 'The exact string decoded from the QR shown at the gym door.',
+    example: 'DOOR1.59697360.3f2a1c8e9b7d4a6f0e5c2b8d1a4f7c3e',
+  })
+  @IsString()
+  @IsNotEmpty({ message: 'code should not be empty' })
+  @MaxLength(256)
+  code!: string;
 }

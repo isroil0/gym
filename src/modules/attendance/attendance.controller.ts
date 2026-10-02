@@ -33,7 +33,9 @@ import {
   AttendanceResponseDto,
   CheckInResultDto,
   CheckOutDto,
+  DoorCodeDto,
   ManualCheckInDto,
+  SelfCheckInDto,
   QrScanDto,
   QueryAttendanceDto,
   TodayAttendanceDto,
@@ -120,6 +122,47 @@ export class AttendanceController {
     @CurrentUser() actor: AuthenticatedUser,
   ): Promise<CheckInResultDto> {
     return presentCheckIn(await this.attendance.checkInManually(dto.memberId, actor, dto.notes));
+  }
+
+  @Get('door-code')
+  @Roles(UserRole.ADMIN)
+  @ApiOperation({
+    summary: 'The entry code currently shown at the door',
+    description:
+      'Render this as a QR on a screen at the entrance for members to scan. ' +
+      'It identifies the moment, not a person, and rotates every few seconds ' +
+      'so that a photograph of it is worthless by the time it is shared. ' +
+      'Fetch the next one at `expiresAt`.',
+  })
+  @ApiOkResponse({ type: DoorCodeDto })
+  doorCode(): DoorCodeDto {
+    const current = this.attendance.currentDoorCode();
+    return {
+      code: current.code,
+      periodSeconds: current.periodSeconds,
+      expiresAt: current.expiresAt.toISOString(),
+    };
+  }
+
+  @Post('check-in/self')
+  @Roles(UserRole.MEMBER)
+  @ApiOperation({
+    summary: 'Admit yourself by scanning the gym door code',
+    description:
+      'The member scans the screen at the entrance. The code says only when ' +
+      'and where; who is taken from the caller, so a member can admit nobody ' +
+      'but themselves. The same membership rules apply as at the front desk.',
+  })
+  @ApiCreatedResponse({ type: CheckInResultDto })
+  @ApiUnprocessableEntityResponse({
+    description: 'Entry refused — see details for the reason code',
+    type: ApiErrorResponse,
+  })
+  async checkInSelf(
+    @Body() dto: SelfCheckInDto,
+    @CurrentUser() actor: AuthenticatedUser,
+  ): Promise<CheckInResultDto> {
+    return presentCheckIn(await this.attendance.checkInBySelfScan(dto.code, actor.id));
   }
 
   @Post('check-in/qr')

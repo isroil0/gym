@@ -109,6 +109,8 @@ export const ENTRY_DENIAL_REASONS = [
   'CARD_SUPERSEDED',
   'CARD_INVALID',
   'CARD_NOT_ISSUED',
+  'DOOR_CODE_INVALID',
+  'DOOR_CODE_EXPIRED',
 ] as const;
 export type EntryDenialReason = (typeof ENTRY_DENIAL_REASONS)[number];
 
