@@ -22,7 +22,7 @@ import { useQueryState } from '@/lib/hooks/useQueryState';
 import { useLocale } from '@/providers/LocaleProvider';
 import { useToast } from '@/providers/ToastProvider';
 import { useApiErrorMessage } from '@/lib/forms/useApiForm';
-import { formatDateTime, formatDuration, formatTime } from '@/lib/format/datetime';
+import { formatDateTime } from '@/lib/format/datetime';
 import { formatNumber } from '@/lib/format/number';
 import { CheckInDesk } from './CheckInDesk';
 import { useAttendanceList, useCheckOutVisit, useTodayAttendance } from './useAttendance';
@@ -70,22 +70,15 @@ export function AttendancePage({ tab = 'today' }: { tab?: string }) {
         valueGetter: (_, row) => formatDateTime(row.checkedInAt, locale),
       },
       {
-        field: 'checkedOutAt',
-        headerName: t('columns.checkedOutAt'),
-        width: 120,
+        // Whether somebody is still in the building, not when they left:
+        // the departure time is of no interest to this gym, but knowing who
+        // is inside is what makes the check-out control below meaningful.
+        field: 'stillInside',
+        headerName: t('columns.status'),
+        width: 130,
+        sortable: false,
         renderCell: ({ row }) =>
-          row.stillInside ? (
-            <StatusChip label={t('stillInside')} tone="success" />
-          ) : (
-            <Typography variant="body2">{formatTime(row.checkedOutAt, locale)}</Typography>
-          ),
-      },
-      {
-        field: 'durationMinutes',
-        headerName: t('columns.duration'),
-        width: 110,
-        valueGetter: (_, row) =>
-          row.durationMinutes != null ? formatDuration(row.durationMinutes, locale) : '—',
+          row.stillInside ? <StatusChip label={t('stillInside')} tone="success" /> : null,
       },
       {
         field: 'method',

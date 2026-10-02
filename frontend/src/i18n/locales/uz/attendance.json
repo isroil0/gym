@@ -9,8 +9,7 @@
   "columns": {
     "member": "A'zo",
     "checkedInAt": "Kirgan vaqti",
-    "checkedOutAt": "Chiqqan vaqti",
-    "duration": "Davomiyligi",
+    "status": "Holat",
     "method": "Usul",
     "recordedBy": "Qayd etgan",
     "date": "Sana"

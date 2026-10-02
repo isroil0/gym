@@ -9,8 +9,7 @@
   "columns": {
     "member": "Клиент",
     "checkedInAt": "Приход",
-    "checkedOutAt": "Уход",
-    "duration": "Длительность",
+    "status": "Статус",
     "method": "Способ",
     "recordedBy": "Отметил",
     "date": "Дата"

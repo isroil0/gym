@@ -18,7 +18,7 @@ import { DetailSkeleton, ListSkeleton } from '@/components/feedback/Skeletons';
 import { EmptyState, ErrorState } from '@/components/feedback/EmptyState';
 import { StatusChip } from '@/components/ui/StatusChip';
 import { useLocale } from '@/providers/LocaleProvider';
-import { formatDate, formatDateTime, formatDuration } from '@/lib/format/datetime';
+import { formatDate, formatDateTime } from '@/lib/format/datetime';
 import { useMember } from '@/features/members/useMembers';
 import { useWorkoutPlanList } from '@/features/workouts/useWorkouts';
 import { useMemberProgress } from '@/features/progress/useProgress';
@@ -193,10 +193,7 @@ export function TrainerMemberDetail({ memberId }: { memberId: string }) {
                           {formatDateTime(visit.checkedInAt, locale)}
                         </Typography>
                         <Typography variant="caption" color="text.secondary">
-                          {visit.durationMinutes != null
-                            ? formatDuration(visit.durationMinutes, locale)
-                            : tat('stillInside')}
-                          {' · '}
+                          {visit.stillInside ? `${tat('stillInside')} · ` : ''}
                           {tat(`method.${visit.method}`)}
                         </Typography>
                       </Stack>

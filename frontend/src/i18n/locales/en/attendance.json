@@ -9,8 +9,7 @@
   "columns": {
     "member": "Member",
     "checkedInAt": "Checked in",
-    "checkedOutAt": "Checked out",
-    "duration": "Duration",
+    "status": "Status",
     "method": "Method",
     "recordedBy": "Recorded by",
     "date": "Date"

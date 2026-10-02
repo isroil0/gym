@@ -14,7 +14,7 @@ import { StatusChip } from '@/components/ui/StatusChip';
 import { ListSkeleton } from '@/components/feedback/Skeletons';
 import { EmptyState } from '@/components/feedback/EmptyState';
 import { useLocale } from '@/providers/LocaleProvider';
-import { formatDate, formatDuration, formatTime } from '@/lib/format/datetime';
+import { formatDate, formatTime } from '@/lib/format/datetime';
 import type { Attendance, Paginated } from '@/lib/api/types';
 
 /** The member's visit history. */
@@ -54,18 +54,11 @@ export function MyAttendance() {
                       </Typography>
                       <Typography variant="caption" color="text.secondary">
                         {formatTime(visit.checkedInAt, locale)}
-                        {visit.checkedOutAt ? ` – ${formatTime(visit.checkedOutAt, locale)}` : ''}
                         {' · '}
                         {t(`method.${visit.method}`)}
                       </Typography>
                     </Box>
-                    {visit.stillInside ? (
-                      <StatusChip label={t('stillInside')} tone="success" />
-                    ) : (
-                      <Typography variant="body2" color="text.secondary">
-                        {formatDuration(visit.durationMinutes ?? null, locale)}
-                      </Typography>
-                    )}
+                    {visit.stillInside ? <StatusChip label={t('stillInside')} tone="success" /> : null}
                   </Stack>
                 </Box>
               ))}

@@ -59,7 +59,6 @@ export function RecentAttendance() {
               ) : (
                 <Typography variant="caption" color="text.secondary" className="tabular">
                   {formatTime(visit.checkedInAt, locale)}
-                  {visit.checkedOutAt ? ` – ${formatTime(visit.checkedOutAt, locale)}` : ''}
                 </Typography>
               )}
             </Stack>
