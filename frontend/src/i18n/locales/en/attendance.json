@@ -22,8 +22,7 @@
   },
   "checkIn": {
     "title": "Check in",
-    "subtitle": "Scan a card or search for the member",
-    "manual": "Manual check-in",
+    "subtitle": "Find the member and check them in",
     "manualTitle": "Check a member in by name",
     "searchMember": "Search for a member",
     "searchHint": "Type a name, member code or phone number",
@@ -43,19 +42,15 @@
     "confirm": "Check this member out?"
   },
   "scanner": {
-    "title": "QR scanner",
     "start": "Start scanner",
     "stop": "Stop scanner",
-    "scanning": "Point the member's QR code at the camera",
+    "scanning": "Point your camera at the code",
     "processing": "Checking…",
     "cameraDenied": "Camera access was refused. Allow camera access in your browser settings, or use manual check-in.",
     "cameraUnavailable": "No camera is available on this device. Use manual check-in instead.",
     "cameraError": "The camera could not be started.",
     "switchCamera": "Switch camera",
-    "useManual": "Use manual check-in",
     "ready": "Ready to scan",
-    "lastScan": "Last scan",
-    "scanAgain": "Scan next member",
     "notSecureContext": "The camera needs a secure connection (HTTPS). Use manual check-in on this address."
   },
   "denial": {

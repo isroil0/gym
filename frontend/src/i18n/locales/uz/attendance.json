@@ -22,8 +22,7 @@
   },
   "checkIn": {
     "title": "Kirishni qayd etish",
-    "subtitle": "Kartani skanerlang yoki a'zoni qidiring",
-    "manual": "Qo'lda qayd etish",
+    "subtitle": "A'zoni toping va kirishini qayd eting",
     "manualTitle": "A'zoni ismi bo'yicha qayd etish",
     "searchMember": "A'zoni qidirish",
     "searchHint": "Ism, a'zo kodi yoki telefon raqamini yozing",
@@ -43,19 +42,15 @@
     "confirm": "Bu a'zoning chiqishi qayd etilsinmi?"
   },
   "scanner": {
-    "title": "QR skaner",
     "start": "Skanerni yoqish",
     "stop": "Skanerni to'xtatish",
-    "scanning": "A'zoning QR kodini kameraga tuting",
+    "scanning": "Kamerani kodga qarating",
     "processing": "Tekshirilmoqda…",
     "cameraDenied": "Kameraga ruxsat berilmadi. Brauzer sozlamalarida ruxsat bering yoki qo'lda qayd eting.",
     "cameraUnavailable": "Bu qurilmada kamera yo'q. Qo'lda qayd etishdan foydalaning.",
     "cameraError": "Kamerani ishga tushirib bo'lmadi.",
     "switchCamera": "Kamerani almashtirish",
-    "useManual": "Qo'lda qayd etish",
     "ready": "Skanerlashga tayyor",
-    "lastScan": "Oxirgi skanerlash",
-    "scanAgain": "Keyingi a'zoni skanerlash",
     "notSecureContext": "Kamera xavfsiz ulanishni (HTTPS) talab qiladi. Bu manzilda qo'lda qayd etishdan foydalaning."
   },
   "denial": {

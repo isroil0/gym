@@ -66,18 +66,6 @@ export function useManualCheckIn() {
   );
 }
 
-export function useQrCheckIn() {
-  return useDoorMutation((body: { token: string }) =>
-    api.post<CheckInResult>('attendance/check-in/qr', body),
-  );
-}
-
-export function useQrCheckOut() {
-  return useDoorMutation((body: { token: string }) =>
-    api.post<Attendance>('attendance/check-out/qr', body),
-  );
-}
-
 export function useCheckOut() {
   return useDoorMutation((body: { memberId: string }) =>
     api.post<Attendance>('attendance/check-out', body),
