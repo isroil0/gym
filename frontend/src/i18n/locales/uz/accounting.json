@@ -64,7 +64,6 @@
     "addTitle": "Xarajatni qayd etish",
     "fields": {
       "amount": "Summa",
-      "category": "Toifa",
       "description": "Tavsif",
       "occurredOn": "Sana",
       "method": "To'lov usuli",
@@ -74,7 +73,8 @@
     "success": "Xarajat qayd etildi",
     "history": "Xarajatlar tarixi",
     "total": "Jami xarajatlar",
-    "empty": "Bu davrda xarajatlar qayd etilmagan"
+    "empty": "Bu davrda xarajatlar qayd etilmagan",
+    "noCategory": "Buni qaysi turkumga yozishni bilib bo'lmadi. Hisob → Turkumlar bo'limida bittasini qo'shing."
   },
   "categories": {
     "title": "Xarajat toifalari",

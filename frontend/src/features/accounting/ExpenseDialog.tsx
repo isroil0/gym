@@ -17,20 +17,42 @@ import { PAYMENT_METHODS } from '@/lib/api/types';
 
 interface Values {
   amount: string;
-  expenseCategoryId: string;
   description: string;
   occurredOn: string;
   method: string;
   trainerId?: string;
 }
 
+/** The category uncategorised expenses are filed under. */
+const DEFAULT_CATEGORY_NAME = 'other';
+
+/**
+ * Picks the category an expense is filed under when nobody is asked to choose.
+ *
+ * "Other" exists for exactly this purpose, so prefer it by name; any active
+ * category is better than failing to record the expense, so fall back to the
+ * first. Returns undefined only when the gym has no active category at all,
+ * which the caller has to surface rather than post a request the backend is
+ * certain to reject.
+ */
+function defaultCategoryId(categories: { id: string; name: string }[]): string | undefined {
+  const named = categories.find(
+    (category) => category.name.trim().toLowerCase() === DEFAULT_CATEGORY_NAME,
+  );
+  return (named ?? categories[0])?.id;
+}
+
 /**
  * Record money going out.
  *
- * A category is required: the backend rejects an uncategorised expense, and
- * an expense nobody can attribute is of no use in a report either. The
- * optional trainer attributes the expense to a person, which is how a salary
- * or commission payment is recorded.
+ * The expense is filed under a category automatically rather than asking for
+ * one: the backend rejects an uncategorised expense, so the field cannot
+ * simply be dropped from the request. Categories remain editable under
+ * Accounting, and reports still group by them — every expense recorded here
+ * just lands in the same bucket.
+ *
+ * The optional trainer attributes the expense to a person, which is how a
+ * salary or commission payment is recorded.
  */
 export function ExpenseDialog({
   open,
@@ -57,7 +79,6 @@ export function ExpenseDialog({
 
   const schema = z.object({
     amount: v.money({ min: 0.01 }),
-    expenseCategoryId: z.string().min(1, tv('selectOption')),
     description: v.requiredText(255),
     occurredOn: v.isoDate(true),
     method: z.string().optional(),
@@ -68,21 +89,19 @@ export function ExpenseDialog({
     resolver: zodResolver(schema) as Resolver<Values>,
     defaultValues: {
       amount: '',
-      expenseCategoryId: '',
       description: '',
       occurredOn: toIsoDate(new Date()),
       method: 'TRANSFER',
       trainerId: trainerId ?? '',
     },
   });
-  const { formError, handleError, clearFormError } = useFormErrorHandler(form);
+  const { formError, setFormError, handleError, clearFormError } = useFormErrorHandler(form);
   const { reset } = form;
 
   useEffect(() => {
     if (!open) return;
     reset({
       amount: '',
-      expenseCategoryId: '',
       description: trainerName ? `${trainerName}` : '',
       occurredOn: toIsoDate(new Date()),
       method: 'TRANSFER',
@@ -93,12 +112,21 @@ export function ExpenseDialog({
 
   const submit = form.handleSubmit(async (values) => {
     clearFormError();
+
+    const categoryId = defaultCategoryId(categories.data?.data ?? []);
+    if (!categoryId) {
+      // Nothing to file this under; say so rather than send a request the
+      // backend will refuse.
+      setFormError(t('noCategory'));
+      return;
+    }
+
     const body: Record<string, unknown> = {
       type: 'EXPENSE',
       amount: Number(values.amount),
       occurredOn: values.occurredOn,
       description: values.description,
-      expenseCategoryId: values.expenseCategoryId,
+      expenseCategoryId: categoryId,
     };
     if (values.method) body.method = values.method;
     if (values.trainerId) body.trainerId = values.trainerId;
@@ -119,7 +147,7 @@ export function ExpenseDialog({
       submitLabel={ta('save')}
       onClose={onClose}
       onSubmit={submit}
-      submitting={create.isPending}
+      submitting={create.isPending || categories.isPending}
       error={formError}
     >
       <Box sx={{ display: 'grid', gap: 2, gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' } }}>
@@ -132,18 +160,6 @@ export function ExpenseDialog({
           max={toIsoDate(new Date())}
         />
       </Box>
-
-      <SelectInput
-        control={form.control}
-        name="expenseCategoryId"
-        label={tf('category')}
-        required
-        options={(categories.data?.data ?? []).map((category) => ({
-          value: category.id,
-          label: category.name,
-          description: category.description ?? undefined,
-        }))}
-      />
 
       <TextInput control={form.control} name="description" label={tf('description')} required />
 

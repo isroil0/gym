@@ -64,7 +64,6 @@
     "addTitle": "Record an expense",
     "fields": {
       "amount": "Amount",
-      "category": "Category",
       "description": "Description",
       "occurredOn": "Date",
       "method": "Paid by",
@@ -74,7 +73,8 @@
     "success": "Expense recorded",
     "history": "Expense history",
     "total": "Total expenses",
-    "empty": "No expenses recorded for this period"
+    "empty": "No expenses recorded for this period",
+    "noCategory": "No expense category exists to file this under. Add one under Accounting → Categories."
   },
   "categories": {
     "title": "Expense categories",
