@@ -30,13 +30,21 @@ describe('session restore', () => {
 
     expect(refresh.refreshTokens).toHaveBeenCalledWith('old-refresh');
     expect(session.writeTokens).toHaveBeenCalledWith(TOKENS);
-    expect(response.headers.get('location')).toBe('https://gym.test/admin/members');
+    expect(response.headers.get('location')).toBe('/admin/members');
+  });
+
+  it('redirects by path, not absolute url — behind a proxy the host is internal', async () => {
+    const response = await get('https://internal:8080/api/session/restore?next=%2Fadmin');
+
+    // An absolute URL built from request.url would send the reader to
+    // localhost:8080, which is where the container listens, not where they are.
+    expect(response.headers.get('location')).toBe('/admin');
   });
 
   it('falls back to the root when no page was remembered', async () => {
     const response = await get('https://gym.test/api/session/restore');
 
-    expect(response.headers.get('location')).toBe('https://gym.test/');
+    expect(response.headers.get('location')).toBe('/');
   });
 
   it('clears the cookies when the refresh token is rejected', async () => {
@@ -48,7 +56,7 @@ describe('session restore', () => {
 
     expect(session.clearTokens).toHaveBeenCalled();
     expect(session.writeTokens).not.toHaveBeenCalled();
-    expect(response.headers.get('location')).toBe('https://gym.test/login');
+    expect(response.headers.get('location')).toBe('/login');
   });
 
   it('clears the cookies when there is no refresh token at all', async () => {
@@ -58,7 +66,7 @@ describe('session restore', () => {
 
     expect(session.clearTokens).toHaveBeenCalled();
     expect(refresh.refreshTokens).not.toHaveBeenCalled();
-    expect(response.headers.get('location')).toBe('https://gym.test/login');
+    expect(response.headers.get('location')).toBe('/login');
   });
 
   it('signs out rather than restoring twice in a row', async () => {
@@ -69,7 +77,7 @@ describe('session restore', () => {
 
     expect(refresh.refreshTokens).not.toHaveBeenCalled();
     expect(session.clearTokens).toHaveBeenCalled();
-    expect(response.headers.get('location')).toBe('https://gym.test/login');
+    expect(response.headers.get('location')).toBe('/login');
   });
 
   it('marks the restore so the next one is recognised as a loop', async () => {
@@ -86,6 +94,6 @@ describe('session restore', () => {
   ])('refuses to redirect to %s', async (_label, next) => {
     const response = await get(`https://gym.test/api/session/restore?next=${next}`);
 
-    expect(response.headers.get('location')).toBe('https://gym.test/');
+    expect(response.headers.get('location')).toBe('/');
   });
 });

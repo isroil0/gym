@@ -25,23 +25,35 @@ export async function GET(request: Request): Promise<NextResponse> {
   // A second restore within seconds means the refreshed session still cannot
   // load the page. This route exists to end redirect loops, so it must never
   // become one: sign out instead and let them in through the front door.
-  if (await wasJustRestored()) return await signOut(url.origin);
+  if (await wasJustRestored()) return await signOut();
 
   const { refreshToken } = await readTokens();
-  if (!refreshToken) return await signOut(url.origin);
+  if (!refreshToken) return await signOut();
 
   const outcome = await refreshTokens(refreshToken);
-  if (!outcome.ok) return await signOut(url.origin);
+  if (!outcome.ok) return await signOut();
 
   await writeTokens(outcome.tokens);
   await markRestored();
 
-  return NextResponse.redirect(new URL(safeNext(url.searchParams.get('next')) ?? '/', url.origin), 303);
+  return redirectTo(safeNext(url.searchParams.get('next')) ?? '/');
 }
 
-async function signOut(origin: string): Promise<NextResponse> {
+async function signOut(): Promise<NextResponse> {
   await clearTokens();
-  return NextResponse.redirect(new URL('/login', origin), 303);
+  return redirectTo('/login');
+}
+
+/**
+ * Redirects within the site, by path rather than absolute URL.
+ *
+ * Behind a proxy `request.url` carries the internal host the container
+ * listens on, not the one the reader typed, so building an absolute URL from
+ * it sends them to localhost. A relative Location is resolved by the browser
+ * against the address it actually asked for.
+ */
+function redirectTo(path: string): NextResponse {
+  return new NextResponse(null, { status: 303, headers: { location: path } });
 }
 
 /**
