@@ -77,7 +77,7 @@
     "CARD_NOT_ISSUED": "No membership card has been issued for this member",
     "UNKNOWN": "This member cannot be admitted",
     "DOOR_CODE_INVALID": "This is not the gym entry code",
-    "DOOR_CODE_EXPIRED": "This code has expired. Scan the one on the screen now"
+    "DOOR_CODE_RETIRED": "This entry code is no longer in use. Scan the current code at the door"
   },
   "warnings": {
     "expiringSoon": "This membership expires in {count, plural, one {# day} other {# days}}",
@@ -121,20 +121,27 @@
   },
   "door": {
     "title": "Entry code",
-    "subtitle": "Show this on a screen at the door for members to scan",
-    "rotates": "Changes every {seconds} seconds",
-    "refreshing": "A new code is on its way…",
+    "subtitle": "Print this and put it up at the entrance for members to scan",
+    "instruction": "Open the app and scan to record your entry",
+    "version": "Code version {version}",
+    "print": "Print",
     "fullscreen": "Show full screen",
     "exitFullscreen": "Exit full screen",
-    "instruction": "Open the app and scan to check in",
-    "staleWarning": "A photograph of this code stops working within a minute.",
-    "error": "The entry code could not be loaded"
+    "printHint": "This code does not change, so one printed copy lasts. Anyone who scans it still needs to sign in, so it cannot admit somebody else.",
+    "reissueTitle": "Replace this code",
+    "reissueBody": "If the code has been shared around and members are checking in without coming to the gym, issue a new one. The old code stops working at once.",
+    "reissue": "Issue a new code",
+    "reissueConfirmTitle": "Issue a new entry code?",
+    "reissueConfirmBody": "Every copy of the current code stops working immediately, including the sign at the door. You will need to print and put up the new one before members can check in.",
+    "reissueConfirm": "Issue new code",
+    "reissued": "New entry code issued (version {version}). Replace the sign at the door.",
+    "error": "Could not load the entry code"
   },
   "selfScan": {
     "title": "Check in",
-    "subtitle": "Scan the code on the screen at the gym entrance",
+    "subtitle": "Scan the entry code at the gym entrance",
     "button": "Scan to check in",
-    "scanning": "Point your camera at the screen at the door",
+    "scanning": "Point your camera at the code at the door",
     "success": "You are checked in",
     "again": "Scan again",
     "noCamera": "Your device has no camera. Ask the front desk to check you in.",

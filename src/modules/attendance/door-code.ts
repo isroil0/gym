@@ -1,112 +1,84 @@
 import { createHmac, timingSafeEqual } from 'node:crypto';
 
 /**
- * The code on the screen at the gym's door, which members scan to admit
+ * The code on the sign at the gym's door, which members scan to admit
  * themselves.
  *
  * This is the mirror image of a membership card: the card identifies a
- * person and is scanned by staff, whereas a door code identifies a *moment*
+ * person and is scanned by staff, whereas a door code identifies the *door*
  * and is scanned by the member. The member's own session says who they are,
- * so the code carries no identity at all.
+ * so the code carries no identity whatsoever — printing it on a wall where
+ * the whole street can read it leaks nothing about anybody.
  *
- * It encodes `DOOR1.<bucket>.<signature>`, where `bucket` is the current
- * time divided by a rotation period and the signature is an HMAC of it.
+ * It encodes `DOOR1.<version>.<signature>`, where the signature is an HMAC
+ * over the version. The code is fixed: the same string today and next year,
+ * so it can be printed once and stuck by the turnstile.
  *
- * Rotation is the whole point. A code that never changed would be
- * photographed once and passed around, and members would check in from home —
- * which would quietly corrupt attendance, visit allowances and every report
- * built on them. A short period means a stolen photograph is worthless within
- * a minute.
- *
- * The previous bucket is also accepted, so somebody who scans a fraction of a
- * second after the screen ticks over is not rejected for the gym's timing.
+ * The signature is what makes it the *gym's* code rather than any QR a
+ * member happens to generate. The version is the way back if a code is
+ * abused: staff bump it, every copy in circulation stops verifying, and a
+ * new sign goes up. Without it the only remedy would be rotating the signing
+ * secret, which would also invalidate every membership card in the building.
  */
 
 export const DOOR_PREFIX = 'DOOR1';
 const SEPARATOR = '.';
 const SIGNATURE_LENGTH = 32;
 
-/**
- * How long one code lasts. Thirty seconds is short enough that a photograph
- * is useless by the time it has been sent to anybody, and long enough that a
- * member fumbling with their camera is not punished for it.
- */
-export const DOOR_CODE_PERIOD_SECONDS = 30;
+/** The version a gym starts on, before staff have ever reissued the code. */
+export const INITIAL_DOOR_CODE_VERSION = 1;
 
-/** How many expired buckets still verify. One covers the tick-over race. */
-const GRACE_BUCKETS = 1;
-
-export function bucketFor(now: Date, periodSeconds = DOOR_CODE_PERIOD_SECONDS): number {
-  return Math.floor(now.getTime() / 1000 / periodSeconds);
-}
-
-export function signBucket(bucket: number, secret: string): string {
+export function signVersion(version: number, secret: string): string {
   return createHmac('sha256', secret)
-    .update(`${DOOR_PREFIX}${SEPARATOR}${bucket}`)
+    .update(`${DOOR_PREFIX}${SEPARATOR}${version}`)
     .digest('hex')
     .slice(0, SIGNATURE_LENGTH);
 }
 
-/** The exact string rendered as a QR on the door screen. */
-export function buildDoorCode(
-  now: Date,
-  secret: string,
-  periodSeconds = DOOR_CODE_PERIOD_SECONDS,
-): string {
-  const bucket = bucketFor(now, periodSeconds);
-  return [DOOR_PREFIX, String(bucket), signBucket(bucket, secret)].join(SEPARATOR);
+/** The exact string rendered as the QR on the door sign. */
+export function buildDoorCode(version: number, secret: string): string {
+  return [DOOR_PREFIX, String(version), signVersion(version, secret)].join(SEPARATOR);
 }
 
-/** Milliseconds until the code on screen stops being the current one. */
-export function millisecondsUntilRotation(
-  now: Date,
-  periodSeconds = DOOR_CODE_PERIOD_SECONDS,
-): number {
-  const period = periodSeconds * 1000;
-  return period - (now.getTime() % period);
-}
+export type DoorCodeFailure = 'MALFORMED' | 'WRONG_PREFIX' | 'BAD_SIGNATURE' | 'RETIRED';
 
-export type DoorCodeFailure = 'MALFORMED' | 'WRONG_PREFIX' | 'BAD_SIGNATURE' | 'EXPIRED';
-
-export type DoorCodeResult = { ok: true; bucket: number } | { ok: false; reason: DoorCodeFailure };
+export type DoorCodeResult = { ok: true; version: number } | { ok: false; reason: DoorCodeFailure };
 
 /**
- * Validates a scanned door code.
+ * Validates a scanned door code against the version currently in use.
  *
- * The signature is checked against the current bucket and the one before it,
- * both in constant time, so neither a forgery nor a stale code can be refined
- * from response timings. A code from a future bucket is rejected outright: a
- * member's clock has no say in whether they are standing at the door.
+ * The signature is checked before the version is compared, and in constant
+ * time, so a forgery and a retired-but-genuine code are indistinguishable
+ * from the outside. Any version other than the current one is refused —
+ * including a higher one, since a member's QR generator has no say in which
+ * code the gym has put on its wall.
  */
 export function verifyDoorCode(
   code: string,
   secret: string,
-  now: Date,
-  periodSeconds = DOOR_CODE_PERIOD_SECONDS,
+  currentVersion: number,
 ): DoorCodeResult {
   const parts = code.trim().split(SEPARATOR);
 
   if (parts.length !== 3) return { ok: false, reason: 'MALFORMED' };
 
-  const [prefix, rawBucket, signature] = parts;
+  const [prefix, rawVersion, signature] = parts;
 
   if (prefix !== DOOR_PREFIX) return { ok: false, reason: 'WRONG_PREFIX' };
-  if (!/^\d+$/.test(rawBucket)) return { ok: false, reason: 'MALFORMED' };
+  if (!/^\d+$/.test(rawVersion)) return { ok: false, reason: 'MALFORMED' };
 
-  const bucket = Number.parseInt(rawBucket, 10);
-  if (!Number.isSafeInteger(bucket) || bucket < 1) return { ok: false, reason: 'MALFORMED' };
+  const version = Number.parseInt(rawVersion, 10);
+  if (!Number.isSafeInteger(version) || version < INITIAL_DOOR_CODE_VERSION) {
+    return { ok: false, reason: 'MALFORMED' };
+  }
 
-  // Verify the signature before deciding anything about freshness, so a
-  // forged code and a stale one are indistinguishable from the outside.
-  if (!constantTimeEquals(signature, signBucket(bucket, secret))) {
+  if (!constantTimeEquals(signature, signVersion(version, secret))) {
     return { ok: false, reason: 'BAD_SIGNATURE' };
   }
 
-  const current = bucketFor(now, periodSeconds);
-  if (bucket > current) return { ok: false, reason: 'EXPIRED' };
-  if (current - bucket > GRACE_BUCKETS) return { ok: false, reason: 'EXPIRED' };
+  if (version !== currentVersion) return { ok: false, reason: 'RETIRED' };
 
-  return { ok: true, bucket };
+  return { ok: true, version };
 }
 
 function constantTimeEquals(a: string, b: string): boolean {

@@ -127,21 +127,30 @@ export class AttendanceController {
   @Get('door-code')
   @Roles(UserRole.ADMIN)
   @ApiOperation({
-    summary: 'The entry code currently shown at the door',
+    summary: "The gym's entry code",
     description:
-      'Render this as a QR on a screen at the entrance for members to scan. ' +
-      'It identifies the moment, not a person, and rotates every few seconds ' +
-      'so that a photograph of it is worthless by the time it is shared. ' +
-      'Fetch the next one at `expiresAt`.',
+      'Render this as a QR on a sign at the entrance for members to scan. It ' +
+      'identifies the door, not a person, and does not change — print it once ' +
+      'and leave it there. `version` says which generation is live, so staff ' +
+      'can check the sign on the wall is the current one.',
   })
   @ApiOkResponse({ type: DoorCodeDto })
-  doorCode(): DoorCodeDto {
-    const current = this.attendance.currentDoorCode();
-    return {
-      code: current.code,
-      periodSeconds: current.periodSeconds,
-      expiresAt: current.expiresAt.toISOString(),
-    };
+  async doorCode(): Promise<DoorCodeDto> {
+    return this.attendance.currentDoorCode();
+  }
+
+  @Post('door-code/reissue')
+  @Roles(UserRole.ADMIN)
+  @ApiOperation({
+    summary: 'Retire the entry code and issue a new one',
+    description:
+      'Use when a code has been shared around and members are checking in ' +
+      'without attending. Every copy of the old code stops working ' +
+      'immediately, so the sign at the door must be replaced with this one.',
+  })
+  @ApiCreatedResponse({ type: DoorCodeDto })
+  async reissueDoorCode(@CurrentUser() actor: AuthenticatedUser): Promise<DoorCodeDto> {
+    return this.attendance.reissueDoorCode(actor);
   }
 
   @Post('check-in/self')
@@ -149,9 +158,9 @@ export class AttendanceController {
   @ApiOperation({
     summary: 'Admit yourself by scanning the gym door code',
     description:
-      'The member scans the screen at the entrance. The code says only when ' +
-      'and where; who is taken from the caller, so a member can admit nobody ' +
-      'but themselves. The same membership rules apply as at the front desk.',
+      'The member scans the sign at the entrance. The code says only which ' +
+      'door; who is taken from the caller, so a member can admit nobody but ' +
+      'themselves. The same membership rules apply as at the front desk.',
   })
   @ApiCreatedResponse({ type: CheckInResultDto })
   @ApiUnprocessableEntityResponse({

@@ -16,12 +16,7 @@ import {
   type EntryDecision,
 } from './entry-eligibility';
 import { parseCardToken } from './membership-card-token';
-import {
-  DOOR_CODE_PERIOD_SECONDS,
-  buildDoorCode,
-  millisecondsUntilRotation,
-  verifyDoorCode,
-} from './door-code';
+import { INITIAL_DOOR_CODE_VERSION, buildDoorCode, verifyDoorCode } from './door-code';
 import type { AuthenticatedUser } from '../auth/types/authenticated-user';
 import type { AttendanceWithRelations, QueryAttendanceDto } from './dto/attendance.dto';
 
@@ -43,6 +38,9 @@ export interface CheckInOutcome {
 @Injectable()
 export class AttendanceService {
   private readonly logger = new Logger(AttendanceService.name);
+
+  /** Where the live door-code generation is kept. */
+  private static readonly DOOR_VERSION_KEY = 'gym.doorCodeVersion';
 
   constructor(
     private readonly prisma: PrismaService,
@@ -104,27 +102,68 @@ export class AttendanceService {
   }
 
   /**
-   * The code currently on the door screen, plus when it stops being current,
-   * so the screen can refresh itself without polling.
+   * The code on the gym's door sign.
+   *
+   * Fixed, so it can be printed once and left there. `version` is only for
+   * staff: it tells them which generation of the sign is live, so they can
+   * tell whether the paper by the turnstile is the current one.
    */
-  currentDoorCode(now: Date = new Date()): {
-    code: string;
-    periodSeconds: number;
-    expiresAt: Date;
-  } {
-    return {
-      code: buildDoorCode(now, this.config.qrSecret),
-      periodSeconds: DOOR_CODE_PERIOD_SECONDS,
-      expiresAt: new Date(now.getTime() + millisecondsUntilRotation(now)),
-    };
+  async currentDoorCode(): Promise<{ code: string; version: number }> {
+    const version = await this.doorCodeVersion();
+    return { code: buildDoorCode(version, this.config.qrSecret), version };
   }
 
   /**
-   * A member admitting themselves by scanning the gym's door code.
+   * Retires the current door code and issues the next one.
+   *
+   * For when a code has been shared around and members are checking in from
+   * the car park. Every copy of the old code stops verifying the moment this
+   * returns, so whoever does it has to put up the new sign.
+   */
+  async reissueDoorCode(actor: AuthenticatedUser): Promise<{ code: string; version: number }> {
+    const version = (await this.doorCodeVersion()) + 1;
+
+    await this.prisma.appSetting.upsert({
+      where: { key: AttendanceService.DOOR_VERSION_KEY },
+      create: {
+        key: AttendanceService.DOOR_VERSION_KEY,
+        value: String(version),
+        description:
+          'Generation of the door entry code; raising it retires every copy in circulation',
+      },
+      update: { value: String(version) },
+    });
+
+    this.logger.warn(`Door code reissued as version ${version} by ${actor.id}`);
+    return { code: buildDoorCode(version, this.config.qrSecret), version };
+  }
+
+  /**
+   * The door code generation currently honoured.
+   *
+   * Absent or unreadable means a gym that has never reissued, which is the
+   * overwhelmingly common case; it is deliberately not an error, because
+   * refusing every member at the door over a missing settings row would be a
+   * far worse failure than quietly starting at version one.
+   */
+  private async doorCodeVersion(): Promise<number> {
+    const row = await this.prisma.appSetting.findUnique({
+      where: { key: AttendanceService.DOOR_VERSION_KEY },
+      select: { value: true },
+    });
+
+    const parsed = Number.parseInt(row?.value ?? '', 10);
+    return Number.isSafeInteger(parsed) && parsed >= INITIAL_DOOR_CODE_VERSION
+      ? parsed
+      : INITIAL_DOOR_CODE_VERSION;
+  }
+
+  /**
+   * A member admitting themselves by scanning the gym's door sign.
    *
    * The mirror image of `checkInByCard`: there, staff scan a code that says
-   * who the member is; here, the member scans a code that says only *when*
-   * and *where*, and their own session says who they are. That asymmetry is
+   * who the member is; here, the member scans a code that says only *which
+   * door*, and their own session says who they are. That asymmetry is
    * deliberate — a member cannot admit anybody but themselves, whatever they
    * scan.
    *
@@ -132,13 +171,13 @@ export class AttendanceService {
    * at the door are identical however somebody arrives at it.
    */
   async checkInBySelfScan(code: string, userId: string): Promise<CheckInOutcome> {
-    const verified = verifyDoorCode(code, this.config.qrSecret, new Date());
+    const verified = verifyDoorCode(code, this.config.qrSecret, await this.doorCodeVersion());
 
     if (!verified.ok) {
       this.logger.warn(`Rejected door-code scan: ${verified.reason}`);
       throw AttendanceService.denied(
-        verified.reason === 'EXPIRED'
-          ? EntryDenialReason.DOOR_CODE_EXPIRED
+        verified.reason === 'RETIRED'
+          ? EntryDenialReason.DOOR_CODE_RETIRED
           : EntryDenialReason.DOOR_CODE_INVALID,
       );
     }

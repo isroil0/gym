@@ -1241,12 +1241,32 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * The entry code currently shown at the door
-         * @description Render this as a QR on a screen at the entrance for members to scan. It identifies the moment, not a person, and rotates every few seconds so that a photograph of it is worthless by the time it is shared. Fetch the next one at `expiresAt`.
+         * The gym's entry code
+         * @description Render this as a QR on a sign at the entrance for members to scan. It identifies the door, not a person, and does not change — print it once and leave it there. `version` says which generation is live, so staff can check the sign on the wall is the current one.
          */
         get: operations["AttendanceController_doorCode_v1"];
         put?: never;
         post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/attendance/door-code/reissue": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Retire the entry code and issue a new one
+         * @description Use when a code has been shared around and members are checking in without attending. Every copy of the old code stops working immediately, so the sign at the door must be replaced with this one.
+         */
+        post: operations["AttendanceController_reissueDoorCode_v1"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1264,7 +1284,7 @@ export interface paths {
         put?: never;
         /**
          * Admit yourself by scanning the gym door code
-         * @description The member scans the screen at the entrance. The code says only when and where; who is taken from the caller, so a member can admit nobody but themselves. The same membership rules apply as at the front desk.
+         * @description The member scans the sign at the entrance. The code says only which door; who is taken from the caller, so a member can admit nobody but themselves. The same membership rules apply as at the front desk.
          */
         post: operations["AttendanceController_checkInSelf_v1"];
         delete?: never;
@@ -3551,22 +3571,20 @@ export interface components {
         };
         DoorCodeDto: {
             /**
-             * @description Encode this string into the QR image shown at the door.
-             * @example DOOR1.59697360.3f2a1c8e9b7d4a6f0e5c2b8d1a4f7c3e
+             * @description Encode this string into the QR shown at the door.
+             * @example DOOR1.1.3f2a1c8e9b7d4a6f0e5c2b8d1a4f7c3e
              */
             code: string;
             /**
-             * @description How long each code lasts, in seconds.
-             * @example 30
+             * @description Which generation of the entry code this is. Rises by one each time staff reissue it, which retires every copy of the previous code.
+             * @example 1
              */
-            periodSeconds: number;
-            /** @description When this code stops being the current one. The screen should fetch the next code at this moment. */
-            expiresAt: string;
+            version: number;
         };
         SelfCheckInDto: {
             /**
              * @description The exact string decoded from the QR shown at the gym door.
-             * @example DOOR1.59697360.3f2a1c8e9b7d4a6f0e5c2b8d1a4f7c3e
+             * @example DOOR1.1.3f2a1c8e9b7d4a6f0e5c2b8d1a4f7c3e
              */
             code: string;
         };
@@ -7606,6 +7624,34 @@ export interface operations {
         requestBody?: never;
         responses: {
             200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DoorCodeDto"];
+                };
+            };
+            /** @description Role not permitted */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponse"];
+                };
+            };
+        };
+    };
+    AttendanceController_reissueDoorCode_v1: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            201: {
                 headers: {
                     [name: string]: unknown;
                 };

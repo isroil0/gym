@@ -1,86 +1,141 @@
-import { describe, expect, it, beforeEach, vi, afterEach } from 'vitest';
+import { describe, expect, it, beforeEach, vi } from 'vitest';
 import { screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import '@/test/next-mocks';
 import { apiMock } from '@/test/api-mock';
 import { renderWithProviders } from '@/test/render';
 import { DoorCodeScreen } from '../DoorCodeScreen';
 
-const CODE = 'DOOR1.59697422.32dfb3c1a9e84f7b2d6c0a5e8f1b4d7c';
+const CODE = 'DOOR1.1.32dfb3c1a9e84f7b2d6c0a5e8f1b4d7c';
+const REISSUED = 'DOOR1.2.77aab3c1a9e84f7b2d6c0a5e8f1b4d7c';
 
-function doorCode(secondsLeft = 30) {
-  return {
-    code: CODE,
-    periodSeconds: 30,
-    expiresAt: new Date(Date.now() + secondsLeft * 1000).toISOString(),
-  };
+/** The QR is the one svg whose viewBox is a square module grid. */
+function findQr(container: HTMLElement): SVGElement | undefined {
+  return Array.from(container.querySelectorAll('svg')).find((svg) => {
+    const box = svg.getAttribute('viewBox')?.split(' ') ?? [];
+    return box.length === 4 && box[2] === box[3] && Number(box[2]) > 24;
+  });
 }
 
 describe('DoorCodeScreen', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    apiMock.get.mockResolvedValue(doorCode());
+    apiMock.get.mockResolvedValue({ code: CODE, version: 1 });
   });
-  afterEach(() => vi.useRealTimers());
 
   it('renders the code as a scannable QR', async () => {
     const { container } = await renderWithProviders(<DoorCodeScreen />);
-    await screen.findByText('Open the app and scan to check in');
+    await screen.findByText('Open the app and scan to record your entry');
 
-    // The QR is the one svg whose viewBox is a square module grid; the others
-    // on the page are 24x24 icons.
-    const qr = Array.from(container.querySelectorAll('svg')).find((svg) => {
-      const box = svg.getAttribute('viewBox')?.split(' ') ?? [];
-      return box.length === 4 && box[2] === box[3] && Number(box[2]) > 24;
-    });
+    const qr = findQr(container);
     expect(qr).toBeDefined();
     expect(qr!.querySelectorAll('path').length).toBeGreaterThan(0);
   });
 
-  it('never caches the code — a stale one is a refused member', async () => {
+  it('asks the backend for the code', async () => {
     await renderWithProviders(<DoorCodeScreen />);
     await waitFor(() => expect(apiMock.get).toHaveBeenCalledWith('attendance/door-code'));
   });
 
-  it('tells the room how often it changes', async () => {
+  it('shows which version is live, so staff can check the printed sign', async () => {
     await renderWithProviders(<DoorCodeScreen />);
-    expect(await screen.findByText(/Changes every 30 seconds/)).toBeInTheDocument();
+    expect(await screen.findByText('Code version 1')).toBeInTheDocument();
   });
 
-  it('warns that a photograph of it stops working', async () => {
-    // This is the whole reason the design rotates; it should be said on screen.
+  it('says the code does not change, so one printout lasts', async () => {
     await renderWithProviders(<DoorCodeScreen />);
-    expect(
-      await screen.findByText('A photograph of this code stops working within a minute.'),
-    ).toBeInTheDocument();
+    expect(await screen.findByText(/does not change/)).toBeInTheDocument();
   });
 
-  it('fetches the next code once the current one expires', async () => {
-    apiMock.get.mockResolvedValue(doorCode(0.2));
+  it('offers printing and full screen', async () => {
+    await renderWithProviders(<DoorCodeScreen />);
+    expect(await screen.findByRole('button', { name: 'Print' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Show full screen' })).toBeInTheDocument();
+  });
+
+  it('shows the code large with no chrome in full screen', async () => {
+    const { container } = await renderWithProviders(<DoorCodeScreen />);
+    await userEvent.click(await screen.findByRole('button', { name: 'Show full screen' }));
+
+    expect(findQr(container)).toBeDefined();
+    expect(screen.getByRole('button', { name: 'Exit full screen' })).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Print' })).not.toBeInTheDocument();
+  });
+
+  it('prints when asked', async () => {
+    const print = vi.spyOn(window, 'print').mockImplementation(() => undefined);
     await renderWithProviders(<DoorCodeScreen />);
 
-    await waitFor(() => expect(apiMock.get).toHaveBeenCalledTimes(1));
-    // The screen must refresh itself; nobody is standing there to press a button.
-    await waitFor(() => expect(apiMock.get.mock.calls.length).toBeGreaterThan(1), { timeout: 3000 });
+    await userEvent.click(await screen.findByRole('button', { name: 'Print' }));
+
+    expect(print).toHaveBeenCalled();
+    print.mockRestore();
   });
 
-  it('offers a retry rather than a blank screen when it cannot load', async () => {
-    apiMock.get.mockRejectedValue(new Error('boom'));
+  it('does not reissue without confirmation', async () => {
     await renderWithProviders(<DoorCodeScreen />);
-    expect(await screen.findByText('The entry code could not be loaded')).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: 'Try again' })).toBeInTheDocument();
+
+    await userEvent.click(await screen.findByRole('button', { name: 'Issue a new code' }));
+
+    // The dialog is open; nothing has been sent yet.
+    expect(await screen.findByText('Issue a new entry code?')).toBeInTheDocument();
+    expect(apiMock.post).not.toHaveBeenCalled();
   });
 
-  it('renders in Russian', async () => {
-    await renderWithProviders(<DoorCodeScreen />, { locale: 'ru' });
-    expect(
-      await screen.findByText('Откройте приложение и отсканируйте, чтобы отметить приход'),
-    ).toBeInTheDocument();
+  it('warns that the sign at the door will stop working', async () => {
+    await renderWithProviders(<DoorCodeScreen />);
+    await userEvent.click(await screen.findByRole('button', { name: 'Issue a new code' }));
+
+    expect(await screen.findByText(/stops working immediately/)).toBeInTheDocument();
   });
 
-  it('renders in Uzbek', async () => {
-    await renderWithProviders(<DoorCodeScreen />, { locale: 'uz' });
-    expect(
-      await screen.findByText("Ilovani oching va kirishni qayd etish uchun skanerlang"),
-    ).toBeInTheDocument();
+  it('abandons the reissue on cancel', async () => {
+    await renderWithProviders(<DoorCodeScreen />);
+    await userEvent.click(await screen.findByRole('button', { name: 'Issue a new code' }));
+    await userEvent.click(await screen.findByRole('button', { name: 'Cancel' }));
+
+    expect(apiMock.post).not.toHaveBeenCalled();
+  });
+
+  it('shows the new code once confirmed, without refetching', async () => {
+    apiMock.post.mockResolvedValue({ code: REISSUED, version: 2 });
+    await renderWithProviders(<DoorCodeScreen />);
+
+    await userEvent.click(await screen.findByRole('button', { name: 'Issue a new code' }));
+    await userEvent.click(await screen.findByRole('button', { name: 'Issue new code' }));
+
+    await waitFor(() =>
+      expect(apiMock.post).toHaveBeenCalledWith('attendance/door-code/reissue', {}),
+    );
+    expect(await screen.findByText('Code version 2')).toBeInTheDocument();
+  });
+
+  it('tells staff to replace the sign after reissuing', async () => {
+    apiMock.post.mockResolvedValue({ code: REISSUED, version: 2 });
+    await renderWithProviders(<DoorCodeScreen />);
+
+    await userEvent.click(await screen.findByRole('button', { name: 'Issue a new code' }));
+    await userEvent.click(await screen.findByRole('button', { name: 'Issue new code' }));
+
+    expect(await screen.findByText(/Replace the sign at the door/)).toBeInTheDocument();
+  });
+
+  it('keeps the old code on screen when reissuing fails', async () => {
+    apiMock.post.mockRejectedValue(new Error('network'));
+    await renderWithProviders(<DoorCodeScreen />);
+
+    await userEvent.click(await screen.findByRole('button', { name: 'Issue a new code' }));
+    await userEvent.click(await screen.findByRole('button', { name: 'Issue new code' }));
+
+    // A failed reissue must not leave staff believing the sign is stale.
+    await waitFor(() => expect(apiMock.post).toHaveBeenCalled());
+    expect(await screen.findByText('Code version 1')).toBeInTheDocument();
+  });
+
+  it('offers a retry when the code cannot be loaded', async () => {
+    apiMock.get.mockRejectedValue(new Error('offline'));
+    await renderWithProviders(<DoorCodeScreen />);
+
+    expect(await screen.findByText('Could not load the entry code')).toBeInTheDocument();
   });
 });

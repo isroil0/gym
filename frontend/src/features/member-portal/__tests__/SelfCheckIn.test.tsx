@@ -41,9 +41,9 @@ function denial(reason: string) {
 describe('SelfCheckIn', () => {
   beforeEach(() => vi.clearAllMocks());
 
-  it('asks the member to scan the screen at the door', async () => {
+  it('asks the member to scan the code at the door', async () => {
     await renderWithProviders(<SelfCheckIn />, { user: member });
-    expect(screen.getByText('Point your camera at the screen at the door')).toBeInTheDocument();
+    expect(screen.getByText('Point your camera at the code at the door')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /Scan to check in/ })).toBeInTheDocument();
   });
 
@@ -75,16 +75,16 @@ describe('SelfCheckIn', () => {
     expect(panel).toHaveTextContent('Aziz Tursunov');
   });
 
-  it('explains an expired code as something to fix, not a failure', async () => {
+  it('explains a retired code as something to fix, not a failure', async () => {
     const user = userEvent.setup();
-    apiMock.post.mockRejectedValue(denial('DOOR_CODE_EXPIRED'));
+    apiMock.post.mockRejectedValue(denial('DOOR_CODE_RETIRED'));
     await renderWithProviders(<SelfCheckIn />, { user: member });
 
     await user.click(screen.getByRole('button', { name: /Scan to check in/ }));
     await user.click(await screen.findByText('fake-scan'));
 
     expect(
-      await screen.findByText('This code has expired. Scan the one on the screen now'),
+      await screen.findByText('This entry code is no longer in use. Scan the current code at the door'),
     ).toBeInTheDocument();
   });
 

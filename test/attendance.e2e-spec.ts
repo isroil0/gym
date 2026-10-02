@@ -524,4 +524,159 @@ describe('Attendance (e2e)', () => {
       await request(server).post('/api/v1/attendance/check-in').send({}).expect(401);
     });
   });
+
+  // -------------------------------------------------------------------------
+  // The door code: a fixed sign at the entrance that members scan themselves
+  // -------------------------------------------------------------------------
+
+  describe('door code', () => {
+    const fetchDoorCode = () =>
+      request(server)
+        .get('/api/v1/attendance/door-code')
+        .set(...asAdmin());
+
+    const reissue = () =>
+      request(server)
+        .post('/api/v1/attendance/door-code/reissue')
+        .set(...asAdmin());
+
+    const selfCheckIn = (code: string, token = member.accessToken) =>
+      request(server)
+        .post('/api/v1/attendance/check-in/self')
+        .set(...bearer(token))
+        .send({ code });
+
+    it('hands staff a code and a version', async () => {
+      const response = await fetchDoorCode().expect(200);
+
+      expect(response.body).toEqual({ code: expect.any(String), version: 1 });
+      expect(response.body.code).toMatch(/^DOOR1\.1\.[0-9a-f]{32}$/);
+    });
+
+    it('hands out the same code every time, so the sign stays valid', async () => {
+      const first = await fetchDoorCode().expect(200);
+      const second = await fetchDoorCode().expect(200);
+
+      expect(second.body.code).toBe(first.body.code);
+    });
+
+    it('carries no member identity in the code', async () => {
+      const { body } = await fetchDoorCode().expect(200);
+
+      expect(body.code).not.toContain(member.memberId);
+      expect(body.code).not.toContain(member.user.email);
+    });
+
+    it('admits a member who scans it', async () => {
+      const { body: door } = await fetchDoorCode().expect(200);
+
+      const response = await selfCheckIn(door.code).expect(201);
+
+      expect(response.body).toMatchObject({
+        admitted: true,
+        attendance: { method: CheckInMethod.QR },
+      });
+    });
+
+    it('records the visit with no acting staff member', async () => {
+      const { body: door } = await fetchDoorCode().expect(200);
+      await selfCheckIn(door.code).expect(201);
+
+      const attendance = await ctx.prisma.attendance.findFirst({
+        where: { memberId: member.memberId },
+      });
+
+      // Nobody at the desk did this, so there is no actor to attribute.
+      expect(attendance?.recordedByUserId).toBeNull();
+      expect(attendance?.method).toBe(CheckInMethod.QR);
+    });
+
+    it('refuses a second scan while the member is already inside', async () => {
+      const { body: door } = await fetchDoorCode().expect(200);
+      await selfCheckIn(door.code).expect(201);
+
+      const response = await selfCheckIn(door.code).expect(422);
+
+      expect(denialReason(response.body)).toBe('ALREADY_INSIDE');
+    });
+
+    it('refuses a code from before staff reissued it', async () => {
+      const { body: old } = await fetchDoorCode().expect(200);
+      await reissue().expect(201);
+
+      const response = await selfCheckIn(old.code).expect(422);
+
+      expect(denialReason(response.body)).toBe('DOOR_CODE_RETIRED');
+    });
+
+    it('admits a member scanning the reissued code', async () => {
+      const { body: reissued } = await reissue().expect(201);
+
+      expect(reissued.version).toBe(2);
+      await selfCheckIn(reissued.code).expect(201);
+    });
+
+    it('refuses a membership card scanned at the door', async () => {
+      const card = await request(server)
+        .get(`/api/v1/membership-cards/members/${member.memberId}`)
+        .set(...asAdmin())
+        .expect(200);
+
+      const response = await selfCheckIn(card.body.token as string).expect(422);
+
+      expect(denialReason(response.body)).toBe('DOOR_CODE_INVALID');
+    });
+
+    it('refuses a forged code', async () => {
+      const response = await selfCheckIn(`DOOR1.1.${'f'.repeat(32)}`).expect(422);
+
+      expect(denialReason(response.body)).toBe('DOOR_CODE_INVALID');
+    });
+
+    it('rejects an empty code as a validation error, not a denial', async () => {
+      await selfCheckIn('').expect(400);
+    });
+
+    it('refuses a member without an active membership', async () => {
+      const lapsed = await seedMemberProfile(ctx, server, { email: 'lapsed@gym.test' });
+      const { body: door } = await fetchDoorCode().expect(200);
+
+      const response = await selfCheckIn(door.code, lapsed.accessToken).expect(422);
+
+      expect(denialReason(response.body)).toBe('NO_MEMBERSHIP');
+    });
+
+    it('does not let a member read the door code', async () => {
+      await request(server)
+        .get('/api/v1/attendance/door-code')
+        .set(...bearer(member.accessToken))
+        .expect(403);
+    });
+
+    it('does not let a member reissue the door code', async () => {
+      await request(server)
+        .post('/api/v1/attendance/door-code/reissue')
+        .set(...bearer(member.accessToken))
+        .expect(403);
+    });
+
+    it('does not let staff check in as somebody else through the self route', async () => {
+      const { body: door } = await fetchDoorCode().expect(200);
+
+      // Admins have no member profile; the route is for members only.
+      await request(server)
+        .post('/api/v1/attendance/check-in/self')
+        .set(...asAdmin())
+        .send({ code: door.code })
+        .expect(403);
+    });
+
+    it('requires authentication', async () => {
+      await request(server).get('/api/v1/attendance/door-code').expect(401);
+      await request(server)
+        .post('/api/v1/attendance/check-in/self')
+        .send({ code: 'DOOR1.1.x' })
+        .expect(401);
+    });
+  });
 });

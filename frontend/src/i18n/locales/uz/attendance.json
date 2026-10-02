@@ -77,7 +77,7 @@
     "CARD_NOT_ISSUED": "Bu a'zoga abonement kartasi berilmagan",
     "UNKNOWN": "Bu a'zoni kiritib bo'lmaydi",
     "DOOR_CODE_INVALID": "Bu sportzalning kirish kodi emas",
-    "DOOR_CODE_EXPIRED": "Bu kod eskirgan. Ekrandagi hozirgi kodni skanerlang"
+    "DOOR_CODE_RETIRED": "Bu kirish kodi endi ishlatilmaydi. Eshik oldidagi hozirgi kodni skanerlang"
   },
   "warnings": {
     "expiringSoon": "Bu abonement {count, plural, other {# kundan}} keyin tugaydi",
@@ -121,20 +121,27 @@
   },
   "door": {
     "title": "Kirish kodi",
-    "subtitle": "A'zolar skanerlashi uchun buni eshik oldidagi ekranda ko'rsating",
-    "rotates": "Har {seconds} soniyada o'zgaradi",
-    "refreshing": "Yangi kod tayyorlanmoqda…",
+    "subtitle": "Buni chop etib, a'zolar skanerlashi uchun kirish joyiga joylang",
+    "instruction": "Ilovani oching va kirishni qayd etish uchun skanerlang",
+    "version": "Kod versiyasi {version}",
+    "print": "Chop etish",
     "fullscreen": "To'liq ekranda ko'rsatish",
     "exitFullscreen": "To'liq ekrandan chiqish",
-    "instruction": "Ilovani oching va kirishni qayd etish uchun skanerlang",
-    "staleWarning": "Bu kodning surati bir daqiqa ichida ishlamay qoladi.",
+    "printHint": "Bu kod o'zgarmaydi, shuning uchun bir marta chop etilgan nusxa yetarli. Uni skanerlagan har kim tizimga kirgan bo'lishi shart, shuning uchun u boshqa odamni kirita olmaydi.",
+    "reissueTitle": "Bu kodni almashtirish",
+    "reissueBody": "Agar kod tarqalib ketgan bo'lsa va a'zolar sportzalga kelmasdan kirishni qayd etayotgan bo'lsa, yangi kod chiqaring. Eski kod darhol ishlamay qoladi.",
+    "reissue": "Yangi kod chiqarish",
+    "reissueConfirmTitle": "Yangi kirish kodi chiqarilsinmi?",
+    "reissueConfirmBody": "Hozirgi kodning barcha nusxalari, eshik oldidagi ko'rsatkich ham, darhol ishlamay qoladi. A'zolar kirishni qayd eta olishi uchun yangisini chop etib joylashingiz kerak bo'ladi.",
+    "reissueConfirm": "Yangi kod chiqarish",
+    "reissued": "Yangi kirish kodi chiqarildi ({version}-versiya). Eshik oldidagi ko'rsatkichni almashtiring.",
     "error": "Kirish kodini yuklab bo'lmadi"
   },
   "selfScan": {
     "title": "Kirishni qayd etish",
-    "subtitle": "Sportzal kiraverishidagi ekrandagi kodni skanerlang",
+    "subtitle": "Sportzal kirish joyidagi kirish kodini skanerlang",
     "button": "Skanerlab kirish",
-    "scanning": "Kamerani eshik oldidagi ekranga tuting",
+    "scanning": "Kamerani eshik oldidagi kodga qaratib turing",
     "success": "Kirishingiz qayd etildi",
     "again": "Qayta skanerlash",
     "noCamera": "Qurilmangizda kamera yo'q. Qabulxonadan qayd etishni so'rang.",

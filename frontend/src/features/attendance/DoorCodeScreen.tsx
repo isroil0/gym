@@ -1,75 +1,72 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useTranslations } from 'next-intl';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
-import LinearProgress from '@mui/material/LinearProgress';
+import Chip from '@mui/material/Chip';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import Alert from '@mui/material/Alert';
 import FullscreenIcon from '@mui/icons-material/FullscreenRounded';
 import FullscreenExitIcon from '@mui/icons-material/FullscreenExitRounded';
+import PrintIcon from '@mui/icons-material/PrintRounded';
+import AutorenewIcon from '@mui/icons-material/AutorenewRounded';
 import QRCode from 'react-qr-code';
 import { api } from '@/lib/api/client';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { ErrorState } from '@/components/feedback/EmptyState';
 import { DetailSkeleton } from '@/components/feedback/Skeletons';
+import { useToast } from '@/providers/ToastProvider';
 import type { Schemas } from '@/lib/api/types';
 
 type DoorCode = Schemas['DoorCodeDto'];
 
+const DOOR_CODE_KEY = ['attendance', 'door-code'] as const;
+
 /**
- * The code the gym puts on a screen at its entrance.
+ * The code the gym puts on a sign at its entrance.
  *
- * It refreshes itself a moment before the server stops honouring the current
- * one, so the screen is never showing something that would be refused. The
- * countdown is cosmetic — the server decides what is current — but it tells
- * anybody watching that the code is alive, which is what stops members
- * photographing it and assuming it will keep working.
+ * It is the same code every time it is loaded, which is what makes printing
+ * it worthwhile: put it up by the turnstile once and members scan it from
+ * then on. Nothing on this screen expires, so there is no countdown and
+ * nothing to refresh.
+ *
+ * Reissuing is behind a confirmation because it is the one genuinely
+ * destructive thing here: the moment it succeeds, the sign on the wall is
+ * wrong and every member who scans it is turned away.
  */
 export function DoorCodeScreen() {
   const t = useTranslations('attendance.door');
   const tc = useTranslations('common');
   const te = useTranslations('errors');
+  const toast = useToast();
+  const queryClient = useQueryClient();
   const [fullscreen, setFullscreen] = useState(false);
-  const [remaining, setRemaining] = useState(0);
+  const [confirmReissue, setConfirmReissue] = useState(false);
 
   const { data, isPending, isError, refetch } = useQuery({
-    queryKey: ['attendance', 'door-code'],
+    queryKey: DOOR_CODE_KEY,
     queryFn: () => api.get<DoorCode>('attendance/door-code'),
-    // Never serve this from cache: a stale code is a refused member.
-    gcTime: 0,
-    staleTime: 0,
   });
 
-  // Refetch just before the server rotates, and keep a visible countdown.
-  useEffect(() => {
-    if (!data) return;
-    const expiresAt = Date.parse(data.expiresAt);
-
-    const tick = () => {
-      const left = expiresAt - Date.now();
-      setRemaining(Math.max(0, left));
-      if (left <= 0) void refetch();
-    };
-
-    tick();
-    const timer = setInterval(tick, 250);
-    return () => clearInterval(timer);
-  }, [data, refetch]);
-
-  useEffect(() => {
-    if (!fullscreen) return;
-    const onKey = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') setFullscreen(false);
-    };
-    window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
-  }, [fullscreen]);
+  const reissue = useMutation({
+    mutationFn: () => api.post<DoorCode>('attendance/door-code/reissue', {}),
+    onSuccess: (next) => {
+      queryClient.setQueryData(DOOR_CODE_KEY, next);
+      setConfirmReissue(false);
+      toast.success(t('reissued', { version: next.version }));
+    },
+    onError: () => toast.error(te('generic')),
+  });
 
   if (isPending) return <DetailSkeleton />;
   if (isError || !data) {
@@ -83,12 +80,9 @@ export function DoorCodeScreen() {
     );
   }
 
-  const total = data.periodSeconds * 1000;
-  const progress = Math.min(100, Math.max(0, (remaining / total) * 100));
-  const seconds = Math.ceil(remaining / 1000);
-
   const code = (
     <Box
+      
       sx={{
         // White and quiet-zoned whatever the room's theme: this is a scanner
         // target seen from a metre away, not decoration.
@@ -106,22 +100,6 @@ export function DoorCodeScreen() {
         style={{ width: '100%', height: 'auto', maxWidth: fullscreen ? 560 : 340 }}
       />
     </Box>
-  );
-
-  const countdown = (
-    <Stack spacing={1} sx={{ width: '100%', maxWidth: fullscreen ? 560 : 340 }}>
-      <LinearProgress
-        variant="determinate"
-        value={progress}
-        aria-label={t('rotates', { seconds: data.periodSeconds })}
-        sx={{ height: 6, borderRadius: 3 }}
-      />
-      <Typography variant="caption" color="text.secondary" align="center">
-        {remaining <= 0
-          ? t('refreshing')
-          : `${t('rotates', { seconds: data.periodSeconds })} · ${seconds}s`}
-      </Typography>
-    </Stack>
   );
 
   if (fullscreen) {
@@ -144,7 +122,6 @@ export function DoorCodeScreen() {
           {t('instruction')}
         </Typography>
         {code}
-        {countdown}
         <Button onClick={() => setFullscreen(false)} startIcon={<FullscreenExitIcon />} size="large">
           {t('exitFullscreen')}
         </Button>
@@ -155,23 +132,88 @@ export function DoorCodeScreen() {
   return (
     <>
       <PageHeader title={t('title')} subtitle={t('subtitle')} />
+
       <Stack spacing={2.5} sx={{ maxWidth: 460, mx: 'auto', width: '100%' }}>
-        <Card>
-          <CardContent sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
+        <Card className="door-code-sheet">
+          <CardContent
+            sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}
+          >
             <Typography variant="h4" align="center">
               {t('instruction')}
             </Typography>
             {code}
-            {countdown}
-            <Button onClick={() => setFullscreen(true)} variant="contained" startIcon={<FullscreenIcon />} fullWidth size="large">
-              {t('fullscreen')}
-            </Button>
+            <Chip
+              size="small"
+              variant="outlined"
+              label={t('version', { version: data.version })}
+              className="no-print"
+            />
+            <Stack direction="row" spacing={1} sx={{ width: '100%' }} className="no-print">
+              <Button
+                onClick={() => window.print()}
+                variant="contained"
+                startIcon={<PrintIcon />}
+                fullWidth
+                size="large"
+              >
+                {t('print')}
+              </Button>
+              <Button
+                onClick={() => setFullscreen(true)}
+                variant="outlined"
+                startIcon={<FullscreenIcon />}
+                fullWidth
+                size="large"
+              >
+                {t('fullscreen')}
+              </Button>
+            </Stack>
           </CardContent>
         </Card>
-        <Alert severity="info" variant="outlined">
-          {t('staleWarning')}
+
+        <Alert severity="info" variant="outlined" className="no-print">
+          {t('printHint')}
         </Alert>
+
+        <Card variant="outlined" className="no-print">
+          <CardContent>
+            <Stack spacing={1.5}>
+              <Typography variant="subtitle2">{t('reissueTitle')}</Typography>
+              <Typography variant="body2" color="text.secondary">
+                {t('reissueBody')}
+              </Typography>
+              <Button
+                onClick={() => setConfirmReissue(true)}
+                color="warning"
+                startIcon={<AutorenewIcon />}
+                sx={{ alignSelf: 'flex-start' }}
+              >
+                {t('reissue')}
+              </Button>
+            </Stack>
+          </CardContent>
+        </Card>
       </Stack>
+
+      <Dialog open={confirmReissue} onClose={() => setConfirmReissue(false)}>
+        <DialogTitle>{t('reissueConfirmTitle')}</DialogTitle>
+        <DialogContent>
+          <DialogContentText>{t('reissueConfirmBody')}</DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setConfirmReissue(false)} disabled={reissue.isPending}>
+            {tc('actions.cancel')}
+          </Button>
+          <Button
+            onClick={() => reissue.mutate()}
+            color="warning"
+            variant="contained"
+            loading={reissue.isPending}
+          >
+            {t('reissueConfirm')}
+          </Button>
+        </DialogActions>
+      </Dialog>
     </>
   );
 }
