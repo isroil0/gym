@@ -4,9 +4,9 @@
   "private": true,
   "description": "Gym CRM web client",
   "scripts": {
-    "dev": "next dev -p 3001",
+    "dev": "next dev -p ${PORT:-3001}",
     "build": "next build",
-    "start": "next start -p 3001",
+    "start": "next start -p ${PORT:-3001}",
     "lint": "eslint . --max-warnings 0",
     "lint:fix": "eslint . --fix",
     "typecheck": "tsc --noEmit",
