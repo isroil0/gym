@@ -6,9 +6,11 @@ import {
   isValidTimeZone,
   monthBounds,
   monthRange,
+  parseLocalDate,
   shiftLocalDate,
   zonedDateString,
   zonedPartsOf,
+  zonedTimeToUtc,
   type InstantRange,
 } from './zoned-time';
 
@@ -113,6 +115,17 @@ export class GymTimeService implements OnModuleInit {
 
   shift(localDate: string, days: number): string {
     return shiftLocalDate(localDate, days);
+  }
+
+  /**
+   * The instant of a wall-clock time on a given local date.
+   *
+   * Goes through the zone conversion rather than adding hours to midnight, so
+   * a day on which the clocks changed still lands on the right instant.
+   */
+  localTimeInstant(localDate: string, hour: number, minute = 0): Date {
+    const { year, month, day } = parseLocalDate(localDate);
+    return zonedTimeToUtc({ year, month, day, hour, minute, second: 0 }, this.timeZone);
   }
 
   /**

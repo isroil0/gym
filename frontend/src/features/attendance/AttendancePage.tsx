@@ -3,11 +3,8 @@
 import { useMemo } from 'react';
 import { useTranslations } from 'next-intl';
 import Box from '@mui/material/Box';
-import IconButton from '@mui/material/IconButton';
 import Stack from '@mui/material/Stack';
-import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
-import LogoutIcon from '@mui/icons-material/LogoutRounded';
 import type { GridColDef } from '@mui/x-data-grid';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { TabbedSection } from '@/components/ui/TabbedSection';
@@ -19,12 +16,10 @@ import { DateRangePicker } from '@/components/data/DateRangePicker';
 import { MetricCardSkeleton } from '@/components/feedback/Skeletons';
 import { useQueryState } from '@/lib/hooks/useQueryState';
 import { useLocale } from '@/providers/LocaleProvider';
-import { useToast } from '@/providers/ToastProvider';
-import { useApiErrorMessage } from '@/lib/forms/useApiForm';
 import { formatDateTime } from '@/lib/format/datetime';
 import { formatNumber } from '@/lib/format/number';
 import { CheckInDesk } from './CheckInDesk';
-import { useAttendanceList, useCheckOutVisit, useTodayAttendance } from './useAttendance';
+import { useAttendanceList, useTodayAttendance } from './useAttendance';
 import { ATTENDANCE_METHODS, type Attendance } from '@/lib/api/types';
 
 const DEFAULTS = { page: '1', limit: '20', memberId: '', method: '', from: '', to: '' };
@@ -34,13 +29,10 @@ export function AttendancePage({ tab = 'today' }: { tab?: string }) {
   const t = useTranslations('attendance');
   const tc = useTranslations('common');
   const { locale } = useLocale();
-  const toast = useToast();
-  const describe = useApiErrorMessage();
   const { state, set, clear } = useQueryState(DEFAULTS);
 
   const today = useTodayAttendance();
   const history = useAttendanceList(state);
-  const checkOut = useCheckOutVisit();
 
   const columns = useMemo<GridColDef<Attendance>[]>(
     () => [
@@ -74,37 +66,8 @@ export function AttendancePage({ tab = 'today' }: { tab?: string }) {
         width: 110,
         valueGetter: (_, row) => t(`method.${row.method}`),
       },
-      {
-        field: 'actions',
-        headerName: '',
-        width: 60,
-        align: 'right',
-        headerAlign: 'right',
-        renderCell: ({ row }) =>
-          row.stillInside ? (
-            <Tooltip title={t('checkOut.button')}>
-              <IconButton
-                size="small"
-                aria-label={t('checkOut.button')}
-                onClick={async (event) => {
-                  event.stopPropagation();
-                  try {
-                    await checkOut.mutateAsync(row.id);
-                    toast.success(
-                      t('checkOut.success', { name: row.memberName ?? row.memberCode ?? '' }),
-                    );
-                  } catch (error) {
-                    toast.error(describe(error));
-                  }
-                }}
-              >
-                <LogoutIcon sx={{ fontSize: 17 }} />
-              </IconButton>
-            </Tooltip>
-          ) : null,
-      },
     ],
-    [t, locale, checkOut, toast, describe],
+    [t, locale],
   );
 
   const isFiltered = Object.entries(state).some(

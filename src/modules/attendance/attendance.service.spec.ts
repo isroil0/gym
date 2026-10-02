@@ -52,6 +52,7 @@ describe('AttendanceService', () => {
       findMany: jest.Mock;
       count: jest.Mock;
     };
+    appSetting: { findUnique: jest.Mock };
     $transaction: jest.Mock;
   };
   let members: { findOneOrFail: jest.Mock; scopeFor: jest.Mock };
@@ -92,6 +93,9 @@ describe('AttendanceService', () => {
         findMany: jest.fn().mockResolvedValue([]),
         count: jest.fn().mockResolvedValue(0),
       },
+      appSetting: {
+        findUnique: jest.fn().mockResolvedValue(null),
+      },
       $transaction: jest.fn(),
     };
 
@@ -127,10 +131,15 @@ describe('AttendanceService', () => {
       cards as unknown as MembershipCardsService,
       {
         localDateOf: (instant: Date) => instant.toISOString().slice(0, 10),
+        today: (now: Date = new Date()) => now.toISOString().slice(0, 10),
         day: (localDate: string) => ({
           start: new Date(`${localDate}T00:00:00.000Z`),
           end: new Date(new Date(`${localDate}T00:00:00.000Z`).getTime() + 86_400_000),
         }),
+        localTimeInstant: (localDate: string, hour: number, minute = 0) =>
+          new Date(
+            `${localDate}T${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}:00.000Z`,
+          ),
       } as unknown as GymTimeService,
     );
     jest.spyOn(service['logger'], 'log').mockImplementation(() => undefined);
@@ -217,7 +226,11 @@ describe('AttendanceService', () => {
       ],
       [
         'a member already inside',
-        () => prisma.attendance.findFirst.mockResolvedValue({ id: 'open-1' }),
+        () =>
+          prisma.attendance.findFirst.mockResolvedValue({
+            id: 'open-1',
+            checkedInAt: new Date(),
+          }),
         EntryDenialReason.ALREADY_INSIDE,
       ],
     ])('refuses %s with its own reason code', async (_label, arrange, reason) => {
@@ -232,6 +245,61 @@ describe('AttendanceService', () => {
 
       expect(prisma.attendance.create).not.toHaveBeenCalled();
       expect(memberships.consumeVisit).not.toHaveBeenCalled();
+    });
+
+    it('admits a member whose last visit was never closed', async () => {
+      // Nobody checks members out here, so a forgotten visit must not refuse
+      // them at the door for ever.
+      const yesterday = new Date(Date.now() - 86_400_000);
+      prisma.attendance.findFirst.mockResolvedValue({ id: 'open-1', checkedInAt: yesterday });
+      prisma.appSetting.findUnique.mockResolvedValue({ value: '23:00' });
+
+      await expect(service.checkInManually(MEMBER_ID, ADMIN)).resolves.toBeDefined();
+    });
+
+    it("closes the forgotten visit at that day's closing time", async () => {
+      const yesterday = new Date(Date.now() - 86_400_000);
+      const day = yesterday.toISOString().slice(0, 10);
+      prisma.attendance.findFirst.mockResolvedValue({ id: 'open-1', checkedInAt: yesterday });
+      prisma.appSetting.findUnique.mockResolvedValue({ value: '22:30' });
+
+      await service.checkInManually(MEMBER_ID, ADMIN);
+
+      expect(prisma.attendance.update).toHaveBeenCalledWith({
+        where: { id: 'open-1' },
+        data: { checkedOutAt: new Date(`${day}T22:30:00.000Z`) },
+      });
+    });
+
+    it('falls back to a sensible hour when the setting is unreadable', async () => {
+      // Refusing somebody at the door over a malformed settings row would be
+      // a far worse failure than guessing the closing time.
+      const yesterday = new Date(Date.now() - 86_400_000);
+      const day = yesterday.toISOString().slice(0, 10);
+      prisma.attendance.findFirst.mockResolvedValue({ id: 'open-1', checkedInAt: yesterday });
+      prisma.appSetting.findUnique.mockResolvedValue({ value: 'not a time' });
+
+      await service.checkInManually(MEMBER_ID, ADMIN);
+
+      expect(prisma.attendance.update).toHaveBeenCalledWith({
+        where: { id: 'open-1' },
+        data: { checkedOutAt: new Date(`${day}T23:00:00.000Z`) },
+      });
+    });
+
+    it('never records a departure before the arrival it belongs to', async () => {
+      // Admitted at 23:40, after a 23:00 close.
+      const lateArrival = new Date(Date.now() - 86_400_000);
+      lateArrival.setUTCHours(23, 40, 0, 0);
+      prisma.attendance.findFirst.mockResolvedValue({ id: 'open-1', checkedInAt: lateArrival });
+      prisma.appSetting.findUnique.mockResolvedValue({ value: '23:00' });
+
+      await service.checkInManually(MEMBER_ID, ADMIN);
+
+      const { data } = prisma.attendance.update.mock.calls[0][0] as {
+        data: { checkedOutAt: Date };
+      };
+      expect(data.checkedOutAt.getTime()).toBeGreaterThanOrEqual(lateArrival.getTime());
     });
 
     it('reports a concurrent double check-in as already inside', async () => {

@@ -66,18 +66,6 @@ export function useManualCheckIn() {
   );
 }
 
-export function useCheckOut() {
-  return useDoorMutation((body: { memberId: string }) =>
-    api.post<Attendance>('attendance/check-out', body),
-  );
-}
-
-export function useCheckOutVisit() {
-  return useDoorMutation((attendanceId: string) =>
-    api.post<Attendance>(`attendance/${attendanceId}/check-out`),
-  );
-}
-
 export function useMemberCard(memberId: string, enabled = true) {
   return useQuery({
     queryKey: keys.cards.member(memberId),

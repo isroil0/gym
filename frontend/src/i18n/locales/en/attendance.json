@@ -33,14 +33,6 @@
     "denied": "Not admitted",
     "noteOptional": "Note (optional)"
   },
-  "checkOut": {
-    "title": "Check out",
-    "button": "Check out",
-    "success": "{name} is checked out",
-    "successShort": "Checked out",
-    "notInside": "This member is not currently checked in",
-    "confirm": "Check this member out?"
-  },
   "scanner": {
     "start": "Start scanner",
     "stop": "Stop scanner",

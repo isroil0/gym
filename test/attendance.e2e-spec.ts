@@ -679,4 +679,112 @@ describe('Attendance (e2e)', () => {
         .expect(401);
     });
   });
+
+  // -------------------------------------------------------------------------
+  // Visits nobody closed: staff record arrivals, not departures
+  // -------------------------------------------------------------------------
+
+  describe('a visit left open', () => {
+    /** Puts an open visit in the past, as a forgotten check-out would. */
+    async function openVisitOn(daysAgo: number, hour = 18): Promise<string> {
+      const checkedInAt = new Date();
+      checkedInAt.setUTCDate(checkedInAt.getUTCDate() - daysAgo);
+      checkedInAt.setUTCHours(hour, 30, 0, 0);
+
+      const visit = await ctx.prisma.attendance.create({
+        data: { memberId: member.memberId, checkedInAt, method: CheckInMethod.MANUAL },
+      });
+      return visit.id;
+    }
+
+    it('does not refuse the member on a later day', async () => {
+      await openVisitOn(1);
+
+      await checkIn().expect(201);
+    });
+
+    it("closes it at that day's closing time, not at the new arrival", async () => {
+      const id = await openVisitOn(1);
+      await checkIn().expect(201);
+
+      const closed = await ctx.prisma.attendance.findUniqueOrThrow({ where: { id } });
+      const expected = new Date(closed.checkedInAt);
+      expected.setUTCHours(23, 0, 0, 0);
+
+      expect(closed.checkedOutAt).toEqual(expected);
+    });
+
+    it('never records a departure before the arrival', async () => {
+      // Admitted at 23:30, after a 23:00 closing time.
+      const id = await openVisitOn(2, 23);
+      await checkIn().expect(201);
+
+      const closed = await ctx.prisma.attendance.findUniqueOrThrow({ where: { id } });
+      expect(closed.checkedOutAt!.getTime()).toBeGreaterThanOrEqual(closed.checkedInAt.getTime());
+    });
+
+    it('still refuses a second check-in on the same day', async () => {
+      // The forgotten-visit rule must not become a way to check in twice and
+      // spend two visits off a limited plan.
+      await checkIn().expect(201);
+
+      const response = await checkIn().expect(422);
+
+      expect(denialReason(response.body)).toBe('ALREADY_INSIDE');
+    });
+
+    it('leaves the new visit open, to be closed the same way next time', async () => {
+      await openVisitOn(1);
+      await checkIn().expect(201);
+
+      const open = await ctx.prisma.attendance.findMany({
+        where: { memberId: member.memberId, checkedOutAt: null },
+      });
+      expect(open).toHaveLength(1);
+    });
+
+    it('deducts exactly one visit from a limited plan', async () => {
+      const limited = await seedPlan(ctx, { name: 'Ten visits', visitLimit: 10 });
+      const sparse = await seedMemberProfile(ctx, server, { email: 'sparse@gym.test' });
+      await seedMembership(ctx, sparse.memberId, limited.id, { visitLimit: 10 });
+
+      await request(server)
+        .post('/api/v1/attendance/check-in')
+        .set(...asAdmin())
+        .send({ memberId: sparse.memberId })
+        .expect(201);
+
+      const stale = await ctx.prisma.attendance.findFirstOrThrow({
+        where: { memberId: sparse.memberId },
+      });
+      const yesterday = new Date(stale.checkedInAt);
+      yesterday.setUTCDate(yesterday.getUTCDate() - 1);
+      await ctx.prisma.attendance.update({
+        where: { id: stale.id },
+        data: { checkedInAt: yesterday },
+      });
+
+      const response = await request(server)
+        .post('/api/v1/attendance/check-in')
+        .set(...asAdmin())
+        .send({ memberId: sparse.memberId })
+        .expect(201);
+
+      expect(response.body.visitsRemaining).toBe(8);
+    });
+
+    it('closes it for a member admitting themselves at the door too', async () => {
+      await openVisitOn(1);
+      const { body: door } = await request(server)
+        .get('/api/v1/attendance/door-code')
+        .set(...asAdmin())
+        .expect(200);
+
+      await request(server)
+        .post('/api/v1/attendance/check-in/self')
+        .set(...bearer(member.accessToken))
+        .send({ code: door.code })
+        .expect(201);
+    });
+  });
 });

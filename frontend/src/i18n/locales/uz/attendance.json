@@ -33,14 +33,6 @@
     "denied": "Kiritilmadi",
     "noteOptional": "Izoh (ixtiyoriy)"
   },
-  "checkOut": {
-    "title": "Chiqishni qayd etish",
-    "button": "Chiqishni qayd etish",
-    "success": "{name} chiqishi qayd etildi",
-    "successShort": "Chiqish qayd etildi",
-    "notInside": "Bu a'zo hozir ichkarida emas",
-    "confirm": "Bu a'zoning chiqishi qayd etilsinmi?"
-  },
   "scanner": {
     "start": "Skanerni yoqish",
     "stop": "Skanerni to'xtatish",

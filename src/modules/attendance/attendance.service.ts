@@ -42,6 +42,10 @@ export class AttendanceService {
   /** Where the live door-code generation is kept. */
   private static readonly DOOR_VERSION_KEY = 'gym.doorCodeVersion';
 
+  /** The gym's closing time, as `HH:mm`, used to close forgotten visits. */
+  private static readonly CLOSING_HOUR_KEY = 'gym.closingHour';
+  private static readonly DEFAULT_CLOSING_HOUR = 23;
+
   constructor(
     private readonly prisma: PrismaService,
     private readonly config: AppConfigService,
@@ -199,7 +203,7 @@ export class AttendanceService {
   ): Promise<CheckInOutcome> {
     const member = await this.members.findOneOrFail(memberId);
     const membership = await this.memberships.findRelevantForEntry(memberId);
-    const openVisit = await this.findOpenVisit(memberId);
+    const openVisit = await this.resolveOpenVisit(memberId, new Date());
 
     const decision: EntryDecision = decideEntry({
       memberStatus: member.status,
@@ -270,6 +274,66 @@ export class AttendanceService {
       visitsRemaining: decision.visitsRemainingAfter,
       membershipDaysRemaining: membership ? daysRemaining(membership) : null,
     };
+  }
+
+  /**
+   * The open visit that should block this entry, having first closed one the
+   * member never checked out of on an earlier day.
+   *
+   * Nobody checks members out: this gym records arrivals, not departures. One
+   * open visit per member is a database invariant, so without this a single
+   * missed check-out would refuse that member entry for ever. A visit from an
+   * earlier day is closed at that day's closing time, which is the most
+   * truthful departure available — the gym was shut, so they had gone.
+   *
+   * A visit from today is left exactly where it is, so scanning twice within
+   * one day is still refused and a visit-limited plan cannot be charged twice
+   * for the same attendance.
+   */
+  private async resolveOpenVisit(memberId: string, now: Date): Promise<Attendance | null> {
+    const open = await this.findOpenVisit(memberId);
+    if (!open) return null;
+
+    const visitDay = this.gymTime.localDateOf(open.checkedInAt);
+    if (visitDay === this.gymTime.today(now)) return open;
+
+    const closedAt = await this.closingInstantFor(visitDay, open.checkedInAt, now);
+    await this.prisma.attendance.update({
+      where: { id: open.id },
+      data: { checkedOutAt: closedAt },
+    });
+
+    this.logger.log(
+      `Closed visit ${open.id} left open since ${visitDay}, at that day's closing time`,
+    );
+    return null;
+  }
+
+  /**
+   * When the gym shut on a given local day.
+   *
+   * Clamped at both ends: a recorded departure must never precede the arrival
+   * it belongs to, which would happen to somebody admitted after closing
+   * time, and must never sit in the future. An unreadable setting falls back
+   * to a sensible hour rather than refusing the member at the door.
+   */
+  private async closingInstantFor(localDate: string, checkedInAt: Date, now: Date): Promise<Date> {
+    const setting = await this.prisma.appSetting.findUnique({
+      where: { key: AttendanceService.CLOSING_HOUR_KEY },
+      select: { value: true },
+    });
+
+    const parsed = /^(\d{1,2}):(\d{2})$/.exec(setting?.value?.trim() ?? '');
+    const hour = parsed ? Number(parsed[1]) : AttendanceService.DEFAULT_CLOSING_HOUR;
+    const minute = parsed ? Number(parsed[2]) : 0;
+
+    const closing =
+      hour <= 23 && minute <= 59
+        ? this.gymTime.localTimeInstant(localDate, hour, minute)
+        : this.gymTime.day(localDate).end;
+
+    const notBeforeArrival = Math.max(closing.getTime(), checkedInAt.getTime());
+    return new Date(Math.min(notBeforeArrival, now.getTime()));
   }
 
   // -------------------------------------------------------------------------
