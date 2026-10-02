@@ -2,6 +2,9 @@
   "name": "gym-crm-frontend",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": ">=20.11"
+  },
   "description": "Gym CRM web client",
   "scripts": {
     "dev": "next dev -p ${PORT:-3001}",

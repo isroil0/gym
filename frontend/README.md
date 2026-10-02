@@ -109,6 +109,33 @@ npm run build
 API_URL=https://api.example.com NEXT_PUBLIC_API_URL=https://api.example.com npm start
 ```
 
+The server binds `$PORT` when the platform sets one, falling back to 3001.
+Do not hardcode a port on a host that assigns one.
+
+### Railway
+
+Two services from this one repository. The frontend service needs its **Root
+Directory** set to `frontend`; both read their commands from the `railway.json`
+beside them.
+
+| | Backend (root) | Web (`frontend`) |
+| --- | --- | --- |
+| Build | `npx prisma generate && npm run build` | `npm run build` |
+| Start | `npx prisma migrate deploy && npm run start:prod` | `npm start` |
+| Health | `/api/health` | `/api/health` |
+
+`npm start` on the **backend** runs `nest start`, which recompiles from source
+at boot — use `start:prod`, which runs the build. `migrate deploy` is
+idempotent, so it is safe on every boot.
+
+Web service variables: `API_URL`, `NEXT_PUBLIC_API_URL` (both the backend's
+public URL), `NEXT_PUBLIC_TIMEZONE`, `NEXT_PUBLIC_CURRENCY`. Leave
+`COOKIE_INSECURE` unset so session cookies stay `Secure`.
+
+Keep the web service at **one replica**: the refresh single-flight guard is
+per process, and the API revokes every session when a rotated refresh token
+is replayed. The backend scales freely.
+
 Serve over HTTPS in production: the session cookies are marked `Secure`
 unless `COOKIE_INSECURE=true`, and the QR scanner's camera needs a secure
 context. Add the frontend's origin to the backend's `CORS_ORIGINS` — though

@@ -4,6 +4,9 @@
   "description": "Gym CRM backend API",
   "private": true,
   "license": "UNLICENSED",
+  "engines": {
+    "node": ">=20.11"
+  },
   "scripts": {
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\" \"prisma/**/*.ts\"",
