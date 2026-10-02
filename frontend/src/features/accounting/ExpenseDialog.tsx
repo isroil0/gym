@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react';
 import { useTranslations } from 'next-intl';
-import { useForm, type Resolver } from 'react-hook-form';
+import { Controller, useForm, type Resolver } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import Box from '@mui/material/Box';
@@ -12,44 +12,29 @@ import { validators } from '@/lib/forms/validators';
 import { useFormErrorHandler } from '@/lib/forms/useApiForm';
 import { useToast } from '@/providers/ToastProvider';
 import { toIsoDate } from '@/lib/format/datetime';
-import { useCreateEntry, useExpenseCategories } from './useAccounting';
+import { useCreateCategory, useCreateEntry, useExpenseCategories } from './useAccounting';
+import { CategoryPicker } from './CategoryPicker';
 import { PAYMENT_METHODS } from '@/lib/api/types';
 
 interface Values {
   amount: string;
+  categoryName: string;
   description: string;
   occurredOn: string;
   method: string;
   trainerId?: string;
 }
 
-/** The category uncategorised expenses are filed under. */
-const DEFAULT_CATEGORY_NAME = 'other';
-
-/**
- * Picks the category an expense is filed under when nobody is asked to choose.
- *
- * "Other" exists for exactly this purpose, so prefer it by name; any active
- * category is better than failing to record the expense, so fall back to the
- * first. Returns undefined only when the gym has no active category at all,
- * which the caller has to surface rather than post a request the backend is
- * certain to reject.
- */
-function defaultCategoryId(categories: { id: string; name: string }[]): string | undefined {
-  const named = categories.find(
-    (category) => category.name.trim().toLowerCase() === DEFAULT_CATEGORY_NAME,
-  );
-  return (named ?? categories[0])?.id;
-}
+/** The longest name the backend will accept for a category. */
+const CATEGORY_NAME_MAX = 120;
 
 /**
  * Record money going out.
  *
- * The expense is filed under a category automatically rather than asking for
- * one: the backend rejects an uncategorised expense, so the field cannot
- * simply be dropped from the request. Categories remain editable under
- * Accounting, and reports still group by them — every expense recorded here
- * just lands in the same bucket.
+ * The category can be picked from the list or simply typed: a name that is
+ * not there yet is created when the expense is saved, so recording a cost
+ * never means breaking off to go and set a category up first. Nothing is
+ * created until save, so abandoning the dialog leaves nothing behind.
  *
  * The optional trainer attributes the expense to a person, which is how a
  * salary or commission payment is recorded.
@@ -76,9 +61,11 @@ export function ExpenseDialog({
 
   const categories = useExpenseCategories();
   const create = useCreateEntry();
+  const createCategory = useCreateCategory();
 
   const schema = z.object({
     amount: v.money({ min: 0.01 }),
+    categoryName: v.requiredText(CATEGORY_NAME_MAX),
     description: v.requiredText(255),
     occurredOn: v.isoDate(true),
     method: z.string().optional(),
@@ -89,19 +76,21 @@ export function ExpenseDialog({
     resolver: zodResolver(schema) as Resolver<Values>,
     defaultValues: {
       amount: '',
+      categoryName: '',
       description: '',
       occurredOn: toIsoDate(new Date()),
       method: 'TRANSFER',
       trainerId: trainerId ?? '',
     },
   });
-  const { formError, setFormError, handleError, clearFormError } = useFormErrorHandler(form);
+  const { formError, handleError, clearFormError } = useFormErrorHandler(form);
   const { reset } = form;
 
   useEffect(() => {
     if (!open) return;
     reset({
       amount: '',
+      categoryName: '',
       description: trainerName ? `${trainerName}` : '',
       occurredOn: toIsoDate(new Date()),
       method: 'TRANSFER',
@@ -110,14 +99,33 @@ export function ExpenseDialog({
     clearFormError();
   }, [open, reset, clearFormError, trainerId, trainerName]);
 
+  /**
+   * Turns the typed name into the id the backend wants.
+   *
+   * An existing category is matched without regard to case, so typing "rent"
+   * when "Rent" is already there reuses it instead of creating a second one
+   * the reports would have to show side by side. Anything genuinely new is
+   * created now, at save, not while the reader was still typing.
+   */
+  const resolveCategory = async (typed: string): Promise<string> => {
+    const name = typed.trim();
+    const existing = (categories.data?.data ?? []).find(
+      (category) => category.name.toLowerCase() === name.toLowerCase(),
+    );
+    if (existing) return existing.id;
+
+    const created = await createCategory.mutateAsync({ name });
+    return created.id;
+  };
+
   const submit = form.handleSubmit(async (values) => {
     clearFormError();
 
-    const categoryId = defaultCategoryId(categories.data?.data ?? []);
-    if (!categoryId) {
-      // Nothing to file this under; say so rather than send a request the
-      // backend will refuse.
-      setFormError(t('noCategory'));
+    let categoryId: string;
+    try {
+      categoryId = await resolveCategory(values.categoryName);
+    } catch (error) {
+      handleError(error);
       return;
     }
 
@@ -147,7 +155,7 @@ export function ExpenseDialog({
       submitLabel={ta('save')}
       onClose={onClose}
       onSubmit={submit}
-      submitting={create.isPending || categories.isPending}
+      submitting={create.isPending || createCategory.isPending}
       error={formError}
     >
       <Box sx={{ display: 'grid', gap: 2, gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' } }}>
@@ -160,6 +168,22 @@ export function ExpenseDialog({
           max={toIsoDate(new Date())}
         />
       </Box>
+
+      <Controller
+        control={form.control}
+        name="categoryName"
+        render={({ field, fieldState }) => (
+          <CategoryPicker
+            categories={categories.data?.data ?? []}
+            value={field.value}
+            onChange={field.onChange}
+            label={tf('category')}
+            addLabel={(name) => t('addCategory', { name })}
+            error={fieldState.error?.message}
+            disabled={categories.isPending}
+          />
+        )}
+      />
 
       <TextInput control={form.control} name="description" label={tf('description')} required />
 

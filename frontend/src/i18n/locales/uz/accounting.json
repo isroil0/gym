@@ -68,13 +68,14 @@
       "occurredOn": "Sana",
       "method": "To'lov usuli",
       "reference": "Hujjat raqami",
-      "notes": "Izohlar"
+      "notes": "Izohlar",
+      "category": "Toifa"
     },
     "success": "Xarajat qayd etildi",
     "history": "Xarajatlar tarixi",
     "total": "Jami xarajatlar",
     "empty": "Bu davrda xarajatlar qayd etilmagan",
-    "noCategory": "Buni qaysi turkumga yozishni bilib bo'lmadi. Hisob → Turkumlar bo'limida bittasini qo'shing."
+    "addCategory": "\"{name}\" qo'shish"
   },
   "categories": {
     "title": "Xarajat toifalari",

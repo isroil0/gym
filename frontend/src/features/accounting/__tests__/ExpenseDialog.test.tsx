@@ -1,5 +1,5 @@
 import { describe, expect, it, beforeEach, vi } from 'vitest';
-import { screen, waitFor } from '@testing-library/react';
+import { screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import '@/test/next-mocks';
 import { apiMock } from '@/test/api-mock';
@@ -14,71 +14,149 @@ const CATEGORIES = {
   meta: { page: 1, limit: 100, total: 2, totalPages: 1 },
 };
 
-/** Fills the fields a user still has to answer, then saves. */
-async function recordExpense(user: ReturnType<typeof userEvent.setup>) {
+/** The body of the single POST that records the expense. */
+function entryBody(): Record<string, unknown> {
+  const call = apiMock.post.mock.calls.find(([path]) => path === 'accounting/entries');
+  return (call?.[1] ?? {}) as Record<string, unknown>;
+}
+
+async function fillAmountAndDescription(user: ReturnType<typeof userEvent.setup>) {
   await user.type(await screen.findByLabelText(/Amount/i), '250');
   await user.type(screen.getByLabelText(/Description/i), 'October rent');
-  await user.click(screen.getByRole('button', { name: 'Save' }));
 }
 
 describe('ExpenseDialog', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     apiMock.get.mockResolvedValue(CATEGORIES);
-    apiMock.post.mockResolvedValue({ id: 'entry-1' });
+    apiMock.post.mockImplementation((path: string) =>
+      path === 'accounting/expense-categories'
+        ? Promise.resolve({ id: 'cat-new', name: 'Equipment' })
+        : Promise.resolve({ id: 'entry-1' }),
+    );
   });
 
-  it('does not ask for a category', async () => {
+  it('asks for a category', async () => {
     await renderWithProviders(<ExpenseDialog open onClose={() => {}} />);
-    await screen.findByLabelText(/Amount/i);
 
-    expect(screen.queryByLabelText(/Category/i)).not.toBeInTheDocument();
+    expect(await screen.findByLabelText(/Category/i)).toBeInTheDocument();
   });
 
-  it('still sends a category, because the backend refuses an expense without one', async () => {
+  it('offers the categories the gym already has', async () => {
     const user = userEvent.setup();
     await renderWithProviders(<ExpenseDialog open onClose={() => {}} />);
 
-    await recordExpense(user);
+    await user.click(await screen.findByLabelText(/Category/i));
 
-    await waitFor(() => expect(apiMock.post).toHaveBeenCalled());
-    const [path, body] = apiMock.post.mock.calls[0] as [string, Record<string, unknown>];
-    expect(path).toBe('accounting/entries');
-    expect(body.expenseCategoryId).toBe('cat-other');
-    expect(body).toMatchObject({ type: 'EXPENSE', amount: 250, description: 'October rent' });
+    const list = await screen.findByRole('listbox');
+    expect(within(list).getByText('Rent')).toBeInTheDocument();
+    expect(within(list).getByText('Other')).toBeInTheDocument();
   });
 
-  it('files the expense under any category when there is no "Other"', async () => {
-    apiMock.get.mockResolvedValue({ ...CATEGORIES, data: [CATEGORIES.data[0]] });
+  it('files the expense under a category picked from the list', async () => {
     const user = userEvent.setup();
     await renderWithProviders(<ExpenseDialog open onClose={() => {}} />);
 
-    await recordExpense(user);
+    await user.click(await screen.findByLabelText(/Category/i));
+    await user.click(await screen.findByText('Rent'));
+    await fillAmountAndDescription(user);
+    await user.click(screen.getByRole('button', { name: 'Save' }));
 
-    await waitFor(() => expect(apiMock.post).toHaveBeenCalled());
-    const [, body] = apiMock.post.mock.calls[0] as [string, Record<string, unknown>];
-    expect(body.expenseCategoryId).toBe('cat-rent');
+    await waitFor(() => expect(entryBody().expenseCategoryId).toBe('cat-rent'));
+    // Picking an existing one must not create anything.
+    expect(apiMock.post).not.toHaveBeenCalledWith('accounting/expense-categories', expect.anything());
   });
 
-  it('says so rather than sending a request the backend will refuse', async () => {
-    apiMock.get.mockResolvedValue({ ...CATEGORIES, data: [] });
+  it('offers to add a name that is not in the list', async () => {
     const user = userEvent.setup();
     await renderWithProviders(<ExpenseDialog open onClose={() => {}} />);
 
-    await recordExpense(user);
+    await user.type(await screen.findByLabelText(/Category/i), 'Equipment');
 
-    expect(await screen.findByText(/No expense category exists/)).toBeInTheDocument();
-    expect(apiMock.post).not.toHaveBeenCalled();
+    expect(await screen.findByText('Add "Equipment"')).toBeInTheDocument();
   });
 
-  it('still validates the fields it does ask for', async () => {
+  it('creates a typed category and files the expense under it', async () => {
     const user = userEvent.setup();
     await renderWithProviders(<ExpenseDialog open onClose={() => {}} />);
-    await screen.findByLabelText(/Amount/i);
 
+    await user.type(await screen.findByLabelText(/Category/i), 'Equipment');
+    await user.click(await screen.findByText('Add "Equipment"'));
+    await fillAmountAndDescription(user);
+    await user.click(screen.getByRole('button', { name: 'Save' }));
+
+    await waitFor(() =>
+      expect(apiMock.post).toHaveBeenCalledWith('accounting/expense-categories', {
+        name: 'Equipment',
+      }),
+    );
+    expect(entryBody().expenseCategoryId).toBe('cat-new');
+  });
+
+  it('accepts a name typed without ever opening the list', async () => {
+    // Somebody who types and tabs straight on must not lose what they typed.
+    const user = userEvent.setup();
+    await renderWithProviders(<ExpenseDialog open onClose={() => {}} />);
+
+    await user.type(await screen.findByLabelText(/Category/i), 'Equipment');
+    await fillAmountAndDescription(user);
+    await user.click(screen.getByRole('button', { name: 'Save' }));
+
+    await waitFor(() => expect(entryBody().expenseCategoryId).toBe('cat-new'));
+  });
+
+  it('reuses an existing category typed in a different case', async () => {
+    // Otherwise the reports would show "Rent" and "rent" side by side.
+    const user = userEvent.setup();
+    await renderWithProviders(<ExpenseDialog open onClose={() => {}} />);
+
+    await user.type(await screen.findByLabelText(/Category/i), 'rent');
+    await fillAmountAndDescription(user);
+    await user.click(screen.getByRole('button', { name: 'Save' }));
+
+    await waitFor(() => expect(entryBody().expenseCategoryId).toBe('cat-rent'));
+    expect(apiMock.post).not.toHaveBeenCalledWith('accounting/expense-categories', expect.anything());
+  });
+
+  it('does not offer to add a name that already exists in another case', async () => {
+    const user = userEvent.setup();
+    await renderWithProviders(<ExpenseDialog open onClose={() => {}} />);
+
+    await user.type(await screen.findByLabelText(/Category/i), 'rent');
+
+    expect(screen.queryByText('Add "rent"')).not.toBeInTheDocument();
+  });
+
+  it('refuses to save without a category', async () => {
+    const user = userEvent.setup();
+    await renderWithProviders(<ExpenseDialog open onClose={() => {}} />);
+
+    await fillAmountAndDescription(user);
     await user.click(screen.getByRole('button', { name: 'Save' }));
 
     await waitFor(() => expect(apiMock.post).not.toHaveBeenCalled());
+  });
+
+  it('records nothing when the category cannot be created', async () => {
+    // The expense must not be filed under the wrong thing, or twice.
+    apiMock.post.mockImplementation((path: string) =>
+      path === 'accounting/expense-categories'
+        ? Promise.reject(new Error('conflict'))
+        : Promise.resolve({ id: 'entry-1' }),
+    );
+    const user = userEvent.setup();
+    await renderWithProviders(<ExpenseDialog open onClose={() => {}} />);
+
+    await user.type(await screen.findByLabelText(/Category/i), 'Equipment');
+    await fillAmountAndDescription(user);
+    await user.click(screen.getByRole('button', { name: 'Save' }));
+
+    await waitFor(() =>
+      expect(apiMock.post).toHaveBeenCalledWith('accounting/expense-categories', {
+        name: 'Equipment',
+      }),
+    );
+    expect(apiMock.post).not.toHaveBeenCalledWith('accounting/entries', expect.anything());
   });
 
   it('keeps the trainer attribution used for paying salaries', async () => {
@@ -87,11 +165,13 @@ describe('ExpenseDialog', () => {
       <ExpenseDialog open onClose={() => {}} trainerId="tr-1" trainerName="Ali Valiyev" />,
     );
 
-    await user.type(await screen.findByLabelText(/Amount/i), '500');
+    await user.click(await screen.findByLabelText(/Category/i));
+    await user.click(await screen.findByText('Other'));
+    await user.type(screen.getByLabelText(/Amount/i), '500');
     await user.click(screen.getByRole('button', { name: 'Save' }));
 
-    await waitFor(() => expect(apiMock.post).toHaveBeenCalled());
-    const [, body] = apiMock.post.mock.calls[0] as [string, Record<string, unknown>];
-    expect(body).toMatchObject({ trainerId: 'tr-1', expenseCategoryId: 'cat-other' });
+    await waitFor(() =>
+      expect(entryBody()).toMatchObject({ trainerId: 'tr-1', expenseCategoryId: 'cat-other' }),
+    );
   });
 });

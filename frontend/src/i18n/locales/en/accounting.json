@@ -68,13 +68,14 @@
       "occurredOn": "Date",
       "method": "Paid by",
       "reference": "Reference",
-      "notes": "Notes"
+      "notes": "Notes",
+      "category": "Category"
     },
     "success": "Expense recorded",
     "history": "Expense history",
     "total": "Total expenses",
     "empty": "No expenses recorded for this period",
-    "noCategory": "No expense category exists to file this under. Add one under Accounting → Categories."
+    "addCategory": "Add \"{name}\""
   },
   "categories": {
     "title": "Expense categories",
