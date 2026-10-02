@@ -1,0 +1,78 @@
+{
+  "title": "Shaxsiy mashg'ulotlar",
+  "subtitle": "Yakka tartibdagi mashg'ulotlar",
+  "one": "Mashg'ulot",
+  "schedule": "Jadval",
+  "create": "Mashg'ulot belgilash",
+  "createTitle": "Shaxsiy mashg'ulotni belgilash",
+  "edit": "Mashg'ulotni tahrirlash",
+  "reschedule": "Vaqtini o'zgartirish",
+  "rescheduleTitle": "Mashg'ulot vaqtini o'zgartirish",
+  "status": {
+    "SCHEDULED": "Rejalashtirilgan",
+    "COMPLETED": "Yakunlangan",
+    "CANCELLED": "Bekor qilingan",
+    "NO_SHOW": "Kelmagan"
+  },
+  "columns": {
+    "member": "A'zo",
+    "trainer": "Murabbiy",
+    "startsAt": "Boshlanishi",
+    "endsAt": "Tugashi",
+    "duration": "Davomiyligi",
+    "status": "Holat",
+    "notes": "Izohlar"
+  },
+  "fields": {
+    "member": "A'zo",
+    "trainer": "Murabbiy",
+    "date": "Sana",
+    "startsAt": "Boshlanish vaqti",
+    "endsAt": "Tugash vaqti",
+    "duration": "Davomiyligi",
+    "notes": "Izohlar",
+    "cancellationReason": "Bekor qilish sababi"
+  },
+  "actions": {
+    "complete": "Yakunlangan deb belgilash",
+    "cancel": "Mashg'ulotni bekor qilish",
+    "noShow": "Kelmagan deb belgilash",
+    "reschedule": "Vaqtini o'zgartirish"
+  },
+  "complete": {
+    "title": "Mashg'ulot yakunlangan deb belgilansinmi?",
+    "body": "{name} bilan mashg'ulot o'tkazilgan deb qayd etiladi.",
+    "notes": "Mashg'ulot izohlari",
+    "confirm": "Yakunlangan deb belgilash",
+    "success": "Mashg'ulot yakunlangan deb belgilandi"
+  },
+  "cancelSession": {
+    "title": "Bu mashg'ulot bekor qilinsinmi?",
+    "body": "{name} bilan {date} dagi mashg'ulot bekor qilinadi.",
+    "reason": "Sababi",
+    "confirm": "Mashg'ulotni bekor qilish",
+    "success": "Mashg'ulot bekor qilindi"
+  },
+  "noShow": {
+    "title": "Kelmagan deb belgilansinmi?",
+    "body": "{name} {date} dagi mashg'ulotga kelmagan.",
+    "confirm": "Kelmagan deb belgilash",
+    "success": "Mashg'ulot kelmagan deb belgilandi"
+  },
+  "conflict": "Bu murabbiyning jadvalidagi boshqa mashg'ulot bilan to'qnashadi.",
+  "today": "Bugun",
+  "upcoming": "Rejada",
+  "past": "O'tgan",
+  "nextSession": "Keyingi mashg'ulot",
+  "durationMinutes": "{count, plural, other {# daqiqa}}",
+  "empty": {
+    "title": "Rejalashtirilgan mashg'ulot yo'q",
+    "body": "A'zolaringizdan biri bilan mashg'ulot belgilang.",
+    "today": "Bugunga hech narsa rejalashtirilmagan",
+    "upcoming": "Rejadagi mashg'ulotlar yo'q",
+    "member": "Sizda belgilangan mashg'ulot yo'q",
+    "filtered": "Bu filtrlarga mos mashg'ulot topilmadi"
+  },
+  "created": "Mashg'ulot belgilandi",
+  "updated": "Mashg'ulot yangilandi"
+}

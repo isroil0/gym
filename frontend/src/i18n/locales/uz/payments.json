@@ -1,0 +1,101 @@
+{
+  "title": "To'lovlar",
+  "subtitle": "Kelib tushgan pul",
+  "one": "To'lov",
+  "searchPlaceholder": "A'zo, kod yoki hujjat raqami bo'yicha qidirish",
+  "create": "To'lov qabul qilish",
+  "createTitle": "To'lovni qayd etish",
+  "method": {
+    "CASH": "Naqd",
+    "CARD": "Karta",
+    "TRANSFER": "Bank o'tkazmasi",
+    "OTHER": "Boshqa"
+  },
+  "status": {
+    "COMPLETED": "Bajarilgan",
+    "PARTIALLY_REFUNDED": "Qisman qaytarilgan",
+    "REFUNDED": "Qaytarilgan"
+  },
+  "billingStatus": {
+    "UNPAID": "To'lanmagan",
+    "PARTIALLY_PAID": "Qisman to'langan",
+    "PAID": "To'langan",
+    "OVERPAID": "Ortiqcha to'langan"
+  },
+  "columns": {
+    "date": "Sana",
+    "member": "A'zo",
+    "membership": "Abonement",
+    "amount": "Summa",
+    "method": "Usul",
+    "status": "Holat",
+    "reference": "Hujjat raqami",
+    "receivedBy": "Qabul qilgan",
+    "refunded": "Qaytarilgan",
+    "net": "Sof"
+  },
+  "fields": {
+    "member": "A'zo",
+    "membership": "Abonement",
+    "amount": "Summa",
+    "method": "To'lov usuli",
+    "reference": "Hujjat raqami",
+    "referenceHint": "Chek yoki tranzaksiya raqami, agar bo'lsa.",
+    "paidAt": "To'lov sanasi",
+    "notes": "Izohlar"
+  },
+  "take": {
+    "title": "{name} dan to'lov qabul qilish",
+    "outstanding": "Qarz: {amount}",
+    "payInFull": "To'liq to'lash",
+    "partial": "Qisman to'lash",
+    "noMembershipSelected": "Bu to'lov qaysi abonement uchun ekanini tanlang",
+    "exceedsOutstanding": "Bu qarz summasidan ko'p.",
+    "confirm": "To'lovni qayd etish",
+    "success": "To'lov qayd etildi",
+    "nothingDue": "Bu a'zoning qarzi yo'q."
+  },
+  "refund": {
+    "title": "To'lovni qaytarish",
+    "body": "Qaytarish hisobga mos yozuv kiritadi. Buni ortga qaytarib bo'lmaydi.",
+    "amount": "Qaytariladigan summa",
+    "full": "To'liq qaytarish",
+    "partial": "Qisman qaytarish",
+    "reason": "Qaytarish sababi",
+    "maxRefundable": "Ko'pi bilan {amount} qaytarish mumkin",
+    "confirm": "Qaytarishni amalga oshirish",
+    "success": "Pul qaytarildi",
+    "refundedAmount": "Qaytarilgan",
+    "history": "Qaytarishlar"
+  },
+  "billing": {
+    "title": "Hisob",
+    "amountDue": "Hisoblangan",
+    "netPaid": "To'langan",
+    "outstanding": "Qarz",
+    "credit": "Ortiqcha",
+    "settled": "To'liq hisob-kitob qilingan",
+    "owes": "{amount} qarzi bor"
+  },
+  "outstanding": {
+    "title": "Qarzdorliklar",
+    "subtitle": "Hali qarzi bor a'zolar",
+    "membersInDebt": "{count, plural, other {# ta a'zoning qarzi bor}}",
+    "total": "Jami qarz",
+    "none": "Hech kimning qarzi yo'q"
+  },
+  "history": "To'lovlar tarixi",
+  "noPayments": "Hali to'lovlar yo'q",
+  "empty": {
+    "title": "To'lovlar qayd etilmagan",
+    "body": "To'lov qabul qilganingizdan so'ng bu yerda ko'rinadi.",
+    "filtered": "Bu filtrlarga mos to'lov topilmadi"
+  },
+  "detail": {
+    "title": "To'lov tafsilotlari",
+    "receivedFrom": "Kimdan olingan",
+    "appliedTo": "Nimaga yo'naltirilgan",
+    "recordedBy": "Qayd etgan",
+    "recordedAt": "Qayd etilgan vaqt"
+  }
+}

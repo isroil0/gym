@@ -1,0 +1,106 @@
+{
+  "title": "Workout plans",
+  "subtitle": "Training programmes",
+  "one": "Workout plan",
+  "myPlan": "My workout plan",
+  "create": "Create plan",
+  "createTitle": "Create a workout plan",
+  "edit": "Edit plan",
+  "columns": {
+    "name": "Plan",
+    "member": "Member",
+    "trainer": "Trainer",
+    "goal": "Goal",
+    "days": "Days",
+    "exercises": "Exercises",
+    "status": "Status",
+    "created": "Created"
+  },
+  "fields": {
+    "member": "Member",
+    "name": "Plan name",
+    "goal": "Goal",
+    "goalPlaceholder": "First 100 kg squat, lose 5 kg, …",
+    "notes": "Notes",
+    "startDate": "Start date",
+    "endDate": "End date"
+  },
+  "days": {
+    "title": "Training days",
+    "one": "Day",
+    "add": "Add a day",
+    "addTitle": "Add a training day",
+    "edit": "Edit day",
+    "name": "Day name",
+    "namePlaceholder": "Push day, Legs, …",
+    "order": "Order",
+    "notes": "Notes",
+    "empty": "No training days yet",
+    "emptyHint": "Add a day, then add exercises to it.",
+    "delete": {
+      "title": "Delete this day?",
+      "body": "{name} and all its exercises will be removed.",
+      "confirm": "Delete day",
+      "success": "Day deleted"
+    },
+    "created": "Day added",
+    "updated": "Day updated"
+  },
+  "exercises": {
+    "title": "Exercises",
+    "one": "Exercise",
+    "add": "Add exercise",
+    "addTitle": "Add an exercise",
+    "edit": "Edit exercise",
+    "name": "Exercise",
+    "namePlaceholder": "Bench press, Squat, …",
+    "sets": "Sets",
+    "reps": "Reps",
+    "repsPlaceholder": "8-12",
+    "weight": "Weight",
+    "restSeconds": "Rest",
+    "restSecondsUnit": "{count}s",
+    "instructions": "Instructions",
+    "order": "Order",
+    "empty": "No exercises on this day",
+    "emptyHint": "Add the first exercise.",
+    "summary": "{sets} × {reps}",
+    "summaryWithWeight": "{sets} × {reps} @ {weight}",
+    "delete": {
+      "title": "Delete this exercise?",
+      "body": "{name} will be removed from this day.",
+      "confirm": "Delete exercise",
+      "success": "Exercise deleted"
+    },
+    "created": "Exercise added",
+    "updated": "Exercise updated"
+  },
+  "archive": {
+    "title": "Archive this plan?",
+    "body": "{name} becomes read-only and stops being the member's current plan.",
+    "confirm": "Archive plan",
+    "success": "Plan archived"
+  },
+  "reactivate": {
+    "title": "Reactivate this plan?",
+    "body": "{name} becomes the member's active plan again.",
+    "confirm": "Reactivate plan",
+    "success": "Plan reactivated"
+  },
+  "status": {
+    "ACTIVE": "Active",
+    "ARCHIVED": "Archived"
+  },
+  "dayCount": "{count, plural, one {# day} other {# days}}",
+  "exerciseCount": "{count, plural, one {# exercise} other {# exercises}}",
+  "empty": {
+    "title": "No workout plans yet",
+    "body": "Create a plan for one of your members.",
+    "member": "Your trainer has not written a plan for you yet",
+    "memberHint": "It will appear here once they do.",
+    "filtered": "No plans match these filters"
+  },
+  "created": "Workout plan created",
+  "updated": "Workout plan updated",
+  "history": "Previous plans"
+}

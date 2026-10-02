@@ -1,0 +1,86 @@
+{
+  "admin": {
+    "title": "Панель управления",
+    "subtitle": "Как идут дела в зале сегодня",
+    "kpi": {
+      "totalMembers": "Всего клиентов",
+      "activeMembers": "Активные клиенты",
+      "expiredMembers": "Истёкшие абонементы",
+      "expiringSoon": "Скоро истекают",
+      "todayCheckIns": "Посещений сегодня",
+      "currentlyInside": "Сейчас в зале",
+      "activeTrainers": "Активные тренеры",
+      "monthlyRevenue": "Выручка за месяц",
+      "monthlyExpenses": "Расходы за месяц",
+      "monthlyProfit": "Итог за месяц",
+      "totalOutstanding": "Задолженность",
+      "newMembersThisMonth": "Новых клиентов за месяц"
+    },
+    "charts": {
+      "revenueVsExpenses": "Выручка и расходы",
+      "attendanceTrend": "Посещения по дням",
+      "membershipMix": "Абонементы по статусам",
+      "revenue": "Выручка",
+      "expenses": "Расходы",
+      "profit": "Итог",
+      "checkIns": "Посещения"
+    },
+    "expiringAlert": {
+      "title": "Абонементы на исходе",
+      "body": "{count, plural, one {# абонемент истекает в ближайшие 7 дней} few {# абонемента истекают в ближайшие 7 дней} many {# абонементов истекают в ближайшие 7 дней} other {# абонемента истекают в ближайшие 7 дней}}",
+      "action": "Посмотреть",
+      "none": "В ближайшие 7 дней абонементы не истекают"
+    },
+    "recentPayments": "Последние платежи",
+    "recentAttendance": "Последние посещения",
+    "quickActions": {
+      "title": "Быстрые действия",
+      "addMember": "Добавить клиента",
+      "sellMembership": "Продать абонемент",
+      "takePayment": "Принять оплату",
+      "checkIn": "Отметить приход",
+      "addExpense": "Добавить расход"
+    }
+  },
+  "trainer": {
+    "title": "Панель управления",
+    "subtitle": "Ваши клиенты и расписание на сегодня",
+    "kpi": {
+      "assignedMembers": "Закреплённые клиенты",
+      "activeMembers": "С активным абонементом",
+      "activeWorkoutPlans": "Активные планы тренировок",
+      "sessionsToday": "Тренировок сегодня",
+      "sessionsThisWeek": "Тренировок на неделе",
+      "completedThisMonth": "Проведено за месяц"
+    },
+    "todaySessions": "Тренировки сегодня",
+    "upcomingSessions": "Ближайшие тренировки",
+    "memberActivity": "Активность клиентов",
+    "lastVisit": "Последнее посещение",
+    "visitsThisMonth": "Посещений за месяц",
+    "noSessionsToday": "На сегодня тренировок не запланировано",
+    "noMembers": "За вами пока не закреплены клиенты"
+  },
+  "member": {
+    "greeting": "Здравствуйте, {name}",
+    "subtitle": "Ваше текущее состояние",
+    "membershipStatus": "Абонемент",
+    "daysRemaining": "Осталось дней",
+    "visitsRemaining": "Осталось посещений",
+    "unlimitedVisits": "Посещения без ограничений",
+    "assignedTrainer": "Ваш тренер",
+    "noTrainer": "Тренер не назначен",
+    "nextSession": "Ближайшая тренировка",
+    "noNextSession": "Запланированных тренировок нет",
+    "visitsThisMonth": "Посещений за месяц",
+    "lastVisit": "Последнее посещение",
+    "workoutPlan": "План тренировок",
+    "noWorkoutPlan": "Плана тренировок пока нет",
+    "outstandingBalance": "К оплате",
+    "allPaid": "Задолженности нет",
+    "recentActivity": "Последние события",
+    "showQrCard": "Показать QR-карту",
+    "noMembership": "У вас нет активного абонемента",
+    "noMembershipHint": "Обратитесь на стойку регистрации, чтобы оформить его."
+  }
+}

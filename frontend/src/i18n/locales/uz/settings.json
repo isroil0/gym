@@ -1,0 +1,95 @@
+{
+  "title": "Sozlamalar",
+  "subtitle": "Hisobingiz va bu dastur",
+  "tabs": {
+    "profile": "Profil",
+    "appearance": "Ko'rinish",
+    "security": "Xavfsizlik",
+    "gym": "Sportzal",
+    "audit": "Audit jurnali"
+  },
+  "profile": {
+    "title": "Profilingiz",
+    "subtitle": "Tizimda qanday ko'rinasiz",
+    "save": "Profilni saqlash",
+    "success": "Profil yangilandi",
+    "readOnlyNotice": "Ismingiz va elektron pochta manzilingiz sportzal administratori tomonidan boshqariladi. Backend ularni bu yerdan o'zgartirish imkonini bermaydi."
+  },
+  "appearance": {
+    "title": "Ko'rinish",
+    "subtitle": "Bu dastur shu qurilmada qanday ko'rinadi",
+    "theme": "Mavzu",
+    "themeHint": "Tizim bo'yicha — qurilmangiz sozlamasiga ergashadi.",
+    "language": "Til",
+    "languageHint": "Dasturning hamma joyida qo'llanadi va shu qurilmada eslab qolinadi.",
+    "reducedMotion": "Animatsiyalarni kamaytirish",
+    "reducedMotionHint": "Animatsiyalar qurilmangizning maxsus imkoniyatlar sozlamasiga ergashadi.",
+    "density": "Jadval zichligi",
+    "densityOptions": {
+      "comfortable": "Keng",
+      "standard": "Oddiy",
+      "compact": "Ixcham"
+    },
+    "storedLocally": "Bu sozlamalar shu qurilmada saqlanadi."
+  },
+  "security": {
+    "title": "Xavfsizlik",
+    "subtitle": "Parol va seanslar",
+    "changePassword": "Parolni o'zgartirish",
+    "lastLogin": "Oxirgi kirish",
+    "signOutEverywhere": "Barcha qurilmalardan chiqish",
+    "signOutEverywhereHint": "Barcha seanslarni, shu jumladan joriysini ham tugatadi."
+  },
+  "gym": {
+    "title": "Sportzal sozlamalari",
+    "subtitle": "Nomi, valyutasi va vaqt mintaqasi",
+    "name": "Sportzal nomi",
+    "currency": "Valyuta",
+    "timezone": "Vaqt mintaqasi",
+    "openingHour": "Ochilish vaqti",
+    "closingHour": "Yopilish vaqti",
+    "readOnlyNotice": "Backend sportzal sozlamalari uchun API taqdim etmaydi, shuning uchun ularni bu yerdan o'zgartirib bo'lmaydi. Ular ma'lumotlar bazasida sozlanadi va bu yerda faqat ma'lumot uchun ko'rsatiladi.",
+    "displayOnly": "Bu dastur foydalanadigan ko'rsatish sozlamalari uning muhit faylida belgilanadi."
+  },
+  "audit": {
+    "title": "Audit jurnali",
+    "subtitle": "Kim nima qilgani",
+    "columns": {
+      "when": "Qachon",
+      "actor": "Kim",
+      "action": "Amal",
+      "entity": "Obyekt",
+      "outcome": "Natija",
+      "ip": "IP manzil"
+    },
+    "outcome": {
+      "SUCCESS": "Bajarildi",
+      "FAILURE": "Rad etildi"
+    },
+    "filters": {
+      "actor": "Kim",
+      "action": "Amal",
+      "entityType": "Obyekt turi",
+      "outcome": "Natija"
+    },
+    "empty": "Bu davr uchun audit yozuvlari yo'q",
+    "detail": "Yozuv tafsilotlari",
+    "changes": "Nima o'zgardi",
+    "permissions": {
+      "title": "Yo'nalish ruxsatlari",
+      "subtitle": "Har bir endpoint va uni himoya qiluvchi qoida",
+      "totalRoutes": "Endpointlar",
+      "publicRoutes": "Ochiq",
+      "unrestricted": "Qoidasiz",
+      "allCovered": "Har bir endpoint avtorizatsiya qoidasi bilan himoyalangan."
+    }
+  },
+  "about": {
+    "title": "Dastur haqida",
+    "version": "Versiya",
+    "apiUrl": "API manzili",
+    "apiStatus": "API holati",
+    "connected": "Ulangan",
+    "disconnected": "Ulanmagan"
+  }
+}

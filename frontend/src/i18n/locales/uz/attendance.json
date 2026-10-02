@@ -1,0 +1,120 @@
+{
+  "title": "Davomat",
+  "subtitle": "Kim qachon kelgan",
+  "today": "Bugun",
+  "method": {
+    "QR": "QR orqali",
+    "MANUAL": "Qo'lda"
+  },
+  "columns": {
+    "member": "A'zo",
+    "checkedInAt": "Kirgan vaqti",
+    "checkedOutAt": "Chiqqan vaqti",
+    "duration": "Davomiyligi",
+    "method": "Usul",
+    "recordedBy": "Qayd etgan",
+    "date": "Sana"
+  },
+  "stats": {
+    "totalVisits": "Bugungi tashriflar",
+    "currentlyInside": "Hozir ichkarida",
+    "uniqueMembers": "Noyob a'zolar",
+    "averageDuration": "O'rtacha vaqt",
+    "peakHour": "Eng gavjum soat"
+  },
+  "stillInside": "Hozir ichkarida",
+  "checkIn": {
+    "title": "Kirishni qayd etish",
+    "subtitle": "Kartani skanerlang yoki a'zoni qidiring",
+    "manual": "Qo'lda qayd etish",
+    "manualTitle": "A'zoni ismi bo'yicha qayd etish",
+    "searchMember": "A'zoni qidirish",
+    "searchHint": "Ism, a'zo kodi yoki telefon raqamini yozing",
+    "button": "Qayd etish",
+    "success": "{name} kirishi qayd etildi",
+    "successShort": "Qayd etildi",
+    "admitted": "Kiritildi",
+    "denied": "Kiritilmadi",
+    "noteOptional": "Izoh (ixtiyoriy)"
+  },
+  "checkOut": {
+    "title": "Chiqishni qayd etish",
+    "button": "Chiqishni qayd etish",
+    "success": "{name} chiqishi qayd etildi",
+    "successShort": "Chiqish qayd etildi",
+    "notInside": "Bu a'zo hozir ichkarida emas",
+    "confirm": "Bu a'zoning chiqishi qayd etilsinmi?"
+  },
+  "scanner": {
+    "title": "QR skaner",
+    "start": "Skanerni yoqish",
+    "stop": "Skanerni to'xtatish",
+    "scanning": "A'zoning QR kodini kameraga tuting",
+    "processing": "Tekshirilmoqda…",
+    "cameraDenied": "Kameraga ruxsat berilmadi. Brauzer sozlamalarida ruxsat bering yoki qo'lda qayd eting.",
+    "cameraUnavailable": "Bu qurilmada kamera yo'q. Qo'lda qayd etishdan foydalaning.",
+    "cameraError": "Kamerani ishga tushirib bo'lmadi.",
+    "switchCamera": "Kamerani almashtirish",
+    "useManual": "Qo'lda qayd etish",
+    "ready": "Skanerlashga tayyor",
+    "lastScan": "Oxirgi skanerlash",
+    "scanAgain": "Keyingi a'zoni skanerlash",
+    "notSecureContext": "Kamera xavfsiz ulanishni (HTTPS) talab qiladi. Bu manzilda qo'lda qayd etishdan foydalaning."
+  },
+  "denial": {
+    "MEMBER_ARCHIVED": "Bu a'zo arxivlangan, kiritib bo'lmaydi",
+    "ACCOUNT_INACTIVE": "Bu a'zoning hisobi nofaol",
+    "NO_MEMBERSHIP": "Bu a'zoda abonement yo'q",
+    "MEMBERSHIP_NOT_STARTED": "Bu abonement hali boshlanmagan",
+    "MEMBERSHIP_FROZEN": "Bu abonement muzlatilgan",
+    "MEMBERSHIP_EXPIRED": "Bu abonementning muddati tugagan",
+    "MEMBERSHIP_CANCELLED": "Bu abonement bekor qilingan",
+    "NO_VISITS_LEFT": "Bu abonementda tashriflar qolmagan",
+    "ALREADY_INSIDE": "Bu a'zo allaqachon ichkarida",
+    "CARD_REVOKED": "Bu abonement kartasi bekor qilingan",
+    "CARD_SUPERSEDED": "Bu karta yangisi bilan almashtirilgan",
+    "CARD_INVALID": "Bu QR kod yaroqli abonement kartasi emas",
+    "CARD_NOT_ISSUED": "Bu a'zoga abonement kartasi berilmagan",
+    "UNKNOWN": "Bu a'zoni kiritib bo'lmaydi"
+  },
+  "warnings": {
+    "expiringSoon": "Bu abonement {count, plural, other {# kundan}} keyin tugaydi",
+    "lowVisits": "{count, plural, other {Atigi # ta tashrif qoldi}}",
+    "hasDebt": "Bu a'zoning {amount} qarzi bor"
+  },
+  "card": {
+    "title": "Abonement kartasi",
+    "subtitle": "Buni qabulxonada ko'rsating",
+    "memberCode": "A'zo kodi",
+    "issued": "Berilgan",
+    "version": "Karta versiyasi {version}",
+    "regenerate": "Yangi karta berish",
+    "regenerateTitle": "Yangi karta berilsinmi?",
+    "regenerateBody": "Joriy QR kod darhol ishlamay qoladi. Chop etilgan yoki saqlangan nusxalar yaroqsiz bo'ladi.",
+    "regenerateSuccess": "Yangi karta berildi",
+    "revoke": "Kartani bekor qilish",
+    "revokeTitle": "Bu karta bekor qilinsinmi?",
+    "revokeBody": "Yangi karta berilmaguncha a'zo skanerlab kira olmaydi.",
+    "revokeSuccess": "Karta bekor qilindi",
+    "revoked": "Bekor qilingan",
+    "revokedBody": "Bu karta bekor qilingan. Qabulxonadan yangisini so'rang.",
+    "active": "Faol",
+    "fullscreen": "To'liq ekranda ko'rsatish",
+    "exitFullscreen": "To'liq ekrandan chiqish",
+    "brightnessHint": "Skaner o'qiy olishi uchun ekran yorqinligini oshiring."
+  },
+  "history": "Tashriflar tarixi",
+  "myVisits": "Mening tashriflarim",
+  "monthlyVisits": "Shu oydagi tashriflar",
+  "empty": {
+    "title": "Hali tashriflar yo'q",
+    "body": "A'zolar kelgani sayin bu yerda ko'rinadi.",
+    "today": "Bugun hech kim kelmagan",
+    "filtered": "Bu filtrlarga mos tashrif topilmadi"
+  },
+  "network": {
+    "retrying": "Aloqa uzildi. Qayta urinilmoqda…",
+    "restored": "Aloqa tiklandi",
+    "offlineWarning": "Internet yo'qligida tashrifni qayd etib bo'lmaydi. Kimni kiritish sportzal serveri tomonidan hal qilinadi."
+  }
+}

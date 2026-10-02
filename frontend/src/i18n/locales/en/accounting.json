@@ -1,0 +1,133 @@
+{
+  "title": "Accounting",
+  "subtitle": "The gym's books",
+  "tabs": {
+    "overview": "Overview",
+    "income": "Income",
+    "expenses": "Expenses",
+    "debts": "Debts",
+    "salaries": "Trainer pay",
+    "reports": "Financial reports"
+  },
+  "entryType": {
+    "INCOME": "Income",
+    "EXPENSE": "Expense",
+    "REFUND": "Refund"
+  },
+  "incomeSource": {
+    "MEMBERSHIP_PAYMENT": "Membership payment",
+    "OTHER": "Other income"
+  },
+  "overview": {
+    "revenue": "Revenue",
+    "income": "Income",
+    "expenses": "Expenses",
+    "refunds": "Refunds",
+    "profit": "Result",
+    "profitPositive": "Profit",
+    "profitNegative": "Loss",
+    "margin": "Margin",
+    "outstanding": "Outstanding",
+    "incomeBreakdown": "Where income came from",
+    "expenseBreakdown": "Where money went",
+    "byMethod": "By payment method",
+    "netExplainer": "Revenue is income less refunds. The result is revenue less expenses."
+  },
+  "entries": {
+    "title": "Ledger entries",
+    "columns": {
+      "date": "Date",
+      "type": "Type",
+      "category": "Category",
+      "description": "Description",
+      "method": "Method",
+      "amount": "Amount",
+      "source": "Source",
+      "recordedBy": "Recorded by"
+    },
+    "automatic": "Automatic",
+    "automaticHint": "Posted by the system when a payment or refund was recorded.",
+    "manual": "Manual",
+    "void": {
+      "title": "Void this entry?",
+      "body": "Voiding removes this entry from the totals. Entries created automatically from payments cannot be voided — reverse the payment instead.",
+      "reason": "Reason",
+      "confirm": "Void entry",
+      "success": "Entry voided",
+      "notAllowed": "Automatic entries cannot be voided. Refund the payment instead."
+    },
+    "voided": "Voided",
+    "empty": "No entries for this period"
+  },
+  "expense": {
+    "add": "Add expense",
+    "addTitle": "Record an expense",
+    "fields": {
+      "amount": "Amount",
+      "category": "Category",
+      "description": "Description",
+      "occurredOn": "Date",
+      "method": "Paid by",
+      "reference": "Reference",
+      "notes": "Notes"
+    },
+    "success": "Expense recorded",
+    "history": "Expense history",
+    "total": "Total expenses",
+    "empty": "No expenses recorded for this period"
+  },
+  "categories": {
+    "title": "Expense categories",
+    "one": "Category",
+    "create": "Add category",
+    "createTitle": "Create an expense category",
+    "edit": "Edit category",
+    "fields": {
+      "name": "Name",
+      "description": "Description"
+    },
+    "archive": {
+      "title": "Archive this category?",
+      "body": "{name} can no longer be chosen for new expenses. Existing entries keep it.",
+      "confirm": "Archive category",
+      "success": "Category archived"
+    },
+    "reactivate": {
+      "title": "Reactivate this category?",
+      "body": "{name} becomes available again.",
+      "confirm": "Reactivate category",
+      "success": "Category reactivated"
+    },
+    "created": "Category created",
+    "updated": "Category updated",
+    "empty": "No categories yet",
+    "uncategorised": "Uncategorised"
+  },
+  "salaries": {
+    "title": "Trainer pay",
+    "subtitle": "What each trainer is set up to earn",
+    "columns": {
+      "trainer": "Trainer",
+      "type": "Type",
+      "baseSalary": "Base salary",
+      "commission": "Commission",
+      "assignedMembers": "Members",
+      "sessionsCompleted": "Sessions completed"
+    },
+    "notConfigured": "Not configured",
+    "empty": "No trainers to show",
+    "gapNotice": "The backend does not calculate payroll. This page shows each trainer’s configured compensation and lets a salary or commission payment be recorded as an expense attributed to them; it does not work out what is owed.",
+    "editCompensation": "Edit compensation",
+    "recordPayment": "Record payment",
+    "paidOut": "Paid out",
+    "paidOutHint": "Expenses recorded this year",
+    "noPayments": "No payments recorded"
+  },
+  "debts": {
+    "title": "Debts",
+    "subtitle": "Money owed to the gym"
+  },
+  "daily": "Daily",
+  "monthly": "Monthly",
+  "period": "Period"
+}

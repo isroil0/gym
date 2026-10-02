@@ -1,0 +1,104 @@
+{
+  "title": "A'zolar",
+  "subtitle": "Bu yerda shug'ullanadigan hamma",
+  "one": "A'zo",
+  "searchPlaceholder": "Ism, pochta yoki a'zo kodi bo'yicha qidirish",
+  "create": "A'zo qo'shish",
+  "createTitle": "Yangi a'zo qo'shish",
+  "edit": "A'zoni tahrirlash",
+  "editTitle": "A'zo ma'lumotlarini tahrirlash",
+  "columns": {
+    "code": "Kod",
+    "name": "Ismi",
+    "phone": "Telefon",
+    "email": "Pochta",
+    "membership": "Abonement",
+    "trainer": "Murabbiy",
+    "joined": "Qo'shilgan",
+    "status": "Holat",
+    "lastVisit": "Oxirgi tashrif"
+  },
+  "fields": {
+    "firstName": "Ism",
+    "lastName": "Familiya",
+    "email": "Elektron pochta",
+    "phone": "Telefon",
+    "password": "Boshlang'ich parol",
+    "passwordHint": "A'zo shu parol bilan kiradi. Keyin uni o'zgartirishi mumkin.",
+    "dateOfBirth": "Tug'ilgan sana",
+    "gender": "Jinsi",
+    "address": "Manzil",
+    "emergencyContactName": "Favqulodda aloqa",
+    "emergencyContactPhone": "Favqulodda aloqa telefoni",
+    "notes": "Ichki izohlar",
+    "notesHint": "Bu izohlarni faqat xodimlar ko'radi."
+  },
+  "filters": {
+    "status": "Holat",
+    "trainer": "Murabbiy",
+    "membershipStatus": "Abonement holati",
+    "unassigned": "Murabbiysiz",
+    "withDebt": "Qarzdorlar"
+  },
+  "tabs": {
+    "overview": "Umumiy",
+    "membership": "Abonement",
+    "payments": "To'lovlar",
+    "attendance": "Davomat",
+    "trainer": "Murabbiy",
+    "workouts": "Mashg'ulotlar",
+    "progress": "Natijalar"
+  },
+  "actions": {
+    "renew": "Abonementni yangilash",
+    "freeze": "Abonementni muzlatish",
+    "unfreeze": "Muzlatishni bekor qilish",
+    "addPayment": "To'lov qabul qilish",
+    "checkIn": "Kirishni qayd etish",
+    "assignTrainer": "Murabbiy biriktirish",
+    "changeTrainer": "Murabbiyni o'zgartirish",
+    "removeTrainer": "Murabbiyni olib tashlash",
+    "sellMembership": "Abonement sotish",
+    "viewCard": "QR kartani ko'rish",
+    "archive": "A'zoni arxivlash",
+    "reactivate": "A'zoni qayta faollashtirish"
+  },
+  "archive": {
+    "title": "Bu a'zo arxivlansinmi?",
+    "body": "{name} endi tizimga kira olmaydi va sportzalga kirita olmaydi. Tarixi saqlanadi, keyinroq qayta faollashtirish mumkin.",
+    "confirm": "A'zoni arxivlash",
+    "success": "A'zo arxivlandi"
+  },
+  "reactivate": {
+    "title": "Bu a'zo qayta faollashtirilsinmi?",
+    "body": "{name} yana tizimga kira oladi va sportzalga kela oladi.",
+    "confirm": "A'zoni qayta faollashtirish",
+    "success": "A'zo qayta faollashtirildi"
+  },
+  "assignTrainer": {
+    "title": "Murabbiy biriktirish",
+    "body": "{name} uchun mas'ul murabbiyni tanlang.",
+    "field": "Murabbiy",
+    "none": "Murabbiysiz",
+    "success": "Murabbiy biriktirildi",
+    "removed": "Murabbiy olib tashlandi"
+  },
+  "empty": {
+    "title": "Hali a'zolar yo'q",
+    "body": "Boshlash uchun birinchi a'zoni qo'shing.",
+    "filtered": "Bu filtrlarga mos a'zo topilmadi"
+  },
+  "detail": {
+    "memberSince": "{date} dan beri a'zo",
+    "noTrainer": "Murabbiy biriktirilmagan",
+    "noMembership": "Abonement yo'q",
+    "contact": "Aloqa",
+    "personal": "Shaxsiy ma'lumotlar",
+    "emergency": "Favqulodda aloqa",
+    "internalNotes": "Ichki izohlar",
+    "noNotes": "Izoh yo'q"
+  },
+  "created": "A'zo yaratildi",
+  "updated": "A'zo yangilandi",
+  "profileUpdated": "Profilingiz yangilandi"
+}

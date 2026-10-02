@@ -1,0 +1,78 @@
+{
+  "title": "Sessions",
+  "subtitle": "One-to-one training",
+  "one": "Session",
+  "schedule": "Schedule",
+  "create": "Schedule session",
+  "createTitle": "Schedule a training session",
+  "edit": "Edit session",
+  "reschedule": "Reschedule",
+  "rescheduleTitle": "Move this session",
+  "status": {
+    "SCHEDULED": "Scheduled",
+    "COMPLETED": "Completed",
+    "CANCELLED": "Cancelled",
+    "NO_SHOW": "No-show"
+  },
+  "columns": {
+    "member": "Member",
+    "trainer": "Trainer",
+    "startsAt": "Starts",
+    "endsAt": "Ends",
+    "duration": "Duration",
+    "status": "Status",
+    "notes": "Notes"
+  },
+  "fields": {
+    "member": "Member",
+    "trainer": "Trainer",
+    "date": "Date",
+    "startsAt": "Start time",
+    "endsAt": "End time",
+    "duration": "Duration",
+    "notes": "Notes",
+    "cancellationReason": "Reason for cancelling"
+  },
+  "actions": {
+    "complete": "Mark completed",
+    "cancel": "Cancel session",
+    "noShow": "Mark no-show",
+    "reschedule": "Reschedule"
+  },
+  "complete": {
+    "title": "Mark this session completed?",
+    "body": "Record the session with {name} as done.",
+    "notes": "Session notes",
+    "confirm": "Mark completed",
+    "success": "Session marked completed"
+  },
+  "cancelSession": {
+    "title": "Cancel this session?",
+    "body": "The session with {name} on {date} will be cancelled.",
+    "reason": "Reason",
+    "confirm": "Cancel session",
+    "success": "Session cancelled"
+  },
+  "noShow": {
+    "title": "Mark as a no-show?",
+    "body": "{name} did not attend the session on {date}.",
+    "confirm": "Mark no-show",
+    "success": "Session marked as a no-show"
+  },
+  "conflict": "This clashes with another session in the trainer's diary.",
+  "today": "Today",
+  "upcoming": "Upcoming",
+  "past": "Past",
+  "nextSession": "Next session",
+  "durationMinutes": "{count, plural, one {# minute} other {# minutes}}",
+  "empty": {
+    "title": "No sessions scheduled",
+    "body": "Schedule a session with one of your members.",
+    "today": "Nothing scheduled for today",
+    "upcoming": "No upcoming sessions",
+    "member": "You have no sessions booked",
+    "filtered": "No sessions match these filters"
+  },
+  "created": "Session scheduled",
+  "updated": "Session updated"
+}

@@ -1,0 +1,101 @@
+{
+  "title": "Payments",
+  "subtitle": "Money taken in",
+  "one": "Payment",
+  "searchPlaceholder": "Search by member, code or reference",
+  "create": "Take payment",
+  "createTitle": "Record a payment",
+  "method": {
+    "CASH": "Cash",
+    "CARD": "Card",
+    "TRANSFER": "Bank transfer",
+    "OTHER": "Other"
+  },
+  "status": {
+    "COMPLETED": "Completed",
+    "PARTIALLY_REFUNDED": "Partly refunded",
+    "REFUNDED": "Refunded"
+  },
+  "billingStatus": {
+    "UNPAID": "Unpaid",
+    "PARTIALLY_PAID": "Part paid",
+    "PAID": "Paid",
+    "OVERPAID": "Overpaid"
+  },
+  "columns": {
+    "date": "Date",
+    "member": "Member",
+    "membership": "Membership",
+    "amount": "Amount",
+    "method": "Method",
+    "status": "Status",
+    "reference": "Reference",
+    "receivedBy": "Received by",
+    "refunded": "Refunded",
+    "net": "Net"
+  },
+  "fields": {
+    "member": "Member",
+    "membership": "Membership",
+    "amount": "Amount",
+    "method": "Payment method",
+    "reference": "Reference",
+    "referenceHint": "Receipt or transaction number, if any.",
+    "paidAt": "Payment date",
+    "notes": "Notes"
+  },
+  "take": {
+    "title": "Take payment from {name}",
+    "outstanding": "Outstanding: {amount}",
+    "payInFull": "Pay in full",
+    "partial": "Partial payment",
+    "noMembershipSelected": "Choose which membership this payment is for",
+    "exceedsOutstanding": "This is more than the outstanding balance.",
+    "confirm": "Record payment",
+    "success": "Payment recorded",
+    "nothingDue": "This member has nothing outstanding."
+  },
+  "refund": {
+    "title": "Refund a payment",
+    "body": "Refunding posts a matching entry in the accounts. It cannot be undone.",
+    "amount": "Refund amount",
+    "full": "Refund in full",
+    "partial": "Partial refund",
+    "reason": "Reason for refund",
+    "maxRefundable": "At most {amount} can be refunded",
+    "confirm": "Issue refund",
+    "success": "Refund issued",
+    "refundedAmount": "Refunded",
+    "history": "Refunds"
+  },
+  "billing": {
+    "title": "Balance",
+    "amountDue": "Charged",
+    "netPaid": "Paid",
+    "outstanding": "Outstanding",
+    "credit": "Credit",
+    "settled": "Settled in full",
+    "owes": "Owes {amount}"
+  },
+  "outstanding": {
+    "title": "Outstanding balances",
+    "subtitle": "Members who still owe money",
+    "membersInDebt": "{count, plural, one {# member owes money} other {# members owe money}}",
+    "total": "Total outstanding",
+    "none": "Nobody owes anything"
+  },
+  "history": "Payment history",
+  "noPayments": "No payments yet",
+  "empty": {
+    "title": "No payments recorded",
+    "body": "Payments appear here once you take one.",
+    "filtered": "No payments match these filters"
+  },
+  "detail": {
+    "title": "Payment details",
+    "receivedFrom": "Received from",
+    "appliedTo": "Applied to",
+    "recordedBy": "Recorded by",
+    "recordedAt": "Recorded at"
+  }
+}

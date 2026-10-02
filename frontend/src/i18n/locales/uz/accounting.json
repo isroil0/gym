@@ -1,0 +1,133 @@
+{
+  "title": "Buxgalteriya",
+  "subtitle": "Sportzal hisob-kitoblari",
+  "tabs": {
+    "overview": "Umumiy",
+    "income": "Daromad",
+    "expenses": "Xarajatlar",
+    "debts": "Qarzlar",
+    "salaries": "Murabbiylar haqi",
+    "reports": "Moliyaviy hisobotlar"
+  },
+  "entryType": {
+    "INCOME": "Daromad",
+    "EXPENSE": "Xarajat",
+    "REFUND": "Qaytarish"
+  },
+  "incomeSource": {
+    "MEMBERSHIP_PAYMENT": "Abonement to'lovi",
+    "OTHER": "Boshqa daromad"
+  },
+  "overview": {
+    "revenue": "Tushum",
+    "income": "Daromad",
+    "expenses": "Xarajatlar",
+    "refunds": "Qaytarishlar",
+    "profit": "Natija",
+    "profitPositive": "Foyda",
+    "profitNegative": "Zarar",
+    "margin": "Rentabellik",
+    "outstanding": "Qarzdorlik",
+    "incomeBreakdown": "Daromad qayerdan keldi",
+    "expenseBreakdown": "Pul qayerga ketdi",
+    "byMethod": "To'lov usuli bo'yicha",
+    "netExplainer": "Tushum — daromaddan qaytarishlar ayirilgani. Natija — tushumdan xarajatlar ayirilgani."
+  },
+  "entries": {
+    "title": "Hisob yozuvlari",
+    "columns": {
+      "date": "Sana",
+      "type": "Turi",
+      "category": "Toifa",
+      "description": "Tavsif",
+      "method": "Usul",
+      "amount": "Summa",
+      "source": "Manba",
+      "recordedBy": "Qayd etgan"
+    },
+    "automatic": "Avtomatik",
+    "automaticHint": "To'lov yoki qaytarish qayd etilganda tizim tomonidan kiritilgan.",
+    "manual": "Qo'lda",
+    "void": {
+      "title": "Bu yozuv bekor qilinsinmi?",
+      "body": "Bekor qilish yozuvni jami hisobdan chiqaradi. To'lovlardan avtomatik yaratilgan yozuvlarni bekor qilib bo'lmaydi — buning o'rniga to'lovni qaytaring.",
+      "reason": "Sababi",
+      "confirm": "Yozuvni bekor qilish",
+      "success": "Yozuv bekor qilindi",
+      "notAllowed": "Avtomatik yozuvlarni bekor qilib bo'lmaydi. Buning o'rniga to'lovni qaytaring."
+    },
+    "voided": "Bekor qilingan",
+    "empty": "Bu davr uchun yozuvlar yo'q"
+  },
+  "expense": {
+    "add": "Xarajat qo'shish",
+    "addTitle": "Xarajatni qayd etish",
+    "fields": {
+      "amount": "Summa",
+      "category": "Toifa",
+      "description": "Tavsif",
+      "occurredOn": "Sana",
+      "method": "To'lov usuli",
+      "reference": "Hujjat raqami",
+      "notes": "Izohlar"
+    },
+    "success": "Xarajat qayd etildi",
+    "history": "Xarajatlar tarixi",
+    "total": "Jami xarajatlar",
+    "empty": "Bu davrda xarajatlar qayd etilmagan"
+  },
+  "categories": {
+    "title": "Xarajat toifalari",
+    "one": "Toifa",
+    "create": "Toifa qo'shish",
+    "createTitle": "Xarajat toifasini yaratish",
+    "edit": "Toifani tahrirlash",
+    "fields": {
+      "name": "Nomi",
+      "description": "Tavsif"
+    },
+    "archive": {
+      "title": "Bu toifa arxivlansinmi?",
+      "body": "{name} yangi xarajatlar uchun tanlanmaydi. Mavjud yozuvlarda saqlanib qoladi.",
+      "confirm": "Toifani arxivlash",
+      "success": "Toifa arxivlandi"
+    },
+    "reactivate": {
+      "title": "Bu toifa qayta faollashtirilsinmi?",
+      "body": "{name} yana tanlash uchun ochiladi.",
+      "confirm": "Toifani qayta faollashtirish",
+      "success": "Toifa qayta faollashtirildi"
+    },
+    "created": "Toifa yaratildi",
+    "updated": "Toifa yangilandi",
+    "empty": "Hali toifalar yo'q",
+    "uncategorised": "Toifasiz"
+  },
+  "salaries": {
+    "title": "Murabbiylar haqi",
+    "subtitle": "Har bir murabbiy uchun belgilangan to'lov shartlari",
+    "columns": {
+      "trainer": "Murabbiy",
+      "type": "Turi",
+      "baseSalary": "Asosiy maosh",
+      "commission": "Ulush",
+      "assignedMembers": "A'zolar",
+      "sessionsCompleted": "Yakunlangan mashg'ulotlar"
+    },
+    "notConfigured": "Belgilanmagan",
+    "empty": "Ko'rsatiladigan murabbiy yo'q",
+    "gapNotice": "Backend maosh hisoblamaydi. Bu sahifa har bir murabbiyning belgilangan to'lov shartlarini ko'rsatadi va maosh yoki ulushni unga tegishli xarajat sifatida qayd etish imkonini beradi; qancha to'lanishi kerakligini hisoblamaydi.",
+    "editCompensation": "Mehnat haqini tahrirlash",
+    "recordPayment": "To'lovni qayd etish",
+    "paidOut": "To'langan",
+    "paidOutHint": "Shu yilda qayd etilgan xarajatlar",
+    "noPayments": "To'lovlar qayd etilmagan"
+  },
+  "debts": {
+    "title": "Qarzlar",
+    "subtitle": "Sportzalga qarzdor summalar"
+  },
+  "daily": "Kunlik",
+  "monthly": "Oylik",
+  "period": "Davr"
+}

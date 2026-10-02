@@ -1,0 +1,21 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: gym-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: gym
+      POSTGRES_PASSWORD: gym
+      POSTGRES_DB: gym_dev
+    ports:
+      - '55433:5432'
+    volumes:
+      - gym-pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U gym -d gym_dev']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  gym-pgdata:

@@ -1,0 +1,81 @@
+{
+  "title": "Progress",
+  "subtitle": "Measurements over time",
+  "myProgress": "My progress",
+  "record": "Record measurement",
+  "recordTitle": "Record a measurement",
+  "edit": "Edit measurement",
+  "metrics": {
+    "weightKg": "Weight",
+    "heightCm": "Height",
+    "bodyFatPercent": "Body fat",
+    "muscleMassKg": "Muscle mass",
+    "chestCm": "Chest",
+    "waistCm": "Waist",
+    "hipsCm": "Hips",
+    "thighCm": "Thigh",
+    "armCm": "Arm",
+    "restingHeartRate": "Resting heart rate"
+  },
+  "units": {
+    "kg": "kg",
+    "lb": "lb",
+    "cm": "cm",
+    "percent": "%",
+    "bpm": "bpm",
+    "KG": "Kilograms",
+    "LB": "Pounds"
+  },
+  "fields": {
+    "member": "Member",
+    "measuredOn": "Measured on",
+    "unit": "Unit",
+    "notes": "Notes"
+  },
+  "bmi": {
+    "label": "BMI",
+    "underweight": "Underweight",
+    "normal": "Healthy",
+    "overweight": "Overweight",
+    "obese": "Obese",
+    "needsHeight": "Record a height to calculate BMI"
+  },
+  "change": {
+    "since": "since {date}",
+    "increase": "up {value}",
+    "decrease": "down {value}",
+    "noChange": "unchanged",
+    "first": "First measurement"
+  },
+  "chart": {
+    "title": "{metric} over time",
+    "noData": "Not enough measurements to draw a chart",
+    "noDataHint": "Record at least two measurements of this metric.",
+    "selectMetric": "Metric"
+  },
+  "columns": {
+    "date": "Date",
+    "weight": "Weight",
+    "bodyFat": "Body fat",
+    "muscleMass": "Muscle mass",
+    "notes": "Notes",
+    "recordedBy": "Recorded by"
+  },
+  "latest": "Latest measurement",
+  "history": "Measurement history",
+  "delete": {
+    "title": "Delete this measurement?",
+    "body": "The measurement taken on {date} will be removed.",
+    "confirm": "Delete measurement",
+    "success": "Measurement deleted"
+  },
+  "empty": {
+    "title": "No measurements yet",
+    "body": "Record the first measurement to start tracking progress.",
+    "member": "No measurements recorded yet",
+    "memberHint": "Your trainer records these during sessions."
+  },
+  "created": "Measurement recorded",
+  "updated": "Measurement updated",
+  "duplicateDate": "A measurement is already recorded for this member on this date. Choose another date, or edit the existing one."
+}

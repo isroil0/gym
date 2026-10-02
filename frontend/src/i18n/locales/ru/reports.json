@@ -1,0 +1,104 @@
+{
+  "title": "Отчёты",
+  "subtitle": "Как идут дела",
+  "tabs": {
+    "revenue": "Выручка",
+    "expenses": "Расходы",
+    "profit": "Итог",
+    "membershipSales": "Продажи абонементов",
+    "renewals": "Продления",
+    "expired": "Истёкшие",
+    "attendance": "Посещаемость",
+    "unpaid": "Задолженности",
+    "trainers": "Тренеры"
+  },
+  "groupBy": {
+    "label": "Группировать",
+    "day": "По дням",
+    "month": "По месяцам"
+  },
+  "revenue": {
+    "title": "Выручка",
+    "income": "Доходы",
+    "refunds": "Возвраты",
+    "net": "Чистая выручка",
+    "chartLabel": "Выручка",
+    "byMethod": "По способу оплаты",
+    "bySource": "По источнику"
+  },
+  "expenses": {
+    "title": "Расходы",
+    "total": "Всего расходов",
+    "byCategory": "По категориям",
+    "chartLabel": "Расходы"
+  },
+  "profit": {
+    "title": "Итог",
+    "revenue": "Выручка",
+    "expenses": "Расходы",
+    "result": "Итог",
+    "margin": "Рентабельность",
+    "chartLabel": "Итог"
+  },
+  "membershipSales": {
+    "title": "Продажи абонементов",
+    "totalSold": "Продано абонементов",
+    "grossValue": "Общая сумма",
+    "discounts": "Предоставлено скидок",
+    "netValue": "Сумма за вычетом скидок",
+    "newSales": "Новые",
+    "renewals": "Продления",
+    "byPlan": "По тарифам"
+  },
+  "renewals": {
+    "title": "Продления",
+    "totalRenewals": "Продлений",
+    "renewalRate": "Доля продлений",
+    "chartLabel": "Продления"
+  },
+  "expired": {
+    "title": "Истёкшие абонементы",
+    "totalExpired": "Истекло",
+    "notRenewed": "Не продлены",
+    "chartLabel": "Истёкшие"
+  },
+  "attendance": {
+    "title": "Посещаемость",
+    "totalVisits": "Всего посещений",
+    "uniqueMembers": "Уникальных клиентов",
+    "averagePerDay": "В среднем за день",
+    "byMethod": "По способу отметки",
+    "chartLabel": "Посещения",
+    "busiestDay": "Самый загруженный день"
+  },
+  "unpaid": {
+    "title": "Задолженности",
+    "membersInDebt": "Клиентов с долгом",
+    "totalOutstanding": "Общая задолженность",
+    "oldestDebt": "Самый давний долг",
+    "cappedNotice": "Показано не более 100 клиентов — таково ограничение этого отчёта в бэкенде."
+  },
+  "trainerStats": {
+    "title": "Статистика тренеров",
+    "trainer": "Тренер",
+    "assignedMembers": "Клиенты",
+    "activeMembers": "Активные",
+    "plansWritten": "Планы",
+    "sessionsCompleted": "Проведено",
+    "sessionsCancelled": "Отменено",
+    "noShows": "Неявки"
+  },
+  "range": {
+    "label": "Период",
+    "from": "С",
+    "to": "По",
+    "invalid": "Дата начала должна быть не позже даты окончания",
+    "tooLong": "Выберите период не больше {days} дней"
+  },
+  "empty": {
+    "title": "За этот период данных нет",
+    "body": "Попробуйте выбрать более широкий период."
+  },
+  "exportCsv": "Экспорт в CSV",
+  "exported": "Отчёт выгружен"
+}

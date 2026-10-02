@@ -1,0 +1,104 @@
+{
+  "title": "Reports",
+  "subtitle": "How the business is performing",
+  "tabs": {
+    "revenue": "Revenue",
+    "expenses": "Expenses",
+    "profit": "Result",
+    "membershipSales": "Membership sales",
+    "renewals": "Renewals",
+    "expired": "Expired",
+    "attendance": "Attendance",
+    "unpaid": "Unpaid",
+    "trainers": "Trainers"
+  },
+  "groupBy": {
+    "label": "Group by",
+    "day": "Day",
+    "month": "Month"
+  },
+  "revenue": {
+    "title": "Revenue",
+    "income": "Income",
+    "refunds": "Refunds",
+    "net": "Net revenue",
+    "chartLabel": "Revenue",
+    "byMethod": "By payment method",
+    "bySource": "By source"
+  },
+  "expenses": {
+    "title": "Expenses",
+    "total": "Total expenses",
+    "byCategory": "By category",
+    "chartLabel": "Expenses"
+  },
+  "profit": {
+    "title": "Result",
+    "revenue": "Revenue",
+    "expenses": "Expenses",
+    "result": "Result",
+    "margin": "Margin",
+    "chartLabel": "Result"
+  },
+  "membershipSales": {
+    "title": "Membership sales",
+    "totalSold": "Memberships sold",
+    "grossValue": "Gross value",
+    "discounts": "Discounts given",
+    "netValue": "Net value",
+    "newSales": "New",
+    "renewals": "Renewals",
+    "byPlan": "By plan"
+  },
+  "renewals": {
+    "title": "Renewals",
+    "totalRenewals": "Renewals",
+    "renewalRate": "Renewal rate",
+    "chartLabel": "Renewals"
+  },
+  "expired": {
+    "title": "Expired memberships",
+    "totalExpired": "Expired",
+    "notRenewed": "Not renewed",
+    "chartLabel": "Expired"
+  },
+  "attendance": {
+    "title": "Attendance",
+    "totalVisits": "Total visits",
+    "uniqueMembers": "Unique members",
+    "averagePerDay": "Average per day",
+    "byMethod": "By method",
+    "chartLabel": "Visits",
+    "busiestDay": "Busiest day"
+  },
+  "unpaid": {
+    "title": "Unpaid balances",
+    "membersInDebt": "Members in debt",
+    "totalOutstanding": "Total outstanding",
+    "oldestDebt": "Oldest unpaid",
+    "cappedNotice": "Shows up to 100 members. The backend caps this report at that many."
+  },
+  "trainerStats": {
+    "title": "Trainer statistics",
+    "trainer": "Trainer",
+    "assignedMembers": "Members",
+    "activeMembers": "Active",
+    "plansWritten": "Plans",
+    "sessionsCompleted": "Completed",
+    "sessionsCancelled": "Cancelled",
+    "noShows": "No-shows"
+  },
+  "range": {
+    "label": "Date range",
+    "from": "From",
+    "to": "To",
+    "invalid": "The start date must be on or before the end date",
+    "tooLong": "Choose a range of at most {days} days"
+  },
+  "empty": {
+    "title": "No data for this period",
+    "body": "Try a wider date range."
+  },
+  "exportCsv": "Export as CSV",
+  "exported": "Report exported"
+}

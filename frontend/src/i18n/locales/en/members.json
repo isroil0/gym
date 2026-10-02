@@ -1,0 +1,104 @@
+{
+  "title": "Members",
+  "subtitle": "Everyone who trains here",
+  "one": "Member",
+  "searchPlaceholder": "Search by name, email or member code",
+  "create": "Add member",
+  "createTitle": "Add a new member",
+  "edit": "Edit member",
+  "editTitle": "Edit member details",
+  "columns": {
+    "code": "Code",
+    "name": "Name",
+    "phone": "Phone",
+    "email": "Email",
+    "membership": "Membership",
+    "trainer": "Trainer",
+    "joined": "Joined",
+    "status": "Status",
+    "lastVisit": "Last visit"
+  },
+  "fields": {
+    "firstName": "First name",
+    "lastName": "Last name",
+    "email": "Email",
+    "phone": "Phone",
+    "password": "Initial password",
+    "passwordHint": "The member uses this to sign in. They can change it later.",
+    "dateOfBirth": "Date of birth",
+    "gender": "Gender",
+    "address": "Address",
+    "emergencyContactName": "Emergency contact",
+    "emergencyContactPhone": "Emergency contact phone",
+    "notes": "Internal notes",
+    "notesHint": "Only staff can see these notes."
+  },
+  "filters": {
+    "status": "Status",
+    "trainer": "Trainer",
+    "membershipStatus": "Membership status",
+    "unassigned": "Without a trainer",
+    "withDebt": "With outstanding balance"
+  },
+  "tabs": {
+    "overview": "Overview",
+    "membership": "Membership",
+    "payments": "Payments",
+    "attendance": "Attendance",
+    "trainer": "Trainer",
+    "workouts": "Workouts",
+    "progress": "Progress"
+  },
+  "actions": {
+    "renew": "Renew membership",
+    "freeze": "Freeze membership",
+    "unfreeze": "Unfreeze membership",
+    "addPayment": "Take payment",
+    "checkIn": "Check in",
+    "assignTrainer": "Assign trainer",
+    "changeTrainer": "Change trainer",
+    "removeTrainer": "Remove trainer",
+    "sellMembership": "Sell membership",
+    "viewCard": "View QR card",
+    "archive": "Archive member",
+    "reactivate": "Reactivate member"
+  },
+  "archive": {
+    "title": "Archive this member?",
+    "body": "{name} will no longer be able to sign in or enter the gym. Their history is kept and they can be reactivated later.",
+    "confirm": "Archive member",
+    "success": "Member archived"
+  },
+  "reactivate": {
+    "title": "Reactivate this member?",
+    "body": "{name} will be able to sign in and enter the gym again.",
+    "confirm": "Reactivate member",
+    "success": "Member reactivated"
+  },
+  "assignTrainer": {
+    "title": "Assign a trainer",
+    "body": "Choose the trainer responsible for {name}.",
+    "field": "Trainer",
+    "none": "No trainer",
+    "success": "Trainer assigned",
+    "removed": "Trainer removed"
+  },
+  "empty": {
+    "title": "No members yet",
+    "body": "Add your first member to get started.",
+    "filtered": "No members match these filters"
+  },
+  "detail": {
+    "memberSince": "Member since {date}",
+    "noTrainer": "No trainer assigned",
+    "noMembership": "No membership",
+    "contact": "Contact",
+    "personal": "Personal details",
+    "emergency": "Emergency contact",
+    "internalNotes": "Internal notes",
+    "noNotes": "No notes"
+  },
+  "created": "Member created",
+  "updated": "Member updated",
+  "profileUpdated": "Your profile has been updated"
+}

@@ -1,0 +1,40 @@
+{
+  "title": "Xatolik yuz berdi",
+  "generic": "So'rovni bajarib bo'lmadi. Qayta urinib ko'ring.",
+  "network": "Serverga ulanib bo'lmadi. Internet aloqasini tekshiring.",
+  "timeout": "Server javob bermadi.",
+  "unauthorized": "Seansingiz tugadi. Qaytadan kiring.",
+  "forbidden": "Buni bajarishga ruxsatingiz yo'q.",
+  "notFound": "So'ralgan ma'lumot topilmadi.",
+  "conflict": "Bu mavjud ma'lumotlarga zid keladi.",
+  "validation": "Belgilangan maydonlarni to'g'rilang.",
+  "rateLimited": "Juda ko'p urinish bo'ldi. Biroz kuting.",
+  "server": "Serverda xatolik yuz berdi.",
+  "unprocessable": "Hozir bu amalni bajarib bo'lmaydi.",
+  "codes": {
+    "VALIDATION_ERROR": "Belgilangan maydonlarni to'g'rilang.",
+    "BAD_REQUEST": "So'rovni tushunib bo'lmadi.",
+    "UNAUTHORIZED": "Seansingiz tugadi. Qaytadan kiring.",
+    "FORBIDDEN": "Buni bajarishga ruxsatingiz yo'q.",
+    "NOT_FOUND": "So'ralgan ma'lumot topilmadi.",
+    "METHOD_NOT_ALLOWED": "Bu amal bu yerda mavjud emas.",
+    "CONFLICT": "Bu mavjud ma'lumotlarga zid keladi.",
+    "UNPROCESSABLE_ENTITY": "Hozir bu amalni bajarib bo'lmaydi.",
+    "TOO_MANY_REQUESTS": "Juda ko'p urinish bo'ldi. Biroz kuting.",
+    "PAYLOAD_TOO_LARGE": "Yuborilayotgan ma'lumot juda katta.",
+    "UNSUPPORTED_MEDIA_TYPE": "Bu fayl turi qo'llab-quvvatlanmaydi.",
+    "DATABASE_ERROR": "Ma'lumotlar bazasi so'rovni bajara olmadi.",
+    "FOREIGN_KEY_CONSTRAINT": "Bunga bog'liq ma'lumot topilmadi.",
+    "UNIQUE_CONSTRAINT": "Bu qiymat allaqachon band.",
+    "SERVICE_UNAVAILABLE": "Xizmat vaqtincha mavjud emas.",
+    "INTERNAL_SERVER_ERROR": "Serverda xatolik yuz berdi.",
+    "NETWORK_ERROR": "Serverga ulanib bo'lmadi. Internet aloqasini tekshiring."
+  },
+  "boundary": {
+    "title": "Bu bo'limni yuklab bo'lmadi",
+    "body": "Sahifani ko'rsatishda kutilmagan xatolik yuz berdi.",
+    "reload": "Sahifani qayta yuklash",
+    "details": "Texnik tafsilotlar"
+  },
+  "requestId": "Murojaat raqami: {id}"
+}

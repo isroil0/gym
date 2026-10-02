@@ -1,0 +1,106 @@
+{
+  "title": "Mashg'ulot rejalari",
+  "subtitle": "Mashg'ulot dasturlari",
+  "one": "Mashg'ulot rejasi",
+  "myPlan": "Mening mashg'ulot rejam",
+  "create": "Reja yaratish",
+  "createTitle": "Mashg'ulot rejasini yaratish",
+  "edit": "Rejani tahrirlash",
+  "columns": {
+    "name": "Reja",
+    "member": "A'zo",
+    "trainer": "Murabbiy",
+    "goal": "Maqsad",
+    "days": "Kunlar",
+    "exercises": "Mashqlar",
+    "status": "Holat",
+    "created": "Yaratilgan"
+  },
+  "fields": {
+    "member": "A'zo",
+    "name": "Reja nomi",
+    "goal": "Maqsad",
+    "goalPlaceholder": "100 kg cho'kkalab turish, 5 kg vazn tashlash, …",
+    "notes": "Izohlar",
+    "startDate": "Boshlanish sanasi",
+    "endDate": "Tugash sanasi"
+  },
+  "days": {
+    "title": "Mashg'ulot kunlari",
+    "one": "Kun",
+    "add": "Kun qo'shish",
+    "addTitle": "Mashg'ulot kunini qo'shish",
+    "edit": "Kunni tahrirlash",
+    "name": "Kun nomi",
+    "namePlaceholder": "Ko'krak kuni, Oyoqlar, …",
+    "order": "Tartibi",
+    "notes": "Izohlar",
+    "empty": "Hali mashg'ulot kunlari yo'q",
+    "emptyHint": "Avval kun qo'shing, keyin unga mashqlar kiriting.",
+    "delete": {
+      "title": "Bu kun o'chirilsinmi?",
+      "body": "{name} va undagi barcha mashqlar o'chiriladi.",
+      "confirm": "Kunni o'chirish",
+      "success": "Kun o'chirildi"
+    },
+    "created": "Kun qo'shildi",
+    "updated": "Kun yangilandi"
+  },
+  "exercises": {
+    "title": "Mashqlar",
+    "one": "Mashq",
+    "add": "Mashq qo'shish",
+    "addTitle": "Mashq qo'shish",
+    "edit": "Mashqni tahrirlash",
+    "name": "Mashq",
+    "namePlaceholder": "Jim bosish, Cho'kkalash, …",
+    "sets": "Yondashuv",
+    "reps": "Takror",
+    "repsPlaceholder": "8-12",
+    "weight": "Og'irlik",
+    "restSeconds": "Dam olish",
+    "restSecondsUnit": "{count} s",
+    "instructions": "Ko'rsatmalar",
+    "order": "Tartibi",
+    "empty": "Bu kunda mashqlar yo'q",
+    "emptyHint": "Birinchi mashqni qo'shing.",
+    "summary": "{sets} × {reps}",
+    "summaryWithWeight": "{sets} × {reps}, {weight}",
+    "delete": {
+      "title": "Bu mashq o'chirilsinmi?",
+      "body": "{name} bu kundan olib tashlanadi.",
+      "confirm": "Mashqni o'chirish",
+      "success": "Mashq o'chirildi"
+    },
+    "created": "Mashq qo'shildi",
+    "updated": "Mashq yangilandi"
+  },
+  "archive": {
+    "title": "Bu reja arxivlansinmi?",
+    "body": "{name} faqat o'qish uchun qoladi va a'zoning joriy rejasi bo'lmaydi.",
+    "confirm": "Rejani arxivlash",
+    "success": "Reja arxivlandi"
+  },
+  "reactivate": {
+    "title": "Bu reja qayta faollashtirilsinmi?",
+    "body": "{name} yana a'zoning faol rejasiga aylanadi.",
+    "confirm": "Rejani qayta faollashtirish",
+    "success": "Reja qayta faollashtirildi"
+  },
+  "status": {
+    "ACTIVE": "Faol",
+    "ARCHIVED": "Arxivlangan"
+  },
+  "dayCount": "{count, plural, other {# kun}}",
+  "exerciseCount": "{count, plural, other {# ta mashq}}",
+  "empty": {
+    "title": "Hali mashg'ulot rejalari yo'q",
+    "body": "A'zolaringizdan biri uchun reja tuzing.",
+    "member": "Murabbiyingiz hali sizga reja tuzmagan",
+    "memberHint": "Tuzilgach, bu yerda ko'rinadi.",
+    "filtered": "Bu filtrlarga mos reja topilmadi"
+  },
+  "created": "Mashg'ulot rejasi yaratildi",
+  "updated": "Mashg'ulot rejasi yangilandi",
+  "history": "Oldingi rejalar"
+}

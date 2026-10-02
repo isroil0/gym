@@ -1,0 +1,82 @@
+{
+  "title": "Murabbiylar",
+  "subtitle": "Murabbiylar tarkibi",
+  "one": "Murabbiy",
+  "searchPlaceholder": "Ism, pochta yoki murabbiy kodi bo'yicha qidirish",
+  "create": "Murabbiy qo'shish",
+  "createTitle": "Yangi murabbiy qo'shish",
+  "edit": "Murabbiyni tahrirlash",
+  "editTitle": "Murabbiy ma'lumotlarini tahrirlash",
+  "columns": {
+    "code": "Kod",
+    "name": "Ismi",
+    "email": "Pochta",
+    "phone": "Telefon",
+    "specialization": "Yo'nalishi",
+    "members": "A'zolar",
+    "status": "Holat",
+    "hiredAt": "Ishga olingan"
+  },
+  "fields": {
+    "firstName": "Ism",
+    "lastName": "Familiya",
+    "email": "Elektron pochta",
+    "phone": "Telefon",
+    "password": "Boshlang'ich parol",
+    "specialization": "Yo'nalishi",
+    "bio": "Qisqacha ma'lumot",
+    "certifications": "Sertifikatlar",
+    "hourlyRate": "Soatlik stavka",
+    "hiredAt": "Ishga olingan sana"
+  },
+  "compensation": {
+    "title": "Mehnat haqi",
+    "type": "To'lov turi",
+    "baseSalary": "Asosiy maosh",
+    "commissionPercent": "Ulush",
+    "edit": "Mehnat haqini tahrirlash",
+    "updated": "Mehnat haqi yangilandi",
+    "types": {
+      "NONE": "Belgilanmagan",
+      "FIXED": "Belgilangan maosh",
+      "COMMISSION": "Faqat ulush",
+      "FIXED_PLUS_COMMISSION": "Maosh va ulush"
+    }
+  },
+  "tabs": {
+    "overview": "Umumiy",
+    "members": "Biriktirilgan a'zolar",
+    "sessions": "Mashg'ulotlar",
+    "schedule": "Jadval",
+    "stats": "Statistika"
+  },
+  "stats": {
+    "assignedMembers": "Biriktirilgan a'zolar",
+    "activeMembers": "Faol a'zolar",
+    "plansWritten": "Tuzilgan rejalar",
+    "sessionsCompleted": "Yakunlangan mashg'ulotlar",
+    "sessionsCancelled": "Bekor qilingan",
+    "noShows": "Kelmaganlar"
+  },
+  "assignedMembers": "Biriktirilgan a'zolar",
+  "noAssignedMembers": "Bu murabbiyga a'zo biriktirilmagan",
+  "archive": {
+    "title": "Bu murabbiy arxivlansinmi?",
+    "body": "{name} endi tizimga kira olmaydi. Unga biriktirilgan a'zolar siz ko'chirmaguningizcha biriktirilgan qoladi.",
+    "confirm": "Murabbiyni arxivlash",
+    "success": "Murabbiy arxivlandi"
+  },
+  "reactivate": {
+    "title": "Bu murabbiy qayta faollashtirilsinmi?",
+    "body": "{name} yana tizimga kira oladi.",
+    "confirm": "Murabbiyni qayta faollashtirish",
+    "success": "Murabbiy qayta faollashtirildi"
+  },
+  "empty": {
+    "title": "Hali murabbiylar yo'q",
+    "body": "Boshlash uchun birinchi murabbiyni qo'shing.",
+    "filtered": "Bu filtrlarga mos murabbiy topilmadi"
+  },
+  "created": "Murabbiy yaratildi",
+  "updated": "Murabbiy yangilandi"
+}

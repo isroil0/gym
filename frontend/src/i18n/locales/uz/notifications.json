@@ -1,0 +1,66 @@
+{
+  "title": "Bildirishnomalar",
+  "subtitle": "E'tiboringizni talab qiladigan narsalar",
+  "unread": "O'qilmagan",
+  "unreadCount": "{count, plural, =0 {O'qilmagan bildirishnoma yo'q} other {# ta o'qilmagan bildirishnoma}}",
+  "markRead": "O'qilgan deb belgilash",
+  "markAllRead": "Hammasini o'qilgan deb belgilash",
+  "allRead": "Barcha bildirishnomalar o'qilgan deb belgilandi",
+  "type": {
+    "MEMBERSHIP_EXPIRING": "Abonement tugayapti",
+    "MEMBERSHIP_EXPIRED": "Abonement tugadi",
+    "PAYMENT_DUE": "To'lov muddati keldi",
+    "SESSION_SCHEDULED": "Mashg'ulot belgilandi",
+    "SESSION_CANCELLED": "Mashg'ulot bekor qilindi",
+    "CARD_REVOKED": "Karta bekor qilindi",
+    "ANNOUNCEMENT": "E'lon"
+  },
+  "severity": {
+    "INFO": "Ma'lumot",
+    "WARNING": "Ogohlantirish",
+    "CRITICAL": "Shoshilinch"
+  },
+  "filters": {
+    "all": "Hammasi",
+    "unreadOnly": "Faqat o'qilmaganlar",
+    "type": "Turi",
+    "severity": "Muhimligi"
+  },
+  "delete": {
+    "title": "Bu bildirishnoma o'chirilsinmi?",
+    "confirm": "O'chirish",
+    "success": "Bildirishnoma o'chirildi"
+  },
+  "announcement": {
+    "create": "E'lon yuborish",
+    "createTitle": "E'lon yuborish",
+    "body": "Bu tanlangan auditoriyadagi hammaga yetkaziladi.",
+    "fields": {
+      "title": "Sarlavha",
+      "message": "Matn",
+      "audience": "Kimga",
+      "severity": "Muhimligi"
+    },
+    "audience": {
+      "ALL": "Hammaga",
+      "MEMBERS": "Barcha a'zolarga",
+      "TRAINERS": "Barcha murabbiylarga"
+    },
+    "confirm": "E'lonni yuborish",
+    "success": "E'lon {count, plural, other {# kishiga}} yuborildi"
+  },
+  "reminders": {
+    "run": "Eslatmalarni yuborish",
+    "runTitle": "Eslatmalar yuborilsinmi?",
+    "runBody": "Bu tugayotgan va tugagan abonementlar hamda muddati o'tgan to'lovlarni tekshirib, tegishli a'zolarga xabar beradi. Ikki marta ishga tushirsangiz, takroriy xabar yuborilmaydi.",
+    "confirm": "Yuborish",
+    "success": "Eslatmalar yuborildi",
+    "result": "{expiring} ta tugayapti, {expired} ta tugagan, {payments} ta to'lov eslatmasi, {skipped} ta takror sifatida o'tkazib yuborildi"
+  },
+  "empty": {
+    "title": "Ko'rsatadigan narsa yo'q",
+    "body": "Sizda bildirishnomalar yo'q.",
+    "unread": "O'qilmagan bildirishnomalar yo'q"
+  },
+  "viewAll": "Barcha bildirishnomalarni ko'rish"
+}

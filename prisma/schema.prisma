@@ -1,0 +1,967 @@
+// Gym CRM — Prisma schema
+// Phase 1: foundation. Phase 2: accounts, roles and authentication.
+// Phase 3: member and trainer profiles.
+// Phase 4: membership plans and member memberships.
+// Phase 5: payments, refunds and the accounting ledger.
+// Phase 6: attendance and QR membership cards.
+// Phase 7: workout plans, member progress and personal training sessions.
+// Phase 9: notifications, audit logging and security hardening.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+/// Generic key/value application settings store.
+/// Used in Phase 1 as the foundation table (settings module) and to verify
+/// that migrations, the Prisma client and the database health probe all work.
+model AppSetting {
+  id          String   @id @default(uuid()) @db.Uuid
+  key         String   @unique @db.VarChar(100)
+  value       String   @db.Text
+  description String?  @db.VarChar(255)
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  @@map("app_settings")
+}
+
+// ---------------------------------------------------------------------------
+// Phase 2 — accounts, roles and authentication
+// ---------------------------------------------------------------------------
+
+/// The three account types in the system. A user has exactly one role.
+enum UserRole {
+  ADMIN
+  TRAINER
+  MEMBER
+
+  @@map("user_role")
+}
+
+/// Whether an account may authenticate. INACTIVE accounts keep all their data
+/// and history but are refused at login and rejected on every request.
+enum UserStatus {
+  ACTIVE
+  INACTIVE
+
+  @@map("user_status")
+}
+
+/// A login account. Domain profiles (member, trainer) are linked to a user in
+/// Phase 3; this model only owns identity, credentials and authorization.
+model User {
+  id           String     @id @default(uuid()) @db.Uuid
+  /// Always stored lower-cased so lookups are case-insensitive.
+  email        String     @unique @db.VarChar(255)
+  passwordHash String     @map("password_hash") @db.VarChar(255)
+  role         UserRole
+  status       UserStatus @default(ACTIVE)
+  firstName    String     @map("first_name") @db.VarChar(100)
+  lastName     String     @map("last_name") @db.VarChar(100)
+  phone        String?    @db.VarChar(30)
+  /// Bumped on every successful login; used by the Phase 8 dashboards.
+  lastLoginAt  DateTime?  @map("last_login_at")
+  createdAt    DateTime   @default(now()) @map("created_at")
+  updatedAt    DateTime   @updatedAt @map("updated_at")
+
+  refreshTokens        RefreshToken[]
+  passwordResetTokens  PasswordResetToken[]
+  /// Money movements this account recorded. Kept for audit; never cascades.
+  recordedPayments     Payment[]            @relation("PaymentRecordedBy")
+  recordedRefunds      Refund[]             @relation("RefundRecordedBy")
+  recordedEntries      AccountingEntry[]    @relation("EntryRecordedBy")
+  recordedAttendances  Attendance[]         @relation("AttendanceRecordedBy")
+  recordedMeasurements MemberMeasurement[]  @relation("MeasurementRecordedBy")
+  /// At most one domain profile per account, matching the account's role.
+  member               Member?
+  trainer              Trainer?
+  notifications        Notification[]
+  auditLogs            AuditLog[]
+
+  @@index([role])
+  @@index([status])
+  @@index([role, status])
+  @@map("users")
+}
+
+/// An issued refresh token. The raw token never touches the database — only a
+/// SHA-256 hash of it — so a database leak cannot be replayed as a session.
+/// Tokens rotate on every use; `replacedBy` links a token to its successor so
+/// replaying a rotated token can be detected.
+model RefreshToken {
+  id           String    @id @default(uuid()) @db.Uuid
+  userId       String    @map("user_id") @db.Uuid
+  tokenHash    String    @unique @map("token_hash") @db.VarChar(64)
+  expiresAt    DateTime  @map("expires_at")
+  revokedAt    DateTime? @map("revoked_at")
+  /// Id of the token issued when this one was rotated.
+  replacedById String?   @map("replaced_by_id") @db.Uuid
+  userAgent    String?   @map("user_agent") @db.VarChar(255)
+  ipAddress    String?   @map("ip_address") @db.VarChar(64)
+  createdAt    DateTime  @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([expiresAt])
+  @@map("refresh_tokens")
+}
+
+/// A single-use password reset token. Stored hashed, like refresh tokens.
+model PasswordResetToken {
+  id        String    @id @default(uuid()) @db.Uuid
+  userId    String    @map("user_id") @db.Uuid
+  tokenHash String    @unique @map("token_hash") @db.VarChar(64)
+  expiresAt DateTime  @map("expires_at")
+  usedAt    DateTime? @map("used_at")
+  createdAt DateTime  @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([expiresAt])
+  @@map("password_reset_tokens")
+}
+
+// ---------------------------------------------------------------------------
+// Phase 3 — member and trainer profiles
+// ---------------------------------------------------------------------------
+
+/// Lifecycle of a domain profile. Archiving is reversible and preserves all
+/// history; profiles are never deleted, because memberships, payments and
+/// attendance reference them.
+enum ProfileStatus {
+  ACTIVE
+  ARCHIVED
+
+  @@map("profile_status")
+}
+
+enum Gender {
+  MALE
+  FEMALE
+  OTHER
+  PREFER_NOT_TO_SAY
+
+  @@map("gender")
+}
+
+/// A gym member. Owns the gym-specific data; identity, credentials and login
+/// status live on the linked User account.
+model Member {
+  id     String @id @default(uuid()) @db.Uuid
+  userId String @unique @map("user_id") @db.Uuid
+
+  /// Sequential counter behind the human-readable member code (M-000001).
+  /// A database sequence, so concurrent sign-ups can never collide.
+  memberNumber Int @unique @default(autoincrement()) @map("member_number")
+
+  dateOfBirth           DateTime? @map("date_of_birth") @db.Date
+  gender                Gender?
+  address               String?   @db.VarChar(255)
+  emergencyContactName  String?   @map("emergency_contact_name") @db.VarChar(100)
+  emergencyContactPhone String?   @map("emergency_contact_phone") @db.VarChar(30)
+  /// Staff-facing notes. Not visible to the member.
+  notes                 String?   @db.Text
+
+  joinedAt   DateTime      @default(now()) @map("joined_at")
+  status     ProfileStatus @default(ACTIVE)
+  archivedAt DateTime?     @map("archived_at")
+
+  /// The trainer currently responsible for this member, if any.
+  assignedTrainerId String?   @map("assigned_trainer_id") @db.Uuid
+  assignedAt        DateTime? @map("assigned_at")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  user             User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  /// Restrict, not cascade: a trainer who leaves is unassigned explicitly so
+  /// their members are never silently detached.
+  assignedTrainer  Trainer?            @relation(fields: [assignedTrainerId], references: [id], onDelete: Restrict)
+  memberships      MemberMembership[]
+  payments         Payment[]
+  attendances      Attendance[]
+  membershipCard   MembershipCard?
+  workoutPlans     WorkoutPlan[]
+  measurements     MemberMeasurement[]
+  trainingSessions TrainingSession[]
+
+  @@index([status])
+  @@index([assignedTrainerId])
+  @@index([assignedTrainerId, status])
+  @@index([joinedAt])
+  @@map("members")
+}
+
+/// A trainer employed by the gym.
+model Trainer {
+  id     String @id @default(uuid()) @db.Uuid
+  userId String @unique @map("user_id") @db.Uuid
+
+  /// Sequential counter behind the human-readable trainer code (T-000001).
+  trainerNumber Int @unique @default(autoincrement()) @map("trainer_number")
+
+  specialization String? @db.VarChar(120)
+  bio            String? @db.Text
+  certifications String? @db.Text
+
+  // --- Compensation (Phase 5 foundation) ---
+  // Stored so payouts can be computed later; Phase 5 does not run payrolls.
+  compensationType CompensationType @default(NONE) @map("compensation_type")
+  /// Fixed monthly amount, when the compensation type includes a salary.
+  monthlySalary    Decimal?         @map("monthly_salary") @db.Decimal(10, 2)
+  /// Percentage (0-100) of attributed revenue, when it includes commission.
+  commissionRate   Decimal?         @map("commission_rate") @db.Decimal(5, 2)
+
+  hiredAt    DateTime      @default(now()) @map("hired_at")
+  status     ProfileStatus @default(ACTIVE)
+  archivedAt DateTime?     @map("archived_at")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  user              User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  assignedMembers   Member[]
+  /// Expenses attributed to this trainer (salary, commission payouts).
+  accountingEntries AccountingEntry[]
+  workoutPlans      WorkoutPlan[]
+  trainingSessions  TrainingSession[]
+
+  @@index([status])
+  @@index([hiredAt])
+  @@map("trainers")
+}
+
+// ---------------------------------------------------------------------------
+// Phase 4 — membership plans and member memberships
+// ---------------------------------------------------------------------------
+
+/// A plan can be retired without touching the memberships already sold on it.
+enum MembershipPlanStatus {
+  ACTIVE
+  ARCHIVED
+
+  @@map("membership_plan_status")
+}
+
+/// Lifecycle of a membership a member has bought.
+///
+/// PENDING   — paid for, but the start date has not arrived yet
+/// ACTIVE    — currently usable
+/// FROZEN    — paused; the remaining days are preserved and the end date is
+///             pushed out by the frozen duration when it resumes
+/// EXPIRED   — the end date has passed (terminal)
+/// CANCELLED — ended early by the gym or the member (terminal)
+enum MembershipStatus {
+  PENDING
+  ACTIVE
+  FROZEN
+  EXPIRED
+  CANCELLED
+
+  @@map("membership_status")
+}
+
+/// A product the gym sells: a duration, a price and a visit allowance.
+model MembershipPlan {
+  id          String  @id @default(uuid()) @db.Uuid
+  name        String  @unique @db.VarChar(120)
+  description String? @db.Text
+
+  /// Length of the membership in days, counted inclusively from the start date.
+  durationDays Int     @map("duration_days")
+  price        Decimal @db.Decimal(10, 2)
+  /// Number of visits included, or null for unlimited.
+  visitLimit   Int?    @map("visit_limit")
+
+  /// Ordering hint for client-side plan lists.
+  displayOrder Int @default(0) @map("display_order")
+
+  status     MembershipPlanStatus @default(ACTIVE)
+  archivedAt DateTime?            @map("archived_at")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  memberships MemberMembership[]
+
+  @@index([status])
+  @@index([displayOrder])
+  @@map("membership_plans")
+}
+
+/// A membership a member has bought.
+///
+/// Price and visit allowance are copied from the plan at purchase time and
+/// never re-read: changing a plan's price must not rewrite what somebody
+/// already paid. The plan relation is RESTRICT for the same reason.
+model MemberMembership {
+  id       String @id @default(uuid()) @db.Uuid
+  memberId String @map("member_id") @db.Uuid
+  planId   String @map("plan_id") @db.Uuid
+
+  /// The agreed price of this membership, captured at purchase.
+  purchasePrice  Decimal @map("purchase_price") @db.Decimal(10, 2)
+  /// Reduction granted off the purchase price. The amount owed is
+  /// purchasePrice - discountAmount.
+  discountAmount Decimal @default(0) @map("discount_amount") @db.Decimal(10, 2)
+  discountReason String? @map("discount_reason") @db.VarChar(255)
+  /// Visit allowance captured at purchase; null means unlimited.
+  visitLimit     Int?    @map("visit_limit")
+  /// Incremented by attendance check-in (Phase 6).
+  visitsUsed     Int     @default(0) @map("visits_used")
+
+  startDate DateTime @map("start_date") @db.Date
+  /// Inclusive last day. Pushed out by freezes and extensions.
+  endDate   DateTime @map("end_date") @db.Date
+
+  status MembershipStatus @default(ACTIVE)
+
+  /// Set while the membership is FROZEN; null otherwise.
+  frozenAt        DateTime? @map("frozen_at")
+  /// Running total of days this membership has spent frozen.
+  totalFrozenDays Int       @default(0) @map("total_frozen_days")
+
+  cancelledAt        DateTime? @map("cancelled_at")
+  cancellationReason String?   @map("cancellation_reason") @db.VarChar(255)
+
+  /// Days added by administrator extensions, excluding freeze compensation.
+  extendedDays Int @default(0) @map("extended_days")
+
+  /// The membership this one renewed, forming the renewal chain.
+  previousMembershipId String? @unique @map("previous_membership_id") @db.Uuid
+
+  notes String? @db.Text
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  member             Member            @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  plan               MembershipPlan    @relation(fields: [planId], references: [id], onDelete: Restrict)
+  previousMembership MemberMembership? @relation("MembershipRenewal", fields: [previousMembershipId], references: [id], onDelete: SetNull)
+  renewedBy          MemberMembership? @relation("MembershipRenewal")
+
+  freezes     MembershipFreeze[]
+  payments    Payment[]
+  attendances Attendance[]
+
+  @@index([memberId])
+  @@index([memberId, status])
+  @@index([status])
+  @@index([endDate])
+  @@index([status, endDate])
+  @@index([planId])
+  @@map("member_memberships")
+}
+
+/// One freeze episode. Kept as history so the running total on the membership
+/// can always be reconciled against the individual pauses.
+model MembershipFreeze {
+  id           String @id @default(uuid()) @db.Uuid
+  membershipId String @map("membership_id") @db.Uuid
+
+  startedAt DateTime  @map("started_at")
+  endedAt   DateTime? @map("ended_at")
+  /// Days credited back to the membership when this freeze ended.
+  days      Int?
+  reason    String?   @db.VarChar(255)
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  membership MemberMembership @relation(fields: [membershipId], references: [id], onDelete: Cascade)
+
+  @@index([membershipId])
+  @@map("membership_freezes")
+}
+
+// ---------------------------------------------------------------------------
+// Phase 5 — payments, refunds and accounting
+// ---------------------------------------------------------------------------
+
+/// How a trainer is paid. Phase 5 stores the configuration only; computing and
+/// running payouts is deliberately left to a later phase.
+enum CompensationType {
+  NONE
+  FIXED
+  COMMISSION
+  FIXED_PLUS_COMMISSION
+
+  @@map("compensation_type")
+}
+
+enum PaymentMethod {
+  CASH
+  CARD
+  TRANSFER
+  OTHER
+
+  @@map("payment_method")
+}
+
+/// Whether a payment has been refunded, in whole or in part.
+enum PaymentStatus {
+  COMPLETED
+  PARTIALLY_REFUNDED
+  REFUNDED
+
+  @@map("payment_status")
+}
+
+/// INCOME and EXPENSE are self-explanatory. REFUND is money returned to a
+/// member: contra-revenue rather than an operating cost, so it is kept
+/// distinct and subtracted from income when computing revenue.
+enum AccountingEntryType {
+  INCOME
+  EXPENSE
+  REFUND
+
+  @@map("accounting_entry_type")
+}
+
+/// Where an income entry came from.
+enum IncomeSource {
+  MEMBERSHIP_PAYMENT
+  OTHER
+
+  @@map("income_source")
+}
+
+/// Money received from a member.
+///
+/// Creating one also writes its INCOME ledger entry, in the same transaction.
+model Payment {
+  id           String  @id @default(uuid()) @db.Uuid
+  memberId     String  @map("member_id") @db.Uuid
+  /// The membership this payment settles. Null for other member income, which
+  /// counts towards revenue but offsets no membership debt.
+  membershipId String? @map("membership_id") @db.Uuid
+
+  amount Decimal       @db.Decimal(10, 2)
+  method PaymentMethod
+  status PaymentStatus @default(COMPLETED)
+
+  /// When the money actually changed hands, which may precede the data entry.
+  paidAt    DateTime @map("paid_at")
+  /// Card authorisation code, transfer reference, receipt number.
+  reference String?  @db.VarChar(120)
+  notes     String?  @db.Text
+
+  /// Staff member who took the payment. Kept even if that account is deleted.
+  recordedByUserId String? @map("recorded_by_user_id") @db.Uuid
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  member        Member            @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  membership    MemberMembership? @relation(fields: [membershipId], references: [id], onDelete: SetNull)
+  recordedBy    User?             @relation("PaymentRecordedBy", fields: [recordedByUserId], references: [id], onDelete: SetNull)
+  refunds       Refund[]
+  ledgerEntries AccountingEntry[]
+
+  @@index([memberId])
+  @@index([membershipId])
+  @@index([paidAt])
+  @@index([method])
+  @@index([status])
+  @@map("payments")
+}
+
+/// Money returned against a payment. Partial refunds are allowed; the total
+/// refunded can never exceed the payment.
+model Refund {
+  id        String @id @default(uuid()) @db.Uuid
+  paymentId String @map("payment_id") @db.Uuid
+
+  amount     Decimal       @db.Decimal(10, 2)
+  /// How the money went back, which need not match how it came in.
+  method     PaymentMethod
+  reason     String?       @db.VarChar(255)
+  refundedAt DateTime      @map("refunded_at")
+
+  recordedByUserId String? @map("recorded_by_user_id") @db.Uuid
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  payment       Payment           @relation(fields: [paymentId], references: [id], onDelete: Cascade)
+  recordedBy    User?             @relation("RefundRecordedBy", fields: [recordedByUserId], references: [id], onDelete: SetNull)
+  ledgerEntries AccountingEntry[]
+
+  @@index([paymentId])
+  @@index([refundedAt])
+  @@map("refunds")
+}
+
+/// A spending category, so expenses can be grouped in reports.
+model ExpenseCategory {
+  id          String    @id @default(uuid()) @db.Uuid
+  name        String    @unique @db.VarChar(120)
+  description String?   @db.VarChar(255)
+  /// Archived categories cannot take new expenses but keep their history.
+  archivedAt  DateTime? @map("archived_at")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  entries AccountingEntry[]
+
+  @@index([archivedAt])
+  @@map("expense_categories")
+}
+
+/// The single ledger. Every money movement the gym reports on lives here, so
+/// revenue and profit are one query rather than a reconciliation.
+///
+/// Entries generated by a payment or refund are marked `isAutomatic` and carry
+/// a unique link back to their source, which is what makes double-posting
+/// impossible. They are never editable or voidable through the API.
+model AccountingEntry {
+  id     String              @id @default(uuid()) @db.Uuid
+  type   AccountingEntryType
+  amount Decimal             @db.Decimal(10, 2)
+
+  /// Date the money moved, used for daily and monthly totals. Date-only so
+  /// day boundaries do not shift with the server's clock.
+  occurredOn  DateTime @map("occurred_on") @db.Date
+  description String   @db.VarChar(255)
+
+  /// Required for EXPENSE, null otherwise.
+  expenseCategoryId String?        @map("expense_category_id") @db.Uuid
+  /// Set for INCOME, null otherwise.
+  incomeSource      IncomeSource?  @map("income_source")
+  /// How the money moved, when known.
+  method            PaymentMethod?
+
+  /// Exactly one automatic entry per payment, enforced by the unique index.
+  paymentId String? @unique @map("payment_id") @db.Uuid
+  /// Exactly one automatic entry per refund.
+  refundId  String? @unique @map("refund_id") @db.Uuid
+
+  /// Expense attribution, for trainer salary and commission payouts.
+  trainerId String? @map("trainer_id") @db.Uuid
+
+  /// True when generated by a payment or refund rather than entered by hand.
+  isAutomatic Boolean @default(false) @map("is_automatic")
+
+  /// Manual entries can be voided to correct a mistake; voided entries are
+  /// excluded from every total but are never deleted.
+  voidedAt     DateTime? @map("voided_at")
+  voidedReason String?   @map("voided_reason") @db.VarChar(255)
+
+  recordedByUserId String? @map("recorded_by_user_id") @db.Uuid
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  expenseCategory ExpenseCategory? @relation(fields: [expenseCategoryId], references: [id], onDelete: Restrict)
+  payment         Payment?         @relation(fields: [paymentId], references: [id], onDelete: Cascade)
+  refund          Refund?          @relation(fields: [refundId], references: [id], onDelete: Cascade)
+  trainer         Trainer?         @relation(fields: [trainerId], references: [id], onDelete: SetNull)
+  recordedBy      User?            @relation("EntryRecordedBy", fields: [recordedByUserId], references: [id], onDelete: SetNull)
+
+  @@index([type])
+  @@index([occurredOn])
+  @@index([type, occurredOn])
+  @@index([expenseCategoryId])
+  @@index([trainerId])
+  @@index([voidedAt])
+  @@map("accounting_entries")
+}
+
+// ---------------------------------------------------------------------------
+// Phase 6 — attendance and QR membership cards
+// ---------------------------------------------------------------------------
+
+enum CheckInMethod {
+  MANUAL
+  QR
+
+  @@map("check_in_method")
+}
+
+/// A member's QR membership card.
+///
+/// No secret is stored. The QR payload is derived as
+/// `GYM1.<memberId>.<version>.<hmac>`, where the signature is an HMAC of the id
+/// and version under QR_SECRET — so the server can always re-render a member's
+/// card without keeping anything replayable in the database, and bumping
+/// `version` instantly invalidates every card already printed or screenshotted.
+model MembershipCard {
+  id       String @id @default(uuid()) @db.Uuid
+  memberId String @unique @map("member_id") @db.Uuid
+
+  /// Incremented on every regeneration; older payloads stop verifying.
+  version Int @default(1)
+
+  issuedAt      DateTime  @default(now()) @map("issued_at")
+  revokedAt     DateTime? @map("revoked_at")
+  revokedReason String?   @map("revoked_reason") @db.VarChar(255)
+  /// Bumped on each successful scan, for "when was this card last used".
+  lastUsedAt    DateTime? @map("last_used_at")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  member Member @relation(fields: [memberId], references: [id], onDelete: Cascade)
+
+  @@index([revokedAt])
+  @@map("membership_cards")
+}
+
+/// One visit to the gym.
+///
+/// A row with `checkedOutAt` still null means the member is currently inside.
+/// A partial unique index (added in the migration) allows at most one such row
+/// per member, so a double check-in is impossible even under a race — which is
+/// what keeps a limited visit allowance honest.
+model Attendance {
+  id           String  @id @default(uuid()) @db.Uuid
+  memberId     String  @map("member_id") @db.Uuid
+  /// The membership that admitted this visit. Kept for visit accounting even
+  /// if the membership is later archived.
+  membershipId String? @map("membership_id") @db.Uuid
+
+  checkedInAt  DateTime  @default(now()) @map("checked_in_at")
+  checkedOutAt DateTime? @map("checked_out_at")
+
+  method CheckInMethod
+
+  /// True when this visit consumed one of a limited allowance. False for an
+  /// unlimited membership, so a plan change cannot retroactively alter counts.
+  visitDeducted Boolean @default(false) @map("visit_deducted")
+
+  /// Staff member who recorded a manual check-in.
+  recordedByUserId String? @map("recorded_by_user_id") @db.Uuid
+  notes            String? @db.Text
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  member     Member            @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  membership MemberMembership? @relation(fields: [membershipId], references: [id], onDelete: SetNull)
+  recordedBy User?             @relation("AttendanceRecordedBy", fields: [recordedByUserId], references: [id], onDelete: SetNull)
+
+  @@index([memberId])
+  @@index([checkedInAt])
+  @@index([memberId, checkedInAt])
+  @@index([membershipId])
+  @@index([checkedOutAt])
+  @@map("attendances")
+}
+
+// ---------------------------------------------------------------------------
+// Phase 7 — workout plans, member progress and personal training sessions
+// ---------------------------------------------------------------------------
+
+/// Archived plans are kept so a member's training history stays intact.
+enum WorkoutPlanStatus {
+  ACTIVE
+  ARCHIVED
+
+  @@map("workout_plan_status")
+}
+
+/// Unit a prescribed load is expressed in, recorded per exercise so "80" is
+/// never ambiguous.
+enum WeightUnit {
+  KG
+  LB
+
+  @@map("weight_unit")
+}
+
+enum TrainingSessionStatus {
+  SCHEDULED
+  COMPLETED
+  CANCELLED
+  NO_SHOW
+
+  @@map("training_session_status")
+}
+
+/// A training programme written for one member by one trainer.
+model WorkoutPlan {
+  id        String  @id @default(uuid()) @db.Uuid
+  memberId  String  @map("member_id") @db.Uuid
+  /// The trainer who wrote it. Kept when a trainer leaves, so the member's
+  /// plan does not lose its author.
+  trainerId String? @map("trainer_id") @db.Uuid
+
+  name        String  @db.VarChar(120)
+  description String? @db.Text
+  /// What the plan is for: "Lose 5kg", "First 100kg squat".
+  goal        String? @db.VarChar(255)
+
+  startDate DateTime? @map("start_date") @db.Date
+  endDate   DateTime? @map("end_date") @db.Date
+
+  /// Coaching notes. Visible to staff and to the member, unlike the staff-only
+  /// notes elsewhere — the point of a plan is that the member reads it.
+  trainerNotes String? @map("trainer_notes") @db.Text
+
+  status     WorkoutPlanStatus @default(ACTIVE)
+  archivedAt DateTime?         @map("archived_at")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  member  Member       @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  trainer Trainer?     @relation(fields: [trainerId], references: [id], onDelete: SetNull)
+  days    WorkoutDay[]
+
+  @@index([memberId])
+  @@index([memberId, status])
+  @@index([trainerId])
+  @@index([status])
+  @@map("workout_plans")
+}
+
+/// One training day within a plan — "Push", "Legs", "Day 1".
+model WorkoutDay {
+  id     String @id @default(uuid()) @db.Uuid
+  planId String @map("plan_id") @db.Uuid
+
+  /// Position in the week or cycle, 1-based.
+  dayOrder Int     @map("day_order")
+  name     String  @db.VarChar(120)
+  notes    String? @db.Text
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  plan      WorkoutPlan       @relation(fields: [planId], references: [id], onDelete: Cascade)
+  exercises WorkoutExercise[]
+
+  /// Two days in one plan cannot share a position.
+  @@unique([planId, dayOrder])
+  @@index([planId])
+  @@map("workout_days")
+}
+
+/// A prescribed exercise: what to do, how much, and how long to rest.
+model WorkoutExercise {
+  id    String @id @default(uuid()) @db.Uuid
+  dayId String @map("day_id") @db.Uuid
+
+  /// Position within the day, 1-based.
+  exerciseOrder     Int     @map("exercise_order")
+  name              String  @db.VarChar(120)
+  /// Free text so a trainer can write "Chest", "Posterior chain", anything.
+  targetMuscleGroup String? @map("target_muscle_group") @db.VarChar(120)
+
+  sets Int
+  /// Text, so "8-12", "AMRAP" and "30s" are all expressible.
+  reps String @db.VarChar(30)
+
+  weight     Decimal?   @db.Decimal(6, 2)
+  weightUnit WeightUnit @default(KG) @map("weight_unit")
+
+  restSeconds Int?    @map("rest_seconds")
+  /// Tempo prescription such as "3-1-2-0".
+  tempo       String? @db.VarChar(30)
+  notes       String? @db.Text
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  day WorkoutDay @relation(fields: [dayId], references: [id], onDelete: Cascade)
+
+  @@unique([dayId, exerciseOrder])
+  @@index([dayId])
+  @@map("workout_exercises")
+}
+
+/// One set of body measurements taken on one date. The series is the member's
+/// progress; every field is optional because a trainer rarely measures
+/// everything at once.
+model MemberMeasurement {
+  id       String @id @default(uuid()) @db.Uuid
+  memberId String @map("member_id") @db.Uuid
+
+  /// Date the measurements were taken. One set per member per date.
+  measuredOn DateTime @map("measured_on") @db.Date
+
+  weightKg       Decimal? @map("weight_kg") @db.Decimal(5, 2)
+  heightCm       Decimal? @map("height_cm") @db.Decimal(5, 1)
+  bodyFatPercent Decimal? @map("body_fat_percent") @db.Decimal(4, 1)
+  muscleMassKg   Decimal? @map("muscle_mass_kg") @db.Decimal(5, 2)
+
+  chestCm Decimal? @map("chest_cm") @db.Decimal(5, 1)
+  waistCm Decimal? @map("waist_cm") @db.Decimal(5, 1)
+  hipsCm  Decimal? @map("hips_cm") @db.Decimal(5, 1)
+  thighCm Decimal? @map("thigh_cm") @db.Decimal(5, 1)
+  armCm   Decimal? @map("arm_cm") @db.Decimal(5, 1)
+
+  restingHeartRate Int?    @map("resting_heart_rate")
+  notes            String? @db.Text
+
+  recordedByUserId String? @map("recorded_by_user_id") @db.Uuid
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  member     Member @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  recordedBy User?  @relation("MeasurementRecordedBy", fields: [recordedByUserId], references: [id], onDelete: SetNull)
+
+  @@unique([memberId, measuredOn])
+  @@index([memberId])
+  @@index([memberId, measuredOn])
+  @@map("member_measurements")
+}
+
+/// A one-to-one session between a trainer and a member.
+model TrainingSession {
+  id        String @id @default(uuid()) @db.Uuid
+  trainerId String @map("trainer_id") @db.Uuid
+  memberId  String @map("member_id") @db.Uuid
+
+  startsAt DateTime @map("starts_at")
+  endsAt   DateTime @map("ends_at")
+
+  status TrainingSessionStatus @default(SCHEDULED)
+
+  /// Where in the gym, or "online".
+  location     String? @db.VarChar(120)
+  /// What the trainer plans to cover, and afterwards what happened.
+  trainerNotes String? @map("trainer_notes") @db.Text
+
+  completedAt        DateTime? @map("completed_at")
+  cancelledAt        DateTime? @map("cancelled_at")
+  cancellationReason String?   @map("cancellation_reason") @db.VarChar(255)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  trainer Trainer @relation(fields: [trainerId], references: [id], onDelete: Cascade)
+  member  Member  @relation(fields: [memberId], references: [id], onDelete: Cascade)
+
+  @@index([trainerId])
+  @@index([memberId])
+  @@index([startsAt])
+  @@index([trainerId, startsAt])
+  @@index([memberId, startsAt])
+  @@index([status])
+  @@map("training_sessions")
+}
+
+// ---------------------------------------------------------------------------
+// Phase 9 — notifications, audit logging and security
+// ---------------------------------------------------------------------------
+
+/// What a notification is about. Clients use this to choose an icon or route,
+/// so the set is deliberately coarse.
+enum NotificationType {
+  MEMBERSHIP_EXPIRING
+  MEMBERSHIP_EXPIRED
+  PAYMENT_DUE
+  SESSION_SCHEDULED
+  SESSION_CANCELLED
+  CARD_REVOKED
+  ANNOUNCEMENT
+
+  @@map("notification_type")
+}
+
+enum NotificationSeverity {
+  INFO
+  WARNING
+  CRITICAL
+
+  @@map("notification_severity")
+}
+
+/// An in-app message for one user.
+///
+/// `dedupeKey` is what makes reminder generation safe to re-run: it is unique,
+/// so a second sweep on the same day cannot send the same reminder twice.
+/// Delivery beyond the app (email, SMS) is out of scope; this is the record a
+/// future transport would read from.
+model Notification {
+  id          String               @id @default(uuid()) @db.Uuid
+  recipientId String               @map("recipient_id") @db.Uuid
+  type        NotificationType
+  severity    NotificationSeverity @default(INFO)
+
+  title             String  @db.VarChar(160)
+  body              String  @db.Text
+  /// Where the client should navigate, e.g. "membership:<uuid>".
+  relatedEntityType String? @map("related_entity_type") @db.VarChar(40)
+  relatedEntityId   String? @map("related_entity_id") @db.Uuid
+
+  /// Null until the recipient opens it.
+  readAt DateTime? @map("read_at")
+
+  /// Unique per logical notification, so re-running a sweep is a no-op.
+  dedupeKey String? @unique @map("dedupe_key") @db.VarChar(200)
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  recipient User @relation(fields: [recipientId], references: [id], onDelete: Cascade)
+
+  @@index([recipientId])
+  @@index([recipientId, readAt])
+  @@index([createdAt])
+  @@index([type])
+  @@map("notifications")
+}
+
+/// Whether the audited request succeeded.
+enum AuditOutcome {
+  SUCCESS
+  FAILURE
+
+  @@map("audit_outcome")
+}
+
+/// An immutable record of every state-changing request.
+///
+/// Written by an interceptor rather than by each service, so a new endpoint is
+/// audited the day it is added instead of whenever somebody remembers. Request
+/// bodies are stored with credentials redacted; nothing here is ever editable
+/// or deletable through the API.
+model AuditLog {
+  id String @id @default(uuid()) @db.Uuid
+
+  /// Null for an unauthenticated request, such as a failed login.
+  actorId    String?   @map("actor_id") @db.Uuid
+  actorRole  UserRole? @map("actor_role")
+  actorEmail String?   @map("actor_email") @db.VarChar(255)
+
+  /// Dotted action name, e.g. "payments.create".
+  action     String  @db.VarChar(120)
+  entityType String? @map("entity_type") @db.VarChar(60)
+  entityId   String? @map("entity_id") @db.VarChar(64)
+
+  method     String       @db.VarChar(10)
+  path       String       @db.VarChar(255)
+  statusCode Int          @map("status_code")
+  outcome    AuditOutcome
+  /// Populated on failure, so a rejected attempt says why.
+  errorCode  String?      @map("error_code") @db.VarChar(60)
+
+  /// Redacted request body. Credentials and tokens never reach this column.
+  payload    Json?
+  /// Correlation id shared with the structured logs.
+  requestId  String? @map("request_id") @db.VarChar(64)
+  ipAddress  String? @map("ip_address") @db.VarChar(64)
+  userAgent  String? @map("user_agent") @db.VarChar(255)
+  /// Milliseconds the request took, for the performance review.
+  durationMs Int?    @map("duration_ms")
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  actor User? @relation(fields: [actorId], references: [id], onDelete: SetNull)
+
+  @@index([actorId])
+  @@index([action])
+  @@index([entityType, entityId])
+  @@index([createdAt])
+  @@index([outcome])
+  @@index([action, createdAt])
+  @@map("audit_logs")
+}

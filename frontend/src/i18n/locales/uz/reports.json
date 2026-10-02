@@ -1,0 +1,104 @@
+{
+  "title": "Hisobotlar",
+  "subtitle": "Biznes qanday ketyapti",
+  "tabs": {
+    "revenue": "Tushum",
+    "expenses": "Xarajatlar",
+    "profit": "Natija",
+    "membershipSales": "Abonement sotuvi",
+    "renewals": "Yangilashlar",
+    "expired": "Tugaganlar",
+    "attendance": "Davomat",
+    "unpaid": "To'lanmaganlar",
+    "trainers": "Murabbiylar"
+  },
+  "groupBy": {
+    "label": "Guruhlash",
+    "day": "Kun",
+    "month": "Oy"
+  },
+  "revenue": {
+    "title": "Tushum",
+    "income": "Daromad",
+    "refunds": "Qaytarishlar",
+    "net": "Sof tushum",
+    "chartLabel": "Tushum",
+    "byMethod": "To'lov usuli bo'yicha",
+    "bySource": "Manba bo'yicha"
+  },
+  "expenses": {
+    "title": "Xarajatlar",
+    "total": "Jami xarajatlar",
+    "byCategory": "Toifa bo'yicha",
+    "chartLabel": "Xarajatlar"
+  },
+  "profit": {
+    "title": "Natija",
+    "revenue": "Tushum",
+    "expenses": "Xarajatlar",
+    "result": "Natija",
+    "margin": "Rentabellik",
+    "chartLabel": "Natija"
+  },
+  "membershipSales": {
+    "title": "Abonement sotuvi",
+    "totalSold": "Sotilgan abonementlar",
+    "grossValue": "Umumiy qiymat",
+    "discounts": "Berilgan chegirmalar",
+    "netValue": "Sof qiymat",
+    "newSales": "Yangi",
+    "renewals": "Yangilangan",
+    "byPlan": "Tur bo'yicha"
+  },
+  "renewals": {
+    "title": "Yangilashlar",
+    "totalRenewals": "Yangilashlar",
+    "renewalRate": "Yangilash ulushi",
+    "chartLabel": "Yangilashlar"
+  },
+  "expired": {
+    "title": "Tugagan abonementlar",
+    "totalExpired": "Tugagan",
+    "notRenewed": "Yangilanmagan",
+    "chartLabel": "Tugaganlar"
+  },
+  "attendance": {
+    "title": "Davomat",
+    "totalVisits": "Jami tashriflar",
+    "uniqueMembers": "Noyob a'zolar",
+    "averagePerDay": "Kuniga o'rtacha",
+    "byMethod": "Usul bo'yicha",
+    "chartLabel": "Tashriflar",
+    "busiestDay": "Eng gavjum kun"
+  },
+  "unpaid": {
+    "title": "To'lanmagan qarzlar",
+    "membersInDebt": "Qarzdor a'zolar",
+    "totalOutstanding": "Jami qarz",
+    "oldestDebt": "Eng eski qarz",
+    "cappedNotice": "Ko'pi bilan 100 ta a'zo ko'rsatiladi. Backend bu hisobotni shu songa cheklaydi."
+  },
+  "trainerStats": {
+    "title": "Murabbiylar statistikasi",
+    "trainer": "Murabbiy",
+    "assignedMembers": "A'zolar",
+    "activeMembers": "Faol",
+    "plansWritten": "Rejalar",
+    "sessionsCompleted": "Yakunlangan",
+    "sessionsCancelled": "Bekor qilingan",
+    "noShows": "Kelmaganlar"
+  },
+  "range": {
+    "label": "Sana oralig'i",
+    "from": "Dan",
+    "to": "Gacha",
+    "invalid": "Boshlanish sanasi tugash sanasidan keyin bo'lmasligi kerak",
+    "tooLong": "Ko'pi bilan {days} kunlik oraliq tanlang"
+  },
+  "empty": {
+    "title": "Bu davr uchun ma'lumot yo'q",
+    "body": "Kengroq sana oralig'ini tanlab ko'ring."
+  },
+  "exportCsv": "CSV sifatida eksport",
+  "exported": "Hisobot eksport qilindi"
+}

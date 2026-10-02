@@ -1,0 +1,166 @@
+{
+  "title": "Memberships",
+  "subtitle": "Who is paid up and until when",
+  "one": "Membership",
+  "status": {
+    "PENDING": "Not started",
+    "ACTIVE": "Active",
+    "FROZEN": "Frozen",
+    "EXPIRED": "Expired",
+    "CANCELLED": "Cancelled",
+    "none": "No membership"
+  },
+  "statusHint": {
+    "PENDING": "Starts on {date}",
+    "ACTIVE": "{count, plural, one {# day left} other {# days left}}",
+    "FROZEN": "Frozen since {date}",
+    "EXPIRED": "Expired on {date}",
+    "CANCELLED": "Cancelled on {date}"
+  },
+  "columns": {
+    "member": "Member",
+    "plan": "Plan",
+    "startDate": "Starts",
+    "endDate": "Ends",
+    "status": "Status",
+    "price": "Price",
+    "due": "Due",
+    "daysRemaining": "Days left",
+    "visits": "Visits"
+  },
+  "fields": {
+    "member": "Member",
+    "plan": "Plan",
+    "startDate": "Start date",
+    "startDateHint": "Leave empty to start today.",
+    "notes": "Notes",
+    "purchasePrice": "Price",
+    "discount": "Discount",
+    "discountReason": "Reason for discount"
+  },
+  "sell": {
+    "title": "Sell a membership",
+    "steps": {
+      "member": "Choose member",
+      "plan": "Choose plan",
+      "review": "Review",
+      "confirm": "Confirm"
+    },
+    "selectMember": "Which member is this for?",
+    "selectPlan": "Which plan are they buying?",
+    "reviewTitle": "Check the details",
+    "reviewHint": "The price and visit allowance are copied from the plan now and will not change later.",
+    "confirmButton": "Sell membership",
+    "success": "Membership sold",
+    "overlapWarning": "This member already has a membership covering these dates.",
+    "existingActive": "This member currently has an active membership until {date}."
+  },
+  "renew": {
+    "title": "Renew membership",
+    "body": "A new membership starts the day after the current one ends.",
+    "samePlan": "Same plan",
+    "differentPlan": "Different plan",
+    "startsOn": "The new term starts on {date}",
+    "confirm": "Renew",
+    "success": "Membership renewed"
+  },
+  "extend": {
+    "title": "Extend membership",
+    "days": "Days to add",
+    "reason": "Reason",
+    "newEndDate": "New end date: {date}",
+    "confirm": "Extend",
+    "success": "Membership extended"
+  },
+  "freeze": {
+    "title": "Freeze membership",
+    "body": "While frozen, the member cannot enter the gym. The days spent frozen are added back when you unfreeze.",
+    "reason": "Reason",
+    "reasonPlaceholder": "Travelling, injury, …",
+    "confirm": "Freeze",
+    "success": "Membership frozen"
+  },
+  "unfreeze": {
+    "title": "Unfreeze membership",
+    "body": "The membership becomes usable again and the frozen days are credited to the end date.",
+    "daysCredited": "{count, plural, one {# day will be credited} other {# days will be credited}}",
+    "confirm": "Unfreeze",
+    "success": "Membership unfrozen"
+  },
+  "cancel": {
+    "title": "Cancel membership",
+    "body": "This ends the membership immediately. It cannot be undone.",
+    "reason": "Reason for cancelling",
+    "confirm": "Cancel membership",
+    "success": "Membership cancelled"
+  },
+  "discount": {
+    "title": "Apply a discount",
+    "amount": "Discount amount",
+    "reason": "Reason",
+    "newTotal": "New amount due: {amount}",
+    "confirm": "Apply discount",
+    "success": "Discount applied"
+  },
+  "history": "Membership history",
+  "noHistory": "No previous memberships",
+  "visits": {
+    "used": "{used} of {total} visits used",
+    "remaining": "{count, plural, one {# visit left} other {# visits left}}",
+    "unlimited": "Unlimited visits"
+  },
+  "frozenDays": "{count, plural, one {# frozen day} other {# frozen days}}",
+  "renewedFrom": "Renewed from a previous membership",
+  "empty": {
+    "title": "No memberships yet",
+    "body": "Sell a membership to get started.",
+    "filtered": "No memberships match these filters"
+  },
+  "plans": {
+    "title": "Membership plans",
+    "subtitle": "What the gym sells",
+    "one": "Plan",
+    "create": "Add plan",
+    "createTitle": "Create a membership plan",
+    "edit": "Edit plan",
+    "columns": {
+      "name": "Name",
+      "duration": "Duration",
+      "price": "Price",
+      "visits": "Visits",
+      "status": "Status",
+      "sold": "Sold"
+    },
+    "fields": {
+      "name": "Plan name",
+      "description": "Description",
+      "durationDays": "Duration in days",
+      "price": "Price",
+      "visitLimit": "Visit limit",
+      "unlimitedVisits": "Unlimited visits",
+      "unlimitedHint": "Members on this plan can come as often as they like.",
+      "displayOrder": "Display order"
+    },
+    "durationDays": "{count, plural, one {# day} other {# days}}",
+    "unlimited": "Unlimited",
+    "archive": {
+      "title": "Archive this plan?",
+      "body": "{name} can no longer be sold. Memberships already sold on it are unaffected.",
+      "confirm": "Archive plan",
+      "success": "Plan archived"
+    },
+    "reactivate": {
+      "title": "Reactivate this plan?",
+      "body": "{name} becomes available to sell again.",
+      "confirm": "Reactivate plan",
+      "success": "Plan reactivated"
+    },
+    "empty": {
+      "title": "No plans yet",
+      "body": "Create a plan before selling memberships."
+    },
+    "created": "Plan created",
+    "updated": "Plan updated",
+    "priceChangeHint": "Changing the price affects only memberships sold from now on. Existing ones keep the price agreed at purchase."
+  }
+}

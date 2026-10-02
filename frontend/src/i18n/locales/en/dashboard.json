@@ -1,0 +1,86 @@
+{
+  "admin": {
+    "title": "Dashboard",
+    "subtitle": "How the gym is doing today",
+    "kpi": {
+      "totalMembers": "Total members",
+      "activeMembers": "Active members",
+      "expiredMembers": "Expired memberships",
+      "expiringSoon": "Expiring soon",
+      "todayCheckIns": "Check-ins today",
+      "currentlyInside": "Currently inside",
+      "activeTrainers": "Active trainers",
+      "monthlyRevenue": "Revenue this month",
+      "monthlyExpenses": "Expenses this month",
+      "monthlyProfit": "Result this month",
+      "totalOutstanding": "Outstanding balances",
+      "newMembersThisMonth": "New members this month"
+    },
+    "charts": {
+      "revenueVsExpenses": "Revenue and expenses",
+      "attendanceTrend": "Daily check-ins",
+      "membershipMix": "Memberships by status",
+      "revenue": "Revenue",
+      "expenses": "Expenses",
+      "profit": "Result",
+      "checkIns": "Check-ins"
+    },
+    "expiringAlert": {
+      "title": "Memberships expiring soon",
+      "body": "{count, plural, one {# membership expires within 7 days} other {# memberships expire within 7 days}}",
+      "action": "Review them",
+      "none": "No memberships expiring in the next 7 days"
+    },
+    "recentPayments": "Recent payments",
+    "recentAttendance": "Recent check-ins",
+    "quickActions": {
+      "title": "Quick actions",
+      "addMember": "Add member",
+      "sellMembership": "Sell membership",
+      "takePayment": "Take payment",
+      "checkIn": "Check in a member",
+      "addExpense": "Add expense"
+    }
+  },
+  "trainer": {
+    "title": "Dashboard",
+    "subtitle": "Your members and today's schedule",
+    "kpi": {
+      "assignedMembers": "Assigned members",
+      "activeMembers": "With active memberships",
+      "activeWorkoutPlans": "Active workout plans",
+      "sessionsToday": "Sessions today",
+      "sessionsThisWeek": "Sessions this week",
+      "completedThisMonth": "Completed this month"
+    },
+    "todaySessions": "Today's sessions",
+    "upcomingSessions": "Upcoming sessions",
+    "memberActivity": "Member activity",
+    "lastVisit": "Last visit",
+    "visitsThisMonth": "Visits this month",
+    "noSessionsToday": "No sessions scheduled for today",
+    "noMembers": "No members are assigned to you yet"
+  },
+  "member": {
+    "greeting": "Hello, {name}",
+    "subtitle": "Here is where you stand",
+    "membershipStatus": "Membership",
+    "daysRemaining": "Days remaining",
+    "visitsRemaining": "Visits remaining",
+    "unlimitedVisits": "Unlimited visits",
+    "assignedTrainer": "Your trainer",
+    "noTrainer": "No trainer assigned",
+    "nextSession": "Next session",
+    "noNextSession": "No upcoming sessions",
+    "visitsThisMonth": "Visits this month",
+    "lastVisit": "Last visit",
+    "workoutPlan": "Workout plan",
+    "noWorkoutPlan": "No workout plan yet",
+    "outstandingBalance": "Amount due",
+    "allPaid": "You are all paid up",
+    "recentActivity": "Recent activity",
+    "showQrCard": "Show QR card",
+    "noMembership": "You do not have an active membership",
+    "noMembershipHint": "Speak to the front desk to get started."
+  }
+}

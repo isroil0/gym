@@ -1,0 +1,45 @@
+/* The reset MUI's CssBaseline does not cover, plus app-level primitives. */
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+/* Long words in user-entered names and notes must not widen a layout. */
+body {
+  overflow-wrap: anywhere;
+}
+
+/* Horizontal overflow is always a bug here; make it impossible at the root. */
+#__next,
+body {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+/* Numbers that sit in columns line up digit for digit. */
+.tabular {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum';
+}
+
+/* Visible only to screen readers. */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media print {
+  .no-print {
+    display: none !important;
+  }
+}

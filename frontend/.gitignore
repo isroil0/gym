@@ -1,0 +1,19 @@
+# Dependencies
+node_modules/
+
+# Next.js build output
+.next/
+out/
+next-env.d.ts
+
+# Test and tooling output
+coverage/
+*.tsbuildinfo
+
+# Local environment — never commit; .env.example is the template
+.env
+.env.*
+!.env.example
+
+.DS_Store
+*.log

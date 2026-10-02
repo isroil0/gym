@@ -1,0 +1,120 @@
+{
+  "title": "Attendance",
+  "subtitle": "Who came in and when",
+  "today": "Today",
+  "method": {
+    "QR": "QR scan",
+    "MANUAL": "Manual"
+  },
+  "columns": {
+    "member": "Member",
+    "checkedInAt": "Checked in",
+    "checkedOutAt": "Checked out",
+    "duration": "Duration",
+    "method": "Method",
+    "recordedBy": "Recorded by",
+    "date": "Date"
+  },
+  "stats": {
+    "totalVisits": "Visits today",
+    "currentlyInside": "Currently inside",
+    "uniqueMembers": "Unique members",
+    "averageDuration": "Average stay",
+    "peakHour": "Busiest hour"
+  },
+  "stillInside": "Inside now",
+  "checkIn": {
+    "title": "Check in",
+    "subtitle": "Scan a card or search for the member",
+    "manual": "Manual check-in",
+    "manualTitle": "Check a member in by name",
+    "searchMember": "Search for a member",
+    "searchHint": "Type a name, member code or phone number",
+    "button": "Check in",
+    "success": "{name} is checked in",
+    "successShort": "Checked in",
+    "admitted": "Admitted",
+    "denied": "Not admitted",
+    "noteOptional": "Note (optional)"
+  },
+  "checkOut": {
+    "title": "Check out",
+    "button": "Check out",
+    "success": "{name} is checked out",
+    "successShort": "Checked out",
+    "notInside": "This member is not currently checked in",
+    "confirm": "Check this member out?"
+  },
+  "scanner": {
+    "title": "QR scanner",
+    "start": "Start scanner",
+    "stop": "Stop scanner",
+    "scanning": "Point the member's QR code at the camera",
+    "processing": "Checking…",
+    "cameraDenied": "Camera access was refused. Allow camera access in your browser settings, or use manual check-in.",
+    "cameraUnavailable": "No camera is available on this device. Use manual check-in instead.",
+    "cameraError": "The camera could not be started.",
+    "switchCamera": "Switch camera",
+    "useManual": "Use manual check-in",
+    "ready": "Ready to scan",
+    "lastScan": "Last scan",
+    "scanAgain": "Scan next member",
+    "notSecureContext": "The camera needs a secure connection (HTTPS). Use manual check-in on this address."
+  },
+  "denial": {
+    "MEMBER_ARCHIVED": "This member is archived and cannot be admitted",
+    "ACCOUNT_INACTIVE": "This member's account is inactive",
+    "NO_MEMBERSHIP": "This member has no membership",
+    "MEMBERSHIP_NOT_STARTED": "This membership has not started yet",
+    "MEMBERSHIP_FROZEN": "This membership is frozen",
+    "MEMBERSHIP_EXPIRED": "This membership has expired",
+    "MEMBERSHIP_CANCELLED": "This membership has been cancelled",
+    "NO_VISITS_LEFT": "No visits remain on this membership",
+    "ALREADY_INSIDE": "This member is already checked in",
+    "CARD_REVOKED": "This membership card has been revoked",
+    "CARD_SUPERSEDED": "This card has been replaced by a newer one",
+    "CARD_INVALID": "This QR code is not a valid membership card",
+    "CARD_NOT_ISSUED": "No membership card has been issued for this member",
+    "UNKNOWN": "This member cannot be admitted"
+  },
+  "warnings": {
+    "expiringSoon": "This membership expires in {count, plural, one {# day} other {# days}}",
+    "lowVisits": "{count, plural, one {Only # visit left} other {Only # visits left}}",
+    "hasDebt": "This member owes {amount}"
+  },
+  "card": {
+    "title": "Membership card",
+    "subtitle": "Show this at the front desk",
+    "memberCode": "Member code",
+    "issued": "Issued",
+    "version": "Card version {version}",
+    "regenerate": "Issue a new card",
+    "regenerateTitle": "Issue a new card?",
+    "regenerateBody": "The current QR code stops working immediately. Any printed or screenshotted copy becomes useless.",
+    "regenerateSuccess": "A new card has been issued",
+    "revoke": "Revoke card",
+    "revokeTitle": "Revoke this card?",
+    "revokeBody": "The member will not be able to scan in until a new card is issued.",
+    "revokeSuccess": "Card revoked",
+    "revoked": "Revoked",
+    "revokedBody": "This card has been revoked. Ask the front desk for a new one.",
+    "active": "Active",
+    "fullscreen": "Show full screen",
+    "exitFullscreen": "Exit full screen",
+    "brightnessHint": "Turn your screen brightness up so the scanner can read the code."
+  },
+  "history": "Visit history",
+  "myVisits": "My visits",
+  "monthlyVisits": "Visits this month",
+  "empty": {
+    "title": "No check-ins yet",
+    "body": "Visits appear here as members arrive.",
+    "today": "Nobody has checked in today",
+    "filtered": "No visits match these filters"
+  },
+  "network": {
+    "retrying": "Connection lost. Retrying…",
+    "restored": "Connection restored",
+    "offlineWarning": "Check-ins cannot be recorded while offline. The gym's server decides who may enter."
+  }
+}

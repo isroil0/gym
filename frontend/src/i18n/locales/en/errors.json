@@ -1,0 +1,40 @@
+{
+  "title": "Something went wrong",
+  "generic": "The request could not be completed. Please try again.",
+  "network": "Cannot reach the server. Check your connection.",
+  "timeout": "The server took too long to respond.",
+  "unauthorized": "Your session has ended. Please sign in again.",
+  "forbidden": "You do not have permission to do this.",
+  "notFound": "The requested item was not found.",
+  "conflict": "This conflicts with existing data.",
+  "validation": "Please correct the highlighted fields.",
+  "rateLimited": "Too many attempts. Please wait a moment.",
+  "server": "The server encountered an error.",
+  "unprocessable": "This action is not allowed right now.",
+  "codes": {
+    "VALIDATION_ERROR": "Please correct the highlighted fields.",
+    "BAD_REQUEST": "That request could not be understood.",
+    "UNAUTHORIZED": "Your session has ended. Please sign in again.",
+    "FORBIDDEN": "You do not have permission to do this.",
+    "NOT_FOUND": "The requested item was not found.",
+    "METHOD_NOT_ALLOWED": "That action is not available here.",
+    "CONFLICT": "This conflicts with existing data.",
+    "UNPROCESSABLE_ENTITY": "This action is not allowed right now.",
+    "TOO_MANY_REQUESTS": "Too many attempts. Please wait a moment.",
+    "PAYLOAD_TOO_LARGE": "That is too large to send.",
+    "UNSUPPORTED_MEDIA_TYPE": "That file type is not supported.",
+    "DATABASE_ERROR": "The database could not complete the request.",
+    "FOREIGN_KEY_CONSTRAINT": "Something this depends on is missing.",
+    "UNIQUE_CONSTRAINT": "That value is already in use.",
+    "SERVICE_UNAVAILABLE": "The service is temporarily unavailable.",
+    "INTERNAL_SERVER_ERROR": "The server encountered an error.",
+    "NETWORK_ERROR": "Cannot reach the server. Check your connection."
+  },
+  "boundary": {
+    "title": "This section failed to load",
+    "body": "An unexpected error occurred while rendering this page.",
+    "reload": "Reload page",
+    "details": "Technical details"
+  },
+  "requestId": "Reference: {id}"
+}

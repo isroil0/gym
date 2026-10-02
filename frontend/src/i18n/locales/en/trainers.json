@@ -1,0 +1,82 @@
+{
+  "title": "Trainers",
+  "subtitle": "Coaching staff",
+  "one": "Trainer",
+  "searchPlaceholder": "Search by name, email or trainer code",
+  "create": "Add trainer",
+  "createTitle": "Add a new trainer",
+  "edit": "Edit trainer",
+  "editTitle": "Edit trainer details",
+  "columns": {
+    "code": "Code",
+    "name": "Name",
+    "email": "Email",
+    "phone": "Phone",
+    "specialization": "Specialization",
+    "members": "Members",
+    "status": "Status",
+    "hiredAt": "Hired"
+  },
+  "fields": {
+    "firstName": "First name",
+    "lastName": "Last name",
+    "email": "Email",
+    "phone": "Phone",
+    "password": "Initial password",
+    "specialization": "Specialization",
+    "bio": "Biography",
+    "certifications": "Certifications",
+    "hourlyRate": "Hourly rate",
+    "hiredAt": "Hire date"
+  },
+  "compensation": {
+    "title": "Compensation",
+    "type": "Compensation type",
+    "baseSalary": "Base salary",
+    "commissionPercent": "Commission",
+    "edit": "Edit compensation",
+    "updated": "Compensation updated",
+    "types": {
+      "NONE": "Not set",
+      "FIXED": "Fixed salary",
+      "COMMISSION": "Commission only",
+      "FIXED_PLUS_COMMISSION": "Salary plus commission"
+    }
+  },
+  "tabs": {
+    "overview": "Overview",
+    "members": "Assigned members",
+    "sessions": "Sessions",
+    "schedule": "Schedule",
+    "stats": "Statistics"
+  },
+  "stats": {
+    "assignedMembers": "Assigned members",
+    "activeMembers": "Active members",
+    "plansWritten": "Workout plans written",
+    "sessionsCompleted": "Sessions completed",
+    "sessionsCancelled": "Sessions cancelled",
+    "noShows": "No-shows"
+  },
+  "assignedMembers": "Assigned members",
+  "noAssignedMembers": "No members assigned to this trainer",
+  "archive": {
+    "title": "Archive this trainer?",
+    "body": "{name} will no longer be able to sign in. Members assigned to them stay assigned until you move them.",
+    "confirm": "Archive trainer",
+    "success": "Trainer archived"
+  },
+  "reactivate": {
+    "title": "Reactivate this trainer?",
+    "body": "{name} will be able to sign in again.",
+    "confirm": "Reactivate trainer",
+    "success": "Trainer reactivated"
+  },
+  "empty": {
+    "title": "No trainers yet",
+    "body": "Add your first trainer to get started.",
+    "filtered": "No trainers match these filters"
+  },
+  "created": "Trainer created",
+  "updated": "Trainer updated"
+}

@@ -1,0 +1,166 @@
+{
+  "title": "Abonementlar",
+  "subtitle": "Kim to'lagan va qachongacha",
+  "one": "Abonement",
+  "status": {
+    "PENDING": "Boshlanmagan",
+    "ACTIVE": "Faol",
+    "FROZEN": "Muzlatilgan",
+    "EXPIRED": "Muddati tugagan",
+    "CANCELLED": "Bekor qilingan",
+    "none": "Abonement yo'q"
+  },
+  "statusHint": {
+    "PENDING": "{date} dan boshlanadi",
+    "ACTIVE": "{count, plural, other {# kun qoldi}}",
+    "FROZEN": "{date} dan beri muzlatilgan",
+    "EXPIRED": "{date} da tugagan",
+    "CANCELLED": "{date} da bekor qilingan"
+  },
+  "columns": {
+    "member": "A'zo",
+    "plan": "Turi",
+    "startDate": "Boshlanishi",
+    "endDate": "Tugashi",
+    "status": "Holat",
+    "price": "Narx",
+    "due": "Qarz",
+    "daysRemaining": "Qolgan kun",
+    "visits": "Tashriflar"
+  },
+  "fields": {
+    "member": "A'zo",
+    "plan": "Abonement turi",
+    "startDate": "Boshlanish sanasi",
+    "startDateHint": "Bugundan boshlash uchun bo'sh qoldiring.",
+    "notes": "Izohlar",
+    "purchasePrice": "Narx",
+    "discount": "Chegirma",
+    "discountReason": "Chegirma sababi"
+  },
+  "sell": {
+    "title": "Abonement sotish",
+    "steps": {
+      "member": "A'zoni tanlash",
+      "plan": "Turni tanlash",
+      "review": "Tekshirish",
+      "confirm": "Tasdiqlash"
+    },
+    "selectMember": "Bu kim uchun?",
+    "selectPlan": "Qaysi turni sotib olmoqda?",
+    "reviewTitle": "Ma'lumotlarni tekshiring",
+    "reviewHint": "Narx va tashriflar soni hozir abonement turidan nusxalanadi va keyin o'zgarmaydi.",
+    "confirmButton": "Abonementni sotish",
+    "success": "Abonement sotildi",
+    "overlapWarning": "Bu a'zoda shu sanalarni qamrab oluvchi abonement allaqachon bor.",
+    "existingActive": "Bu a'zoda {date} gacha faol abonement bor."
+  },
+  "renew": {
+    "title": "Abonementni yangilash",
+    "body": "Yangi abonement joriysi tugagan kundan keyin boshlanadi.",
+    "samePlan": "O'sha tur",
+    "differentPlan": "Boshqa tur",
+    "startsOn": "Yangi muddat {date} dan boshlanadi",
+    "confirm": "Yangilash",
+    "success": "Abonement yangilandi"
+  },
+  "extend": {
+    "title": "Abonementni uzaytirish",
+    "days": "Qo'shiladigan kunlar",
+    "reason": "Sababi",
+    "newEndDate": "Yangi tugash sanasi: {date}",
+    "confirm": "Uzaytirish",
+    "success": "Abonement uzaytirildi"
+  },
+  "freeze": {
+    "title": "Abonementni muzlatish",
+    "body": "Muzlatilgan vaqtda a'zo sportzalga kira olmaydi. Muzlatishda o'tgan kunlar keyin qaytariladi.",
+    "reason": "Sababi",
+    "reasonPlaceholder": "Safar, jarohat, …",
+    "confirm": "Muzlatish",
+    "success": "Abonement muzlatildi"
+  },
+  "unfreeze": {
+    "title": "Muzlatishni bekor qilish",
+    "body": "Abonement yana ishlatiladigan bo'ladi va muzlatilgan kunlar tugash sanasiga qo'shiladi.",
+    "daysCredited": "{count, plural, other {# kun qaytariladi}}",
+    "confirm": "Muzlatishni bekor qilish",
+    "success": "Muzlatish bekor qilindi"
+  },
+  "cancel": {
+    "title": "Abonementni bekor qilish",
+    "body": "Bu abonementni darhol tugatadi. Buni ortga qaytarib bo'lmaydi.",
+    "reason": "Bekor qilish sababi",
+    "confirm": "Abonementni bekor qilish",
+    "success": "Abonement bekor qilindi"
+  },
+  "discount": {
+    "title": "Chegirma qo'llash",
+    "amount": "Chegirma summasi",
+    "reason": "Sababi",
+    "newTotal": "Yangi to'lanadigan summa: {amount}",
+    "confirm": "Chegirmani qo'llash",
+    "success": "Chegirma qo'llandi"
+  },
+  "history": "Abonementlar tarixi",
+  "noHistory": "Oldingi abonementlar yo'q",
+  "visits": {
+    "used": "{total} tadan {used} ta tashrif ishlatilgan",
+    "remaining": "{count, plural, other {# ta tashrif qoldi}}",
+    "unlimited": "Cheksiz tashrif"
+  },
+  "frozenDays": "{count, plural, other {# kun muzlatilgan}}",
+  "renewedFrom": "Oldingi abonementdan yangilangan",
+  "empty": {
+    "title": "Hali abonementlar yo'q",
+    "body": "Boshlash uchun abonement soting.",
+    "filtered": "Bu filtrlarga mos abonement topilmadi"
+  },
+  "plans": {
+    "title": "Abonement turlari",
+    "subtitle": "Sportzal nimalarni sotadi",
+    "one": "Abonement turi",
+    "create": "Tur qo'shish",
+    "createTitle": "Abonement turini yaratish",
+    "edit": "Turni tahrirlash",
+    "columns": {
+      "name": "Nomi",
+      "duration": "Muddati",
+      "price": "Narx",
+      "visits": "Tashriflar",
+      "status": "Holat",
+      "sold": "Sotilgan"
+    },
+    "fields": {
+      "name": "Tur nomi",
+      "description": "Tavsif",
+      "durationDays": "Muddati (kun)",
+      "price": "Narx",
+      "visitLimit": "Tashriflar chegarasi",
+      "unlimitedVisits": "Cheksiz tashrif",
+      "unlimitedHint": "Bu turdagi a'zolar xohlagancha kelishi mumkin.",
+      "displayOrder": "Ko'rsatish tartibi"
+    },
+    "durationDays": "{count, plural, other {# kun}}",
+    "unlimited": "Cheksiz",
+    "archive": {
+      "title": "Bu tur arxivlansinmi?",
+      "body": "{name} endi sotilmaydi. Bu turda sotilgan abonementlarga ta'sir qilmaydi.",
+      "confirm": "Turni arxivlash",
+      "success": "Tur arxivlandi"
+    },
+    "reactivate": {
+      "title": "Bu tur qayta faollashtirilsinmi?",
+      "body": "{name} yana sotuvga chiqadi.",
+      "confirm": "Turni qayta faollashtirish",
+      "success": "Tur qayta faollashtirildi"
+    },
+    "empty": {
+      "title": "Hali turlar yo'q",
+      "body": "Abonement sotishdan oldin tur yarating."
+    },
+    "created": "Tur yaratildi",
+    "updated": "Tur yangilandi",
+    "priceChangeHint": "Narxni o'zgartirish faqat bundan keyin sotiladigan abonementlarga ta'sir qiladi. Mavjudlari sotib olishda kelishilgan narxda qoladi."
+  }
+}

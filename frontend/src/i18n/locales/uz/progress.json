@@ -1,0 +1,81 @@
+{
+  "title": "Natijalar",
+  "subtitle": "Vaqt bo'yicha o'lchovlar",
+  "myProgress": "Mening natijalarim",
+  "record": "O'lchov kiritish",
+  "recordTitle": "O'lchovni kiritish",
+  "edit": "O'lchovni tahrirlash",
+  "metrics": {
+    "weightKg": "Vazn",
+    "heightCm": "Bo'y",
+    "bodyFatPercent": "Tana yog'i",
+    "muscleMassKg": "Mushak massasi",
+    "chestCm": "Ko'krak",
+    "waistCm": "Bel",
+    "hipsCm": "Son aylanasi",
+    "thighCm": "Son",
+    "armCm": "Bilak",
+    "restingHeartRate": "Tinch holatdagi puls"
+  },
+  "units": {
+    "kg": "kg",
+    "lb": "lb",
+    "cm": "sm",
+    "percent": "%",
+    "bpm": "zarba/daq",
+    "KG": "Kilogramm",
+    "LB": "Funt"
+  },
+  "fields": {
+    "member": "A'zo",
+    "measuredOn": "O'lchangan sana",
+    "unit": "Birlik",
+    "notes": "Izohlar"
+  },
+  "bmi": {
+    "label": "TVI",
+    "underweight": "Vazn yetishmaydi",
+    "normal": "Me'yorda",
+    "overweight": "Ortiqcha vazn",
+    "obese": "Semizlik",
+    "needsHeight": "TVI hisoblash uchun bo'yni kiriting"
+  },
+  "change": {
+    "since": "{date} dan beri",
+    "increase": "{value} ga ortdi",
+    "decrease": "{value} ga kamaydi",
+    "noChange": "o'zgarmadi",
+    "first": "Birinchi o'lchov"
+  },
+  "chart": {
+    "title": "{metric} dinamikasi",
+    "noData": "Grafik chizish uchun o'lchovlar yetarli emas",
+    "noDataHint": "Bu ko'rsatkich bo'yicha kamida ikkita o'lchov kiriting.",
+    "selectMetric": "Ko'rsatkich"
+  },
+  "columns": {
+    "date": "Sana",
+    "weight": "Vazn",
+    "bodyFat": "Tana yog'i",
+    "muscleMass": "Mushak massasi",
+    "notes": "Izohlar",
+    "recordedBy": "Kiritgan"
+  },
+  "latest": "Oxirgi o'lchov",
+  "history": "O'lchovlar tarixi",
+  "delete": {
+    "title": "Bu o'lchov o'chirilsinmi?",
+    "body": "{date} da olingan o'lchov o'chiriladi.",
+    "confirm": "O'lchovni o'chirish",
+    "success": "O'lchov o'chirildi"
+  },
+  "empty": {
+    "title": "Hali o'lchovlar yo'q",
+    "body": "Natijalarni kuzatish uchun birinchi o'lchovni kiriting.",
+    "member": "Hali o'lchovlar kiritilmagan",
+    "memberHint": "Murabbiyingiz ularni mashg'ulot vaqtida kiritadi."
+  },
+  "created": "O'lchov kiritildi",
+  "updated": "O'lchov yangilandi",
+  "duplicateDate": "Bu a'zo uchun shu sanada o'lchov allaqachon kiritilgan. Boshqa sana tanlang yoki mavjudini tahrirlang."
+}

@@ -1,0 +1,95 @@
+{
+  "title": "Settings",
+  "subtitle": "Your account and this application",
+  "tabs": {
+    "profile": "Profile",
+    "appearance": "Appearance",
+    "security": "Security",
+    "gym": "Gym",
+    "audit": "Audit log"
+  },
+  "profile": {
+    "title": "Your profile",
+    "subtitle": "How you appear in the system",
+    "save": "Save profile",
+    "success": "Profile updated",
+    "readOnlyNotice": "Your name and email address are managed by the gym administrator. The backend provides no endpoint for changing them here."
+  },
+  "appearance": {
+    "title": "Appearance",
+    "subtitle": "How this application looks on this device",
+    "theme": "Theme",
+    "themeHint": "System follows your device setting.",
+    "language": "Language",
+    "languageHint": "Applies everywhere in the application and is remembered on this device.",
+    "reducedMotion": "Reduce motion",
+    "reducedMotionHint": "Animations follow your device's accessibility setting.",
+    "density": "Table density",
+    "densityOptions": {
+      "comfortable": "Comfortable",
+      "standard": "Standard",
+      "compact": "Compact"
+    },
+    "storedLocally": "These preferences are stored on this device."
+  },
+  "security": {
+    "title": "Security",
+    "subtitle": "Password and sessions",
+    "changePassword": "Change password",
+    "lastLogin": "Last signed in",
+    "signOutEverywhere": "Sign out on all devices",
+    "signOutEverywhereHint": "Ends every session, including this one."
+  },
+  "gym": {
+    "title": "Gym settings",
+    "subtitle": "Name, currency and timezone",
+    "name": "Gym name",
+    "currency": "Currency",
+    "timezone": "Timezone",
+    "openingHour": "Opening time",
+    "closingHour": "Closing time",
+    "readOnlyNotice": "The backend does not expose an API for gym settings, so these cannot be changed here. They are configured in the database and are shown for reference only.",
+    "displayOnly": "Display settings used by this application are configured in its environment file."
+  },
+  "audit": {
+    "title": "Audit log",
+    "subtitle": "Who did what",
+    "columns": {
+      "when": "When",
+      "actor": "Who",
+      "action": "Action",
+      "entity": "Item",
+      "outcome": "Outcome",
+      "ip": "IP address"
+    },
+    "outcome": {
+      "SUCCESS": "Succeeded",
+      "FAILURE": "Refused"
+    },
+    "filters": {
+      "actor": "Who",
+      "action": "Action",
+      "entityType": "Item type",
+      "outcome": "Outcome"
+    },
+    "empty": "No audit entries for this period",
+    "detail": "Entry details",
+    "changes": "What changed",
+    "permissions": {
+      "title": "Route permissions",
+      "subtitle": "Every endpoint and the rule that guards it",
+      "totalRoutes": "Endpoints",
+      "publicRoutes": "Public",
+      "unrestricted": "Without a rule",
+      "allCovered": "Every endpoint is covered by an authorization rule."
+    }
+  },
+  "about": {
+    "title": "About",
+    "version": "Version",
+    "apiUrl": "API address",
+    "apiStatus": "API status",
+    "connected": "Connected",
+    "disconnected": "Unreachable"
+  }
+}

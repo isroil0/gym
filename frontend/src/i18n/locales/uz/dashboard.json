@@ -1,0 +1,86 @@
+{
+  "admin": {
+    "title": "Boshqaruv paneli",
+    "subtitle": "Sportzalning bugungi ahvoli",
+    "kpi": {
+      "totalMembers": "Jami a'zolar",
+      "activeMembers": "Faol a'zolar",
+      "expiredMembers": "Muddati tugagan abonementlar",
+      "expiringSoon": "Tez orada tugaydi",
+      "todayCheckIns": "Bugungi tashriflar",
+      "currentlyInside": "Hozir ichkarida",
+      "activeTrainers": "Faol murabbiylar",
+      "monthlyRevenue": "Shu oydagi tushum",
+      "monthlyExpenses": "Shu oydagi xarajat",
+      "monthlyProfit": "Shu oydagi natija",
+      "totalOutstanding": "Qarzdorlik",
+      "newMembersThisMonth": "Shu oydagi yangi a'zolar"
+    },
+    "charts": {
+      "revenueVsExpenses": "Tushum va xarajatlar",
+      "attendanceTrend": "Kunlik tashriflar",
+      "membershipMix": "Abonementlar holati bo'yicha",
+      "revenue": "Tushum",
+      "expenses": "Xarajatlar",
+      "profit": "Natija",
+      "checkIns": "Tashriflar"
+    },
+    "expiringAlert": {
+      "title": "Tez orada tugaydigan abonementlar",
+      "body": "{count, plural, other {# ta abonement 7 kun ichida tugaydi}}",
+      "action": "Ko'rib chiqish",
+      "none": "Yaqin 7 kunda tugaydigan abonement yo'q"
+    },
+    "recentPayments": "So'nggi to'lovlar",
+    "recentAttendance": "So'nggi tashriflar",
+    "quickActions": {
+      "title": "Tezkor amallar",
+      "addMember": "A'zo qo'shish",
+      "sellMembership": "Abonement sotish",
+      "takePayment": "To'lov qabul qilish",
+      "checkIn": "A'zoni qayd etish",
+      "addExpense": "Xarajat qo'shish"
+    }
+  },
+  "trainer": {
+    "title": "Boshqaruv paneli",
+    "subtitle": "A'zolaringiz va bugungi jadval",
+    "kpi": {
+      "assignedMembers": "Biriktirilgan a'zolar",
+      "activeMembers": "Faol abonementi borlar",
+      "activeWorkoutPlans": "Faol mashg'ulot rejalari",
+      "sessionsToday": "Bugungi mashg'ulotlar",
+      "sessionsThisWeek": "Shu haftadagi mashg'ulotlar",
+      "completedThisMonth": "Shu oyda yakunlangan"
+    },
+    "todaySessions": "Bugungi mashg'ulotlar",
+    "upcomingSessions": "Rejadagi mashg'ulotlar",
+    "memberActivity": "A'zolar faolligi",
+    "lastVisit": "Oxirgi tashrif",
+    "visitsThisMonth": "Shu oydagi tashriflar",
+    "noSessionsToday": "Bugunga mashg'ulot rejalashtirilmagan",
+    "noMembers": "Sizga hali a'zo biriktirilmagan"
+  },
+  "member": {
+    "greeting": "Salom, {name}",
+    "subtitle": "Mana sizning holatingiz",
+    "membershipStatus": "Abonement",
+    "daysRemaining": "Qolgan kunlar",
+    "visitsRemaining": "Qolgan tashriflar",
+    "unlimitedVisits": "Cheksiz tashrif",
+    "assignedTrainer": "Murabbiyingiz",
+    "noTrainer": "Murabbiy biriktirilmagan",
+    "nextSession": "Keyingi mashg'ulot",
+    "noNextSession": "Rejadagi mashg'ulot yo'q",
+    "visitsThisMonth": "Shu oydagi tashriflar",
+    "lastVisit": "Oxirgi tashrif",
+    "workoutPlan": "Mashg'ulot rejasi",
+    "noWorkoutPlan": "Hali mashg'ulot rejasi yo'q",
+    "outstandingBalance": "To'lanishi kerak",
+    "allPaid": "Qarzdorligingiz yo'q",
+    "recentActivity": "So'nggi harakatlar",
+    "showQrCard": "QR kartani ko'rsatish",
+    "noMembership": "Sizda faol abonement yo'q",
+    "noMembershipHint": "Boshlash uchun qabulxonaga murojaat qiling."
+  }
+}

@@ -1,0 +1,66 @@
+{
+  "title": "Notifications",
+  "subtitle": "What needs your attention",
+  "unread": "Unread",
+  "unreadCount": "{count, plural, =0 {No unread notifications} one {# unread notification} other {# unread notifications}}",
+  "markRead": "Mark as read",
+  "markAllRead": "Mark all as read",
+  "allRead": "All notifications marked as read",
+  "type": {
+    "MEMBERSHIP_EXPIRING": "Membership expiring",
+    "MEMBERSHIP_EXPIRED": "Membership expired",
+    "PAYMENT_DUE": "Payment due",
+    "SESSION_SCHEDULED": "Session scheduled",
+    "SESSION_CANCELLED": "Session cancelled",
+    "CARD_REVOKED": "Card revoked",
+    "ANNOUNCEMENT": "Announcement"
+  },
+  "severity": {
+    "INFO": "Information",
+    "WARNING": "Warning",
+    "CRITICAL": "Urgent"
+  },
+  "filters": {
+    "all": "All",
+    "unreadOnly": "Unread only",
+    "type": "Type",
+    "severity": "Severity"
+  },
+  "delete": {
+    "title": "Delete this notification?",
+    "confirm": "Delete",
+    "success": "Notification deleted"
+  },
+  "announcement": {
+    "create": "Send announcement",
+    "createTitle": "Send an announcement",
+    "body": "This is delivered to everyone in the chosen audience.",
+    "fields": {
+      "title": "Title",
+      "message": "Message",
+      "audience": "Send to",
+      "severity": "Importance"
+    },
+    "audience": {
+      "ALL": "Everyone",
+      "MEMBERS": "All members",
+      "TRAINERS": "All trainers"
+    },
+    "confirm": "Send announcement",
+    "success": "Announcement sent to {count, plural, one {# person} other {# people}}"
+  },
+  "reminders": {
+    "run": "Run reminder sweep",
+    "runTitle": "Run the reminder sweep?",
+    "runBody": "This checks for expiring memberships, expired memberships and overdue payments, and notifies the members concerned. Running it twice does not send duplicates.",
+    "confirm": "Run sweep",
+    "success": "Sweep complete",
+    "result": "{expiring} expiring, {expired} expired, {payments} payment reminders, {skipped} skipped as duplicates"
+  },
+  "empty": {
+    "title": "Nothing to show",
+    "body": "You have no notifications.",
+    "unread": "No unread notifications"
+  },
+  "viewAll": "View all notifications"
+}
