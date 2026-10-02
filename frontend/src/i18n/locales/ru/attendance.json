@@ -9,7 +9,6 @@
   "columns": {
     "member": "Клиент",
     "checkedInAt": "Приход",
-    "status": "Статус",
     "method": "Способ",
     "recordedBy": "Отметил",
     "date": "Дата"
@@ -21,7 +20,6 @@
     "averageDuration": "Средняя длительность",
     "peakHour": "Час пик"
   },
-  "stillInside": "Сейчас в зале",
   "checkIn": {
     "title": "Отметить приход",
     "subtitle": "Отсканируйте карту или найдите клиента",

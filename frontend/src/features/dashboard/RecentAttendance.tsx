@@ -11,7 +11,6 @@ import { ListSkeleton } from '@/components/feedback/Skeletons';
 import { EmptyState } from '@/components/feedback/EmptyState';
 import { useLocale } from '@/providers/LocaleProvider';
 import { formatRelative, formatTime } from '@/lib/format/datetime';
-import { StatusChip } from '@/components/ui/StatusChip';
 import type { Attendance, Paginated } from '@/lib/api/types';
 
 const QUERY = { page: 1, limit: 6 };
@@ -54,13 +53,9 @@ export function RecentAttendance() {
               </Typography>
             </Box>
             <Stack alignItems="flex-end" spacing={0.25} sx={{ flexShrink: 0 }}>
-              {visit.stillInside ? (
-                <StatusChip label={t('stillInside')} tone="success" />
-              ) : (
-                <Typography variant="caption" color="text.secondary" className="tabular">
-                  {formatTime(visit.checkedInAt, locale)}
-                </Typography>
-              )}
+              <Typography variant="caption" color="text.secondary" className="tabular">
+                {formatTime(visit.checkedInAt, locale)}
+              </Typography>
             </Stack>
           </Stack>
         </Box>

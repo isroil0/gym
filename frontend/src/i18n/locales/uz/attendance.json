@@ -9,7 +9,6 @@
   "columns": {
     "member": "A'zo",
     "checkedInAt": "Kirgan vaqti",
-    "status": "Holat",
     "method": "Usul",
     "recordedBy": "Qayd etgan",
     "date": "Sana"
@@ -21,7 +20,6 @@
     "averageDuration": "O'rtacha vaqt",
     "peakHour": "Eng gavjum soat"
   },
-  "stillInside": "Hozir ichkarida",
   "checkIn": {
     "title": "Kirishni qayd etish",
     "subtitle": "Kartani skanerlang yoki a'zoni qidiring",

@@ -193,7 +193,6 @@ export function TrainerMemberDetail({ memberId }: { memberId: string }) {
                           {formatDateTime(visit.checkedInAt, locale)}
                         </Typography>
                         <Typography variant="caption" color="text.secondary">
-                          {visit.stillInside ? `${tat('stillInside')} · ` : ''}
                           {tat(`method.${visit.method}`)}
                         </Typography>
                       </Stack>

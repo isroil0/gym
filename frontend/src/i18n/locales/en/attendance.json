@@ -9,7 +9,6 @@
   "columns": {
     "member": "Member",
     "checkedInAt": "Checked in",
-    "status": "Status",
     "method": "Method",
     "recordedBy": "Recorded by",
     "date": "Date"
@@ -21,7 +20,6 @@
     "averageDuration": "Average stay",
     "peakHour": "Busiest hour"
   },
-  "stillInside": "Inside now",
   "checkIn": {
     "title": "Check in",
     "subtitle": "Scan a card or search for the member",

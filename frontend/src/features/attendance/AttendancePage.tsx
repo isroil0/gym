@@ -16,7 +16,6 @@ import { SectionCard } from '@/components/ui/SectionCard';
 import { DataTable } from '@/components/data/DataTable';
 import { FilterBar } from '@/components/data/FilterBar';
 import { DateRangePicker } from '@/components/data/DateRangePicker';
-import { StatusChip } from '@/components/ui/StatusChip';
 import { MetricCardSkeleton } from '@/components/feedback/Skeletons';
 import { useQueryState } from '@/lib/hooks/useQueryState';
 import { useLocale } from '@/providers/LocaleProvider';
@@ -68,17 +67,6 @@ export function AttendancePage({ tab = 'today' }: { tab?: string }) {
         headerName: t('columns.checkedInAt'),
         width: 150,
         valueGetter: (_, row) => formatDateTime(row.checkedInAt, locale),
-      },
-      {
-        // Whether somebody is still in the building, not when they left:
-        // the departure time is of no interest to this gym, but knowing who
-        // is inside is what makes the check-out control below meaningful.
-        field: 'stillInside',
-        headerName: t('columns.status'),
-        width: 130,
-        sortable: false,
-        renderCell: ({ row }) =>
-          row.stillInside ? <StatusChip label={t('stillInside')} tone="success" /> : null,
       },
       {
         field: 'method',

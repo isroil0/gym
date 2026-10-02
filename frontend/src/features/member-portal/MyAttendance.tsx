@@ -10,7 +10,6 @@ import Typography from '@mui/material/Typography';
 import { api } from '@/lib/api/client';
 import { keys } from '@/lib/api/keys';
 import { PageHeader } from '@/components/ui/PageHeader';
-import { StatusChip } from '@/components/ui/StatusChip';
 import { ListSkeleton } from '@/components/feedback/Skeletons';
 import { EmptyState } from '@/components/feedback/EmptyState';
 import { useLocale } from '@/providers/LocaleProvider';
@@ -58,7 +57,6 @@ export function MyAttendance() {
                         {t(`method.${visit.method}`)}
                       </Typography>
                     </Box>
-                    {visit.stillInside ? <StatusChip label={t('stillInside')} tone="success" /> : null}
                   </Stack>
                 </Box>
               ))}
