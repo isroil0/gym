@@ -34,7 +34,11 @@ export function middleware(request: NextRequest): NextResponse {
     return NextResponse.redirect(url);
   }
 
-  return NextResponse.next();
+  // Server Components cannot read the request path, and the guards need it
+  // to send a reader back where they were after restoring their session.
+  const requestHeaders = new Headers(request.headers);
+  requestHeaders.set('x-pathname', `${pathname}${search}`);
+  return NextResponse.next({ request: { headers: requestHeaders } });
 }
 
 export const config = {

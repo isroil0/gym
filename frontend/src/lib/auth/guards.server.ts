@@ -1,4 +1,5 @@
 import 'server-only';
+import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { getCurrentUser } from './session.server';
 import { homeFor } from './roles';
@@ -13,8 +14,21 @@ import type { User, UserRole } from '@/lib/api/types';
  */
 export async function requireUser(): Promise<User> {
   const user = await getCurrentUser();
-  if (!user) redirect('/login');
+  if (!user) redirect(await restoreUrl());
   return user;
+}
+
+/**
+ * Where to send a reader the backend did not recognise.
+ *
+ * Not straight to the sign-in page: middleware sends anybody still holding a
+ * refresh cookie back here, which is an endless bounce. The restore route
+ * settles it — it refreshes the session or clears the cookies — and brings
+ * them back to the page they asked for.
+ */
+async function restoreUrl(): Promise<string> {
+  const path = (await headers()).get('x-pathname');
+  return path ? `/api/session/restore?next=${encodeURIComponent(path)}` : '/api/session/restore';
 }
 
 /**
