@@ -130,5 +130,11 @@
   },
   "daily": "Daily",
   "monthly": "Monthly",
-  "period": "Period"
+  "period": "Period",
+  "income": {
+    "add": "Add income",
+    "addTitle": "Record income",
+    "success": "Income recorded",
+    "receivedBy": "Received by"
+  }
 }

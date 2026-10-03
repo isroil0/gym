@@ -16,6 +16,7 @@ import { dateAnchors } from '@/lib/format/datetime';
 import { AccountingOverview } from './AccountingOverview';
 import { EntryTable } from './EntryTable';
 import { ExpenseDialog } from './ExpenseDialog';
+import { IncomeDialog } from './IncomeDialog';
 import { CategoryManager } from './CategoryManager';
 import { DebtsTab } from './DebtsTab';
 import { TrainerPayTab } from './TrainerPayTab';
@@ -42,6 +43,7 @@ export function AccountingPage({ tab = 'overview' }: { tab?: string }) {
   const tc = useTranslations('common');
   const { state, set, clear } = useQueryState(DEFAULTS);
   const [addingExpense, setAddingExpense] = useState(false);
+  const [addingIncome, setAddingIncome] = useState(false);
 
   const categories = useExpenseCategories();
 
@@ -59,14 +61,24 @@ export function AccountingPage({ tab = 'overview' }: { tab?: string }) {
         title={t('title')}
         subtitle={t('subtitle')}
         actions={
-          <Button
-            variant="contained"
-            size="small"
-            startIcon={<AddIcon />}
-            onClick={() => setAddingExpense(true)}
-          >
-            {t('expense.add')}
-          </Button>
+          <Stack direction="row" spacing={1}>
+            <Button
+              variant="outlined"
+              size="small"
+              startIcon={<AddIcon />}
+              onClick={() => setAddingIncome(true)}
+            >
+              {t('income.add')}
+            </Button>
+            <Button
+              variant="contained"
+              size="small"
+              startIcon={<AddIcon />}
+              onClick={() => setAddingExpense(true)}
+            >
+              {t('expense.add')}
+            </Button>
+          </Stack>
         }
       />
 
@@ -141,6 +153,7 @@ export function AccountingPage({ tab = 'overview' }: { tab?: string }) {
       </TabbedSection>
 
       <ExpenseDialog open={addingExpense} onClose={() => setAddingExpense(false)} />
+      <IncomeDialog open={addingIncome} onClose={() => setAddingIncome(false)} />
     </>
   );
 }

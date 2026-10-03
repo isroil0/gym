@@ -130,5 +130,11 @@
   },
   "daily": "Kunlik",
   "monthly": "Oylik",
-  "period": "Davr"
+  "period": "Davr",
+  "income": {
+    "add": "Daromad qo'shish",
+    "addTitle": "Daromadni qayd etish",
+    "success": "Daromad qayd etildi",
+    "receivedBy": "Qanday olindi"
+  }
 }
